@@ -22,7 +22,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         // mengambil data user yang telah login dan menampilkannya ke layout main
-        View::composer('layouts.main', function ($view) {
+        View::composer('*', function ($view) {
             $view->with('authUser', Auth::user());
         });
         

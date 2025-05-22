@@ -14,6 +14,11 @@
                                 <i class="fa fa-file-pdf mr-1"></i> PDF
                             </a>
                         </button>
+                        <button class="btn btn-success btn-sm mr-2" style="min-width: 100px; height: 40px;"
+                                onclick="modalAction('{{ url('peran/import') }}')">
+                            <i class="fa fa-file-import mr-1"></i> Import
+                        </button>
+
                         <button class="btn btn-primary btn-sm" onclick="modalAction('{{ url('peran/create') }}')"
                                 style="min-width: 120px; height: 40px;">
                             Tambah Peran

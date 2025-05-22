@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Yajra\DataTables\Facades\DataTables;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Validator;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class GedungController extends Controller
 {
@@ -102,6 +104,67 @@ class GedungController extends Controller
     {
         return view('gedung.show', compact('gedung'));
     }
+
+
+    public function import()
+    {
+        return view('gedung.import');
+    }
+
+    public function importAjax(Request $request)
+    {
+        if ($request->ajax() || $request->wantsJson()) {
+            $rules = [
+                'file_gedung' => ['required', 'mimes:xlsx', 'max:2048'],
+            ];
+
+            $validator = Validator::make($request->all(), $rules);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Validasi Gagal',
+                    'msgField' => $validator->errors(),
+                ]);
+            }
+
+            $file = $request->file('file_gedung');
+            $reader = IOFactory::createReader('Xlsx');
+            $reader->setReadDataOnly(true);
+            $spreadsheet = $reader->load($file->getPathname());
+            $sheet = $spreadsheet->getActiveSheet();
+            $rows = $sheet->toArray(null, true, true, true);
+
+            $insert = [];
+            foreach ($rows as $i => $row) {
+                if ($i === 1) continue; // skip header
+                if (empty($row['A']) && empty($row['B'])) continue;
+
+                $insert[] = [
+                    'kode_gedung' => $row['A'],
+                    'nama_gedung' => $row['B'],
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ];
+            }
+
+            if (count($insert) === 0) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Tidak ada data yang diimport'
+                ]);
+            }
+
+            Gedung::insertOrIgnore($insert);
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Data berhasil diimport'
+            ]);
+        }
+
+        return redirect()->route('gedung.index');
+    }
+
 
     /* ----------  EXPORT PDF  ---------- */
     public function exportPdf()

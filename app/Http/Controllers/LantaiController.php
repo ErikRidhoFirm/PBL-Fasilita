@@ -7,6 +7,8 @@ use App\Models\Lantai;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Validator;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 
 
 class LantaiController extends Controller
@@ -109,6 +111,70 @@ class LantaiController extends Controller
     {
         return view('lantai.show', compact('lantai'));
     }
+
+
+
+    /* ----------  IMPORT EXCEL  ---------- */
+
+    public function import(Gedung $gedung)
+    {
+        return view('lantai.import', compact('gedung'));
+    }
+
+    public function importAjax(Request $request, Gedung $gedung)
+    {
+        if ($request->ajax() || $request->wantsJson()) {
+            $rules = [
+                'file_lantai' => ['required', 'mimes:xlsx', 'max:2048'],
+            ];
+
+            $validator = Validator::make($request->all(), $rules);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status'   => false,
+                    'message'  => 'Validasi Gagal',
+                    'msgField' => $validator->errors(),
+                ]);
+            }
+
+            $file = $request->file('file_lantai');
+            $reader = IOFactory::createReader('Xlsx');
+            $reader->setReadDataOnly(true);
+            $spreadsheet = $reader->load($file->getPathname());
+            $sheet = $spreadsheet->getActiveSheet();
+            $rows = $sheet->toArray(null, true, true, true);
+
+            $insert = [];
+            foreach ($rows as $i => $row) {
+                if ($i === 1) continue; // Skip header
+                if (empty($row['A']) && empty($row['B'])) continue;
+
+                $insert[] = [
+                    'id_gedung'   => $row['A'],
+                    'nomor_lantai' => $row['B'],
+                    'created_at'  => now(),
+                    'updated_at'  => now(),
+                ];
+            }
+
+            if (count($insert) === 0) {
+                return response()->json([
+                    'status'  => false,
+                    'message' => 'Tidak ada data yang diimport'
+                ]);
+            }
+
+            Lantai::insertOrIgnore($insert);
+
+            return response()->json([
+                'status'  => true,
+                'message' => 'Data Lantai berhasil diimport'
+            ]);
+        }
+
+        return redirect()->route('gedung.lantai.index', $gedung->id_gedung);
+    }
+
 
     public function exportPdf(Gedung $gedung)
     {

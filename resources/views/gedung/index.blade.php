@@ -26,6 +26,9 @@
                         <i class="fa fa-file-pdf mr-1"></i> PDF
                     </a>
                 </button>
+                <button class="btn btn-success btn-sm mr-2" onclick="modalAction('{{ route('gedung.import') }}')" style="min-width: 120px; height: 40px;">
+                    <i class="fa fa-file-import"></i> Import
+                </button>
                 <button class="btn btn-primary btn-sm" onclick="modalAction('{{ route('gedung.create') }}')"
                         style="min-width: 120px; height: 40px;">
                     Tambah Gedung

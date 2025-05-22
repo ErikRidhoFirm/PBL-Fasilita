@@ -6,6 +6,7 @@ use App\Models\Peran;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class PeranController extends Controller
@@ -194,6 +195,65 @@ class PeranController extends Controller
         redirect('/');
     }
 
+
+    public function import()
+    {
+        return view('peran.import');
+    }
+
+    public function importAjax(Request $request)
+    {
+        if ($request->ajax() || $request->wantsJson()) {
+            $rules = [
+                'file_peran' => ['required', 'mimes:xlsx', 'max:2048'],
+            ];
+            $validator = Validator::make($request->all(), $rules);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status'   => false,
+                    'message'  => 'Validasi Gagal',
+                    'msgField' => $validator->errors(),
+                ]);
+            }
+
+            $file = $request->file('file_peran');
+            $reader = IOFactory::createReader('Xlsx');
+            $reader->setReadDataOnly(true);
+            $spreadsheet = $reader->load($file->getPathname());
+            $sheet = $spreadsheet->getActiveSheet();
+            $rows = $sheet->toArray(null, true, true, true);
+
+            $insert = [];
+            foreach ($rows as $i => $row) {
+                if ($i === 1) continue; // skip header
+                if (empty($row['A']) && empty($row['B'])) continue;
+                $insert[] = [
+                    'kode_peran' => $row['A'],
+                    'nama_peran' => $row['B'],
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ];
+            }
+
+            if (count($insert) === 0) {
+                return response()->json([
+                    'status'  => false,
+                    'message' => 'Tidak ada data yang diimport'
+                ]);
+            }
+
+            Peran::insertOrIgnore($insert);
+
+            return response()->json([
+                'status'  => true,
+                'message' => 'Data peran berhasil diimport'
+            ]);
+        }
+
+        return redirect()->route('peran.index');
+    }
+
+    
     public function exportPdf()
     {
         $peran = Peran::orderBy('kode_peran')->get();

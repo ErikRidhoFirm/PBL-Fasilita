@@ -71,6 +71,8 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/delete/{id}', [PeranController::class, 'delete'])->name('peran.delete');
             Route::delete('/destroy/{id}', [PeranController::class, 'destroy'])->name('peran.destroy');
             Route::get('/export_pdf', [PeranController::class, 'exportPdf'])->name('peran.export_pdf');
+            Route::get('/import', [PeranController::class, 'import'])->name('peran.import');
+            Route::post('/import_ajax', [PeranController::class, 'importAjax'])->name('peran.import_ajax');
         });
 
         Route::prefix('kategori_kerusakan')->group(function () {
@@ -121,6 +123,8 @@ Route::middleware(['auth'])->group(function () {
             Route::put('/{gedung}',        [GedungController::class, 'update'])->name('update');   // ← ganti {id} → {gedung}
             Route::delete('/{gedung}',     [GedungController::class, 'destroy'])->name('destroy'); // ← ganti {id} → {gedung}
             Route::get('/export_pdf', [GedungController::class, 'exportPdf'])->name('export_pdf');
+            Route::get('/import', [GedungController::class, 'import'])->name('import');
+            Route::post('/import_ajax', [GedungController::class, 'importAjax'])->name('import_ajax');
         });
 
         // 1️⃣ Daftar & Tambah Lantai untuk satu Gedung
@@ -133,6 +137,8 @@ Route::middleware(['auth'])->group(function () {
                     Route::get('create',  [LantaiController::class, 'create'])->name('create');
                     Route::post('store',  [LantaiController::class, 'store'])->name('store');
                     Route::get('export_pdf', [LantaiController::class, 'exportPdf'])->name('export_pdf');
+                    Route::get('import', [LantaiController::class, 'import'])->name('import');
+                    Route::post('import_ajax', [LantaiController::class, 'importAjax'])->name('import_ajax');
                 }
             );
 

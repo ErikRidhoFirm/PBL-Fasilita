@@ -6,6 +6,7 @@ use App\Models\Ruangan;
 use App\Models\Fasilitas;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class FasilitasController extends Controller
 {
@@ -111,5 +112,21 @@ class FasilitasController extends Controller
     public function show(Fasilitas $fasilitas)
     {
         return view('fasilitas.show', compact('fasilitas'));
+    }
+
+    public function exportPdf(Ruangan $ruangan)
+    {
+        $fasilitas = $ruangan->fasilitas()
+                            ->select('id_fasilitas', 'nama_fasilitas', 'jumlah_fasilitas')
+                            ->orderBy('nama_fasilitas')
+                            ->get();
+
+        $lantai = $ruangan->lantai; // pastikan relasi ini ada di model Ruangan
+        $gedung = $lantai->gedung; // pastikan relasi ini ada di model Lantai
+
+        $pdf = PDF::loadView('fasilitas.export_pdf', compact('ruangan', 'fasilitas', 'lantai', 'gedung'))
+                ->setPaper('A4', 'portrait');
+
+        return $pdf->stream('Laporan_Fasilitas_Ruangan_' . $ruangan->nama_ruangan . '_' . date('Y-m-d_H-i-s') . '.pdf');
     }
 }

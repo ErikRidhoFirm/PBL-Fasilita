@@ -6,6 +6,7 @@ use App\Models\Gedung;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Yajra\DataTables\Facades\DataTables;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class GedungController extends Controller
 {
@@ -33,24 +34,17 @@ class GedungController extends Controller
 })
             ->addColumn('aksi', function ($row) {
                 return '
-                <div class="btn-group">
-
-
-                    <!-- tombol EDIT -->
-                    <button onclick="modalAction(\'' .
-                        route('gedung.edit', $row->id_gedung) . '\')"
-                        class="btn btn-warning btn-sm">
-                        <i class="mdi mdi-pencil"></i>
+                <div>
+                    <button onclick="modalAction(\'' . route('gedung.edit', $row->id_gedung) . '\')" class="btn btn-warning btn-sm" style="margin-right:8px;">
+                        <i class="mdi mdi-pencil m-0"></i>
                     </button>
 
-                    <!-- tombol HAPUS -->
-                    <button onclick="modalAction(\'' .
-                        route('gedung.delete', $row->id_gedung) . '\')"
-                        class="btn btn-danger btn-sm">
-                        <i class="mdi mdi-delete"></i>
+                    <button onclick="modalAction(\'' . route('gedung.delete', $row->id_gedung) . '\')" class="btn btn-danger btn-sm">
+                        <i class="mdi mdi-delete m-0"></i>
                     </button>
                 </div>';
             })
+
             ->rawColumns(['pilih', 'aksi']) // kolom yang berisi HTML
             ->make(true);
     }
@@ -107,5 +101,18 @@ class GedungController extends Controller
     public function show(Gedung $gedung)
     {
         return view('gedung.show', compact('gedung'));
+    }
+
+    /* ----------  EXPORT PDF  ---------- */
+    public function exportPdf()
+    {
+        $gedung = Gedung::select('id_gedung', 'kode_gedung', 'nama_gedung')
+            ->orderBy('kode_gedung')
+            ->get();
+
+        $pdf = PDF::loadView('gedung.export_pdf', compact('gedung'))
+            ->setPaper('A4', 'portrait');
+
+        return $pdf->stream('Laporan_Gedung_' . date('Y-m-d_H-i-s') . '.pdf');
     }
 }

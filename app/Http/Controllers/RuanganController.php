@@ -9,6 +9,7 @@ use Illuminate\Validation\Rule;
 use Yajra\DataTables\Facades\DataTables;
 use App\Models\Fasilitas;
 use App\Models\Gedung;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class RuanganController extends Controller
 {
@@ -126,5 +127,18 @@ HTML;
     public function fasilitas()
 {
     return $this->hasMany(Fasilitas::class, 'id_ruangan');
+}
+
+    public function exportPdf(Lantai $lantai)
+{
+    // Ambil semua ruangan yang punya id_lantai sama dengan $lantai->id_lantai
+    $ruangan = $lantai->ruangan()->orderBy('kode_ruangan')->get();
+
+    // Load view dengan data ruangan dan lantai
+    $pdf = PDF::loadView('ruangan.export_pdf', compact('ruangan', 'lantai'))
+              ->setPaper('A4', 'portrait');
+
+    // Nama file sesuai nomor lantai dan timestamp
+    return $pdf->stream('Laporan_Ruangan_Lantai_' . $lantai->nomor_lantai . '_' . date('Y-m-d_H-i-s') . '.pdf');
 }
 }

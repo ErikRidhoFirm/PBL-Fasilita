@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+@stack('css')
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="csrf-token" content="{{ csrf_token() }}">

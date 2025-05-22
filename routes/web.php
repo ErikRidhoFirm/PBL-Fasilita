@@ -70,6 +70,7 @@ Route::middleware(['auth'])->group(function () {
             Route::put('/update/{id}', [PeranController::class, 'update'])->name('peran.update');
             Route::get('/delete/{id}', [PeranController::class, 'delete'])->name('peran.delete');
             Route::delete('/destroy/{id}', [PeranController::class, 'destroy'])->name('peran.destroy');
+            Route::get('/export_pdf', [PeranController::class, 'exportPdf'])->name('peran.export_pdf');
         });
 
         Route::prefix('kategori_kerusakan')->group(function () {
@@ -82,6 +83,7 @@ Route::middleware(['auth'])->group(function () {
             Route::put('/update/{id}', [KategoriKerusakanController::class, 'update'])->name('kategori_kerusakan.update');
             Route::get('/delete/{id}', [KategoriKerusakanController::class, 'delete'])->name('kategori_kerusakan.delete');
             Route::delete('/destroy/{id}', [KategoriKerusakanController::class, 'destroy'])->name('kategori_kerusakan.destroy');
+            Route::get('/export_pdf', [KategoriKerusakanController::class, 'exportPdf'])->name('kategori_kerusakan.export_pdf');
         });
 
         // Pengguna
@@ -118,6 +120,7 @@ Route::middleware(['auth'])->group(function () {
             /* simpan edit & eksekusi hapus */
             Route::put('/{gedung}',        [GedungController::class, 'update'])->name('update');   // ← ganti {id} → {gedung}
             Route::delete('/{gedung}',     [GedungController::class, 'destroy'])->name('destroy'); // ← ganti {id} → {gedung}
+            Route::get('/export_pdf', [GedungController::class, 'exportPdf'])->name('export_pdf');
         });
 
         // 1️⃣ Daftar & Tambah Lantai untuk satu Gedung
@@ -129,6 +132,7 @@ Route::middleware(['auth'])->group(function () {
                     Route::get('list',    [LantaiController::class, 'list'])->name('list');
                     Route::get('create',  [LantaiController::class, 'create'])->name('create');
                     Route::post('store',  [LantaiController::class, 'store'])->name('store');
+                    Route::get('export_pdf', [LantaiController::class, 'exportPdf'])->name('export_pdf');
                 }
             );
 
@@ -162,6 +166,7 @@ Route::middleware(['auth'])->group(function () {
                     Route::get('list',   [RuanganController::class, 'list'])->name('list');
                     Route::get('create', [RuanganController::class, 'create'])->name('create');
                     Route::post('store', [RuanganController::class, 'store'])->name('store');
+                    Route::get('export_pdf', [RuanganController::class, 'exportPdf'])->name('export_pdf');
                 }
             );
 
@@ -200,6 +205,7 @@ Route::middleware(['auth'])->group(function () {
                     Route::get('list',    [FasilitasController::class, 'list'])->name('list');
                     Route::get('create',  [FasilitasController::class, 'create'])->name('create');
                     Route::post('store',  [FasilitasController::class, 'store'])->name('store');
+                    Route::get('export-pdf', [FasilitasController::class, 'exportPdf'])->name('export_pdf');
                 }
             );
 
@@ -251,6 +257,7 @@ Route::middleware(['auth'])->group(function () {
             Route::put('/update/{id}', [KategoriFasilitasController::class, 'update'])->name('kategoriF.update');
             Route::get('/delete/{id}', [KategoriFasilitasController::class, 'delete'])->name('kategoriF.delete');
             Route::delete('/destroy/{id}', [KategoriFasilitasController::class, 'destroy'])->name('kategoriF.destroy');
+            Route::get('/export_pdf', [KategoriFasilitasController::class, 'exportPdf'])->name('kategoriF.export_pdf');
         });
 
         // Fasilitas
@@ -261,7 +268,7 @@ Route::middleware(['auth'])->group(function () {
         });
 
 
-         // Status (master)
+        // Status (master)
         Route::prefix('status')->group(function () {
             Route::get('/', 'StatusController@index')->name('status.index');
             Route::post('/store', 'StatusController@store')->name('status.store');
@@ -294,8 +301,8 @@ Route::middleware(['auth'])->group(function () {
         });
     });
 
-    Route::middleware(['role:ADM,SPR'])->group(function(){
-        Route::prefix('laporan')->group(function(){
+    Route::middleware(['role:ADM,SPR'])->group(function () {
+        Route::prefix('laporan')->group(function () {
             Route::get('/', [LaporanController::class, 'index'])->name('laporan.index');
             Route::get('/list', [LaporanController::class, 'list'])->name('laporan.list');
             Route::get('/show/{id}', [LaporanController::class, 'show'])->name('laporan.show');
@@ -307,32 +314,31 @@ Route::middleware(['auth'])->group(function () {
             Route::delete('/destroy/{id}', [LaporanController::class, 'destroy'])->name('laporan.destroy');
             Route::get('/get-lantai/{idGedung}', [LaporanController::class, 'getLantai']);
             Route::get('/get-ruangan/{idLantai}', [LaporanController::class, 'getRuangan']);
-            Route::get('/{id}/verifikasi', [LaporanController::class,'formByLaporan']) ->name('laporan.verifikasi.form');
-            Route::post ('/verifikasi', [LaporanController::class,'storeByLaporan'])->name('laporan.verifikasi.store');
+            Route::get('/{id}/verifikasi', [LaporanController::class, 'formByLaporan'])->name('laporan.verifikasi.form');
+            Route::post('/verifikasi', [LaporanController::class, 'storeByLaporan'])->name('laporan.verifikasi.store');
         });
 
-        Route::prefix('laporan-fasilitas')->group(function(){
+        Route::prefix('laporan-fasilitas')->group(function () {
             Route::get('/', [RiwayatLaporanFasilitasController::class, 'index'])->name('riwayat.index');
-            Route::get('/list',[RiwayatLaporanFasilitasController::class, 'list'])->name('riwayat.list');
+            Route::get('/list', [RiwayatLaporanFasilitasController::class, 'list'])->name('riwayat.list');
             Route::get('/{id}/riwayat', [RiwayatLaporanFasilitasController::class, 'show'])->name('riwayat.show');
             Route::get('/{id}/riwayat/edit', [RiwayatLaporanFasilitasController::class, 'edit'])->name('riwayat.edit');
             Route::put('/{id}/riwayat', [RiwayatLaporanFasilitasController::class, 'update'])->name('riwayat.update');
             Route::delete('/{id}', [RiwayatLaporanFasilitasController::class, 'destroy'])->name('riwayat.destroy');
         });
 
-        Route::prefix('spk')->group(function(){
-            Route::get('/', [TopsisController::class,'index'])->name('spk.index');
+        Route::prefix('spk')->group(function () {
+            Route::get('/', [TopsisController::class, 'index'])->name('spk.index');
             Route::post('/hitung', [TopsisController::class, 'hitung'])->name('spk.hitung');
             Route::get('/{id}/edit', [TopsisController::class, 'edit'])->name('spk.edit');
             Route::put('/{id}', [TopsisController::class, 'update'])->name('spk.update');
         });
 
-        Route::prefix('skor-topsis')->group(function() {
-    Route::get('/', [SkorTopsisController::class, 'index'])->name('skorTopsis.index');
-    Route::get('/list', [SkorTopsisController::class, 'list'])->name('skorTopsis.list');
-    Route::post('/assign/{id}', [SkorTopsisController::class, 'assign'])->name('skorTopsis.assign');
-});
-
+        Route::prefix('skor-topsis')->group(function () {
+            Route::get('/', [SkorTopsisController::class, 'index'])->name('skorTopsis.index');
+            Route::get('/list', [SkorTopsisController::class, 'list'])->name('skorTopsis.list');
+            Route::post('/assign/{id}', [SkorTopsisController::class, 'assign'])->name('skorTopsis.assign');
+        });
     });
 
     // Route::middleware(['role:ADM,SPR'])->prefix('riwayat')->group(function () {
@@ -342,16 +348,16 @@ Route::middleware(['auth'])->group(function () {
     // });
 
     Route::middleware('auth')
-     ->prefix('riwayatPelapor')
-     ->name('riwayatPelapor.')
-     ->group(function(){
-        Route::get('/',    [RiwayatLaporanFasilitasController::class,'index'])->name('index');
-        Route::get('/{id}',[RiwayatLaporanFasilitasController::class,'show'])->name('show');
-        // hanya ketika status terakhir = Edit Laporan
-    Route::get('/{id}/edit',   [RiwayatLaporanFasilitasController::class,'edit'])->name('edit');
-    Route::put('/{id}',        [RiwayatLaporanFasilitasController::class,'update'])->name('update');
-     });
-    
+        ->prefix('riwayatPelapor')
+        ->name('riwayatPelapor.')
+        ->group(function () {
+            Route::get('/',    [RiwayatLaporanFasilitasController::class, 'index'])->name('index');
+            Route::get('/{id}', [RiwayatLaporanFasilitasController::class, 'show'])->name('show');
+            // hanya ketika status terakhir = Edit Laporan
+            Route::get('/{id}/edit',   [RiwayatLaporanFasilitasController::class, 'edit'])->name('edit');
+            Route::put('/{id}',        [RiwayatLaporanFasilitasController::class, 'update'])->name('update');
+        });
+
     Route::prefix('profile')->group(function () {
         Route::get('/', [ProfileController::class, 'index'])->name('profile.index');
         Route::get('/edit', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -362,7 +368,7 @@ Route::middleware(['auth'])->group(function () {
 
 
 
-    
+
     Route::get('/icons', function () {
         return view('pages.icons.index');
     });

@@ -34,21 +34,22 @@ class RuanganController extends Controller
                 $urlDel  = route('ruangan.delete',         $row->id_ruangan);
 
                 return <<<HTML
-<div class="btn-group">
-  <!-- Detail ↪ fasilitas -->
-  <button onclick="window.location='$urlFas'" class="btn btn-success btn-sm">
-    <i class="mdi mdi-format-list-bulleted"></i>
-  </button>
-  <!-- Edit -->
-  <button onclick="modalAction('$urlEdit')" class="btn btn-warning btn-sm">
-    <i class="mdi mdi-pencil"></i>
-  </button>
-  <!-- Delete -->
-  <button onclick="modalAction('$urlDel')" class="btn btn-danger btn-sm">
-    <i class="mdi mdi-delete"></i>
-  </button>
-</div>
-HTML;
+                <!-- Detail ↪ fasilitas -->
+                <button onclick="window.location='$urlFas'" class="btn btn-success btn-sm m-1">
+                <i class="mdi mdi-format-list-bulleted m-0"></i>
+                </button>
+
+                <!-- Edit -->
+                <button onclick="modalAction('$urlEdit')" class="btn btn-warning btn-sm m-1">
+                <i class="mdi mdi-pencil m-0"></i>
+                </button>
+
+                <!-- Delete -->
+                <button onclick="modalAction('$urlDel')" class="btn btn-danger btn-sm m-1">
+                <i class="mdi mdi-delete m-0"></i>
+                </button>
+                </button>
+                HTML;
             })
             ->rawColumns(['aksi'])
             ->make(true);

@@ -24,18 +24,18 @@ class FasilitasController extends Controller
 
         return DataTables::of($qry)
             ->addIndexColumn()
-            ->addColumn('aksi', function($row){
-                $edit = route('fasilitas.edit',$row->id_fasilitas);
-                $del  = route('fasilitas.delete',$row->id_fasilitas);
-                return "
-                  <button onclick=\"modalAction('$edit')\" class=\"btn btn-sm btn-warning\">
-                    <i class=\"mdi mdi-pencil\"></i>
-                  </button>
-                  <button onclick=\"modalAction('$del')\" class=\"btn btn-sm btn-danger\">
-                    <i class=\"mdi mdi-delete\"></i>
-                  </button>
-                ";
-            })
+->addColumn('aksi', function($row){
+    $edit = route('fasilitas.edit', $row->id_fasilitas);
+    $del  = route('fasilitas.delete', $row->id_fasilitas);
+    return <<<HTML
+    <button onclick="modalAction('$edit')" class="btn btn-sm btn-warning m-1">
+        <i class="mdi mdi-pencil m-0"></i>
+    </button>
+    <button onclick="modalAction('$del')" class="btn btn-sm btn-danger m-1">
+        <i class="mdi mdi-delete m-0"></i>
+    </button>
+    HTML;
+})
             ->rawColumns(['aksi'])
             ->make(true);
     }

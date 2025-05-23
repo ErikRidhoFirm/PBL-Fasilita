@@ -83,29 +83,22 @@
                                 </h5>
                             </div>
                         </div>
-                        <div class="bg-white w-50 pl-3 " style="border-radius: 0 0 0 30px; margin-top: -1px; ">
-                            <div class="stretch-card transparent h-100 pb-3">
-                                <div class="card card-dark-blue" style="border-radius: 0 30px 0 30px;">
-                                    <div class="card-body d-flex flex-column justify-content-end">
-                                        <h3>100%</h3>
-                                        <h5>Setiap laporan segera diproses</h5>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+<div class="bg-white w-50 pl-3" style="border-radius: 0 0 0 30px; margin-top: -1px;">
+    <div class="stretch-card transparent h-100 pb-3">
+<div class="card card-dark-blue d-flex" style="border-radius: 0 30px 0 30px; height: 100%;">
+    <div class="card-body d-flex justify-content-center align-items-center text-center w-100" style="height: 100%;">
+        <h5 class="m-0" style="line-height: 1.6;">
+            Laporan Ditindaklanjuti Dengan<br>
+            Cepat & Tepat
+        </h5>
+    </div>
+</div>
+
+    </div>
+</div>
                     </div>
 
-                    <div class="w-100">
-                        <div class="col-md-6 grid-margin stretch-card">
-                            <div class="card">
-                                <div class="card-body text-center">
-                                    <h4>Temukan Masalah di Sekitarmu?</h4>
-                                    <p>Sudah 124 mahasiswa menggunakan FASILITA minggu ini!</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-7"></div>
-                    </div>
+                    
                 </div>
             </div>
         </div>

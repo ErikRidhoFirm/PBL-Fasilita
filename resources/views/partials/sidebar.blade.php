@@ -1,4 +1,4 @@
-<nav class="sidebar sidebar-offcanvas w-auto" id="sidebar">
+<nav class="sidebar sidebar-offcanvas w-auto position-fixed" id="sidebar">
     <ul class="nav">
 
         {{-- Dashboard (all users) --}}

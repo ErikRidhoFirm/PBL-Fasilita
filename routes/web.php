@@ -320,6 +320,7 @@ Route::middleware(['auth'])->group(function () {
             Route::delete('/destroy/{id}', [LaporanController::class, 'destroy'])->name('laporan.destroy');
             Route::get('/get-lantai/{idGedung}', [LaporanController::class, 'getLantai']);
             Route::get('/get-ruangan/{idLantai}', [LaporanController::class, 'getRuangan']);
+            Route::get('/get-fasilitas/{idRuangan}', [LaporanController::class, 'getFasilitas']);
             Route::get('/{id}/verifikasi', [LaporanController::class, 'formByLaporan'])->name('laporan.verifikasi.form');
             Route::post('/verifikasi', [LaporanController::class, 'storeByLaporan'])->name('laporan.verifikasi.store');
         });

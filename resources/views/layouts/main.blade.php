@@ -63,7 +63,7 @@
                 <!-- content-wrapper ends -->
 
                 <!-- partial:partials/_footer.html -->
-                @in        clude('partials.footer')
+                @include('partials.footer')
                 <!-- partial -->
             </div>
             <!-- main-panel ends -->

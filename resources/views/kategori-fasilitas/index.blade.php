@@ -7,19 +7,24 @@
             <div class="d-flex justify-content-between align-items-center">
                 <h3 class="card-title my-5 w-25">Data Kategori Fasilitas</h3>
                 <div>
-                    <button class="btn btn-danger btn-sm mr-2" style="min-width: 80px; height: 40px;">
-                        <a href="{{ route('kategoriF.export_pdf') }}"
-                        class="text-white text-decoration-none d-flex align-items-center justify-content-center w-100 h-100"
-                        target="_blank">
-                            <i class="fa fa-file-pdf mr-1"></i> PDF
-                        </a>
-                    </button>
-                    <button class="btn btn-primary btn-sm" 
-                            onclick="modalAction('{{ url('kategori-fasilitas/create') }}')"
-                            style="min-width: 120px; height: 40px;">
-                        Tambah Kategori Fasilitas
-                    </button>
-                </div>
+                <button class="btn btn-danger btn-sm mr-2" style="min-width: 80px; height: 40px;">
+                    <a href="{{ route('kategoriF.export_pdf') }}"
+                    class="text-white text-decoration-none d-flex align-items-center justify-content-center w-100 h-100"
+                    target="_blank">
+                        <i class="fa fa-file-pdf mr-1"></i> PDF
+                    </a>
+                </button>
+                <button class="btn btn-success btn-sm mr-2"
+                        onclick="modalAction('{{ route('kategoriF.import') }}')"
+                        style="min-width: 100px; height: 40px;">
+                    <i class="fa fa-file-import mr-1"></i> Import
+                </button>
+                <button class="btn btn-primary btn-sm"
+                        onclick="modalAction('{{ route('kategoriF.create') }}')"
+                        style="min-width: 120px; height: 40px;">
+                    Tambah Kategori Fasilitas
+                </button>
+            </div>
             </div>
                 <div class="table-responsive">
                     @if (session('success'))

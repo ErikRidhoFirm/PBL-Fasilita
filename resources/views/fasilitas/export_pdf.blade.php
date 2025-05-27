@@ -72,7 +72,7 @@ img.image{
 </table>
 
 <h3 class="text-center">
-    Laporan Data Fasilitas {{ $lantai->nama_lantai }} - {{ $gedung->nama_gedung }}
+    Laporan Data Fasilitas {{ $lantai->nomor_lantai }} - {{ $gedung->nama_gedung }}
 </h3>
 
 <table class="border-all">

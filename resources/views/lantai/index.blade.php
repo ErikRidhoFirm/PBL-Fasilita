@@ -41,7 +41,7 @@
 
     <!-- Tombol Import -->
     <button class="btn btn-success btn-sm mr-2 d-flex align-items-center justify-content-center"
-            style="min-width: 120px; height: 40px;"
+            style="min-width: 100px; height: 40px;"
             onclick="modalAction('{{ route('gedung.lantai.import', $gedung->id_gedung) }}')">
       <i class="fa fa-file-import mr-1"></i> Import
     </button>
@@ -55,7 +55,7 @@
 </div>
 
 
-    <table class="table table-striped" id="table-lantai">
+    <table class="table table-hover table-striped" id="table-lantai">
       <thead>
         <tr>
           <th>No</th>

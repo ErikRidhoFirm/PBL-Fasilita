@@ -31,6 +31,12 @@
         <i class="fa fa-file-pdf mr-1"></i> PDF
       </a>
     </button>
+
+    <button class="btn btn-success btn-sm mr-2" 
+            onclick="modalAction('{{ route('lantai.ruangan.import', $lantai) }}')" 
+            style="min-width: 100px; height: 40px;">
+      <i class="fa fa-file-import"></i> Import
+    </button>
     <button class="btn btn-primary btn-sm" 
             onclick="modalAction('{{ route('lantai.ruangan.create', $lantai) }}')" 
             style="min-width: 120px; height: 40px;"> Tambah Ruangan
@@ -38,7 +44,7 @@
   </div>
 </div>
 
-    <table class="table table-hover" id="table-ruangan">
+    <table class="table table-hover table-striped" id="table-ruangan">
       <thead>
         <tr>
           <th>No</th>

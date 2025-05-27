@@ -86,6 +86,8 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/delete/{id}', [KategoriKerusakanController::class, 'delete'])->name('kategori_kerusakan.delete');
             Route::delete('/destroy/{id}', [KategoriKerusakanController::class, 'destroy'])->name('kategori_kerusakan.destroy');
             Route::get('/export_pdf', [KategoriKerusakanController::class, 'exportPdf'])->name('kategori_kerusakan.export_pdf');
+            Route::get('/import', [KategoriKerusakanController::class, 'import'])->name('kategori_kerusakan.import');
+            Route::post('/import_ajax', [KategoriKerusakanController::class, 'importAjax'])->name('kategori_kerusakan.import_ajax');
         });
 
         // Pengguna
@@ -173,6 +175,8 @@ Route::middleware(['auth'])->group(function () {
                     Route::get('create', [RuanganController::class, 'create'])->name('create');
                     Route::post('store', [RuanganController::class, 'store'])->name('store');
                     Route::get('export_pdf', [RuanganController::class, 'exportPdf'])->name('export_pdf');
+                    Route::get('import', [RuanganController::class, 'import'])->name('import');
+                    Route::post('import', [RuanganController::class, 'importAjax'])->name('import_ajax');
                 }
             );
 
@@ -212,6 +216,8 @@ Route::middleware(['auth'])->group(function () {
                     Route::get('create',  [FasilitasController::class, 'create'])->name('create');
                     Route::post('store',  [FasilitasController::class, 'store'])->name('store');
                     Route::get('export-pdf', [FasilitasController::class, 'exportPdf'])->name('export_pdf');
+                    Route::get('import',     [FasilitasController::class, 'import'])->name('import');
+                    Route::post('import-ajax', [FasilitasController::class, 'importAjax'])->name('import_ajax');
                 }
             );
 
@@ -264,6 +270,8 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/delete/{id}', [KategoriFasilitasController::class, 'delete'])->name('kategoriF.delete');
             Route::delete('/destroy/{id}', [KategoriFasilitasController::class, 'destroy'])->name('kategoriF.destroy');
             Route::get('/export_pdf', [KategoriFasilitasController::class, 'exportPdf'])->name('kategoriF.export_pdf');
+            Route::get('/kategori-fasilitas/import', [KategoriFasilitasController::class, 'import'])->name('kategoriF.import');
+            Route::post('/kategori-fasilitas/import-ajax', [KategoriFasilitasController::class, 'importAjax'])->name('kategoriF.import_ajax');
         });
 
         // Fasilitas

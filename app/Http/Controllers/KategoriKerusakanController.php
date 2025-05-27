@@ -6,6 +6,7 @@ use App\Models\KategoriKerusakan;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class KategoriKerusakanController extends Controller
@@ -205,4 +206,62 @@ class KategoriKerusakanController extends Controller
 
         return $pdf->stream('Laporan_Kategori_Kerusakan_' . date('Y-m-d_H-i-s') . '.pdf');
     }
+
+    public function import()
+    {
+        return view('kategori_kerusakan.import');
+    }
+
+    public function importAjax(Request $request)
+    {
+        if ($request->ajax() || $request->wantsJson()) {
+            $rules = [
+                'file_kategori_kerusakan' => ['required', 'mimes:xlsx', 'max:2048'],
+            ];
+            $validator = Validator::make($request->all(), $rules);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Validasi Gagal',
+                    'msgField' => $validator->errors(),
+                ]);
+            }
+
+            $file = $request->file('file_kategori_kerusakan');
+            $reader = IOFactory::createReader('Xlsx');
+            $reader->setReadDataOnly(true);
+            $spreadsheet = $reader->load($file->getPathname());
+            $sheet = $spreadsheet->getActiveSheet();
+            $rows = $sheet->toArray(null, true, true, true);
+
+            $insert = [];
+            foreach ($rows as $i => $row) {
+                if ($i === 1) continue; // Skip header
+                if (empty($row['A']) && empty($row['B'])) continue;
+                $insert[] = [
+                    'kode_kerusakan' => $row['A'],
+                    'nama_kerusakan' => $row['B'],
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ];
+            }
+
+            if (count($insert) === 0) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Tidak ada data yang diimport'
+                ]);
+            }
+
+            KategoriKerusakan::insertOrIgnore($insert);
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Data berhasil diimport'
+            ]);
+        }
+
+        return redirect()->route('kategori_kerusakan.index');
+    }
+
 }

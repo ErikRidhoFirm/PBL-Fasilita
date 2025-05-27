@@ -71,7 +71,7 @@ img.image {
     </tr>
 </table>
 
-<h3 class="text-center">Laporan Data Ruangan {{ $lantai->nomor_lantai }} </h3>
+<h3 class="text-center">Laporan Data Ruangan {{ $lantai->nomor_lantai }} - {{ $lantai->gedung->nama_gedung ?? '-' }} </h3>
 
 <table class="border-all">
     <thead>

@@ -14,6 +14,11 @@
                                 <i class="fa fa-file-pdf mr-1"></i> PDF
                             </a>
                         </button>
+                        <button class="btn btn-success btn-sm mr-2" 
+                                onclick="modalAction('{{ route('kategori_kerusakan.import') }}')"
+                                style="min-width: 100px; height: 40px;">
+                            <i class="fa fa-file-import"></i> Import
+                        </button>
                         <button class="btn btn-primary btn-sm" 
                                 onclick="modalAction('{{ url('kategori_kerusakan/create') }}')"
                                 style="min-width: 120px; height: 40px;">

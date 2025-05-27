@@ -186,6 +186,6 @@ class LantaiController extends Controller
         $pdf = PDF::loadView('lantai.export_pdf', compact('gedung', 'lantai'))
                 ->setPaper('A4', 'portrait');
 
-        return $pdf->stream('Laporan_Lantai_Gedung_' . $gedung->nama_gedung . '_' . date('Y-m-d_H-i-s') . '.pdf');
+        return $pdf->stream('Laporan_Lantai_Gedung_' . $gedung->nama_gedung . '_' . date('Y-m-d_H') . '.pdf');
     }
 }

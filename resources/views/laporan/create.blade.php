@@ -17,25 +17,35 @@
                 <form class="my-5 col-9 w-100" id="form-tambah" method="post">
                     @csrf
                     <input type="hidden" name="id_pengguna" value="{{ $authUser->id_pengguna }}">
-                    <select class="form-control text-dark" id="inputGedung" name="id_gedung" required>
-                        <option value="">Pilih Gedung</option>
-                        @foreach ($gedung as $g)
-                            <option value="{{ $g->id_gedung }}">{{ $g->nama_gedung }}</option>
-                        @endforeach
-                    </select>
+                    <div class="form-group">
+                        <select class="form-control text-dark border-primary" id="inputGedung" name="id_gedung">
+                            <option value="">Pilih Gedung</option>
+                            @foreach ($gedung as $g)
+                                <option value="{{ $g->id_gedung }}">{{ $g->nama_gedung }}</option>
+                            @endforeach
+                        </select>
+                        <small id="error-id_gedung" class="error-text form-text text-danger"></small>
+                    </div>
+
                     {{-- Lantai & Ruangan --}}
                     <div class="my-5 d-flex justify-content-between gap-5" style="gap: 20px">
-                        <select class="form-control text-dark" id="inputLantai" name="id_lantai" disabled required>
-                            <option value="">Pilih Lantai</option>
-                        </select>
-
-                        <select class="form-control text-dark" id="inputRuangan" name="id_ruangan" disabled required>
-                            <option value="">Pilih Ruangan</option>
-                        </select>
+                        <div class="form-group w-100">
+                            <select class="form-control text-dark " id="inputLantai" name="id_lantai" disabled>
+                                <option value="">Pilih Lantai</option>
+                            </select>
+                            <small id="error-id_lantai" class="error-text form-text text-danger"></small>
+                        </div>
+                        <div class="form-group w-100">
+                            <select class="form-control text-dark " id="inputRuangan" name="id_ruangan" disabled>
+                                <option value="">Pilih Ruangan</option>
+                            </select>
+                            <small id="error-id_ruangan" class="error-text form-text text-danger"></small>
+                        </div>
                     </div>
+
                     {{-- Container --}}
-                    <div class="px-4 py-2 border border-secondary rounded-lg d-flex flex-column justify-content-center"
-                        style="min-height: 200px">
+                    <div class="px-4 py-2 border border-primary rounded-lg d-flex flex-column justify-content-center"
+                        style="min-height: 200px" id="container-fasilitas">
                         <div id="laporan-fasilitas">
 
                         </div>
@@ -49,6 +59,7 @@
                             </button>
                         </div>
                     </div>
+                    <small id="error-fasilitas-row" class="error-text form-text text-danger"></small>
 
                     <button type="submit" class="btn btn-lg w-100 my-5 btn-primary">
                         <h4 class="my-0">Simpan</h4>
@@ -75,25 +86,46 @@
                             dibuat-buat dapat menghambat proses perbaikan fasilitas. Pastikan laporan sesuai dengan kondisi
                             sebenarnya agar dapat segera ditindaklanjuti oleh tim kami.
                         </p>
-                        <select class="form-control text-dark" id="inputKategori" name="idKerusakan" required>
-                            <option value="">Pilih Kategori Kerusakan</option>
-                            @foreach ($kategoriKerusakan as $kk)
-                                <option value="{{ $kk->id_kategori_kerusakan }}">{{ $kk->nama_kerusakan }}</option>
-                            @endforeach
-                        </select>
-                        <div class="my-2 d-flex justify-content-between " style="gap: 20px">
-                            <select class="form-control text-dark" id="inputFasilitas" name="idFasilitas" required>
-                                <option value="">Pilih Fasilitas</option>
+                        <div class="form-group">
+                            <select class="form-control text-dark border-primary" id="inputKategori"
+                                name="id_kategori_kerusakan">
+                                <option value="">Pilih Kategori Kerusakan</option>
+                                @foreach ($kategoriKerusakan as $kk)
+                                    <option value="{{ $kk->id_kategori_kerusakan }}">{{ $kk->nama_kerusakan }}</option>
+                                @endforeach
                             </select>
-                            <input type="number" name="jumlah_kerusakan" id="jumlahKerusakan" class="form-control" placeholder="Jumlah Kerusakan"
-                                min="1" max="" required>
+                            <small id="error-id_kategori_kerusakan" class="error-text form-text text-danger"></small>
                         </div>
-                        <h5 for="" class="mt-5">Bukti Foto</h5>
-                        <input type="file" name="" id="inputFoto" class="form-control" required>
-                        <h5 for="" class="mt-5">Deskripsi</h5>
-                        <textarea name="deskripsi" id="inputDeskripsi" cols="30" rows="5" class="form-control"
-                            placeholder="Masukkan Deskripsi Kerusakan" required></textarea>
+
+                        <div class="my-2 d-flex justify-content-between " style="gap: 20px">
+                            <div class="form-group w-100">
+                                <select class="form-control text-dark" id="inputFasilitas" name="id_fasilitas">
+                                    <option value="">Pilih Fasilitas</option>
+                                </select>
+                                <small id="error-id_fasilitas" class="error-text form-text text-danger"></small>
+                            </div>
+                            <div class="form-group w-100">
+                                <input type="number" name="jumlah_kerusakan" id="jumlahKerusakan"
+                                    class="form-control border-primary" placeholder="Jumlah Kerusakan" min="1"
+                                    max="">
+                                <small id="error-jumlah_kerusakan" class="error-text form-text text-danger"></small>
+                            </div>
+                        </div>
+                        <div class="form-group w-100">
+                            <h5 for="" class="mt-5">Bukti Foto</h5>
+                            <input type="file" name="path_foto" id="inputFoto" class="form-control border-primary">
+                            <small id="error-path_foto" class="error-text form-text text-danger"></small>
+                        </div>
+
+                        <div class="form-group w-100">
+                            <h5 for="" class="mt-5">Deskripsi</h5>
+                            <textarea name="deskripsi" id="inputDeskripsi" cols="30" rows="5" class="form-control border-primary"
+                                placeholder="Masukkan Deskripsi Kerusakan"></textarea>
+                            <small id="error-deskripsi" class="error-text form-text text-danger"></small>
+                        </div>
+
                     </div>
+                    <small id="error-lantai-ruangan" class="error-text form-text text-danger"></small>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-warning" data-dismiss="modal">Tutup</button>
                         <button type="submit" class="btn btn-primary" id="simpanPelaporan">Simpan</button>
@@ -114,6 +146,7 @@
         let fileArray = [];
         // form select change
         $(function() {
+            // Gedung
             $('#inputGedung').on('change', function() {
                 const idGedung = $(this).val();
                 const $inputLantai = $('#inputLantai');
@@ -128,16 +161,21 @@
                     $.get(`/laporan/get-lantai/${idGedung}`, function(data) {
                         if (Array.isArray(data) && data.length > 0) {
                             $inputLantai.prop('disabled', false);
+                            $inputLantai.addClass('border-primary');
                             data.forEach(item => {
                                 $inputLantai.append(
                                     `<option value="${item.id_lantai}">${item.nomor_lantai}</option>`
                                 );
                             });
+                        } else {
+                            $inputLantai.prop('disabled', true);
+                            $inputLantai.removeClass('border-primary');
                         }
                     });
                 }
             });
 
+            // Lantai
             $('#inputLantai').on('change', function() {
                 const idLantai = $(this).val();
                 const $inputRuangan = $('#inputRuangan');
@@ -149,17 +187,21 @@
                     $.get(`/laporan/get-ruangan/${idLantai}`, function(data) {
                         if (Array.isArray(data) && data.length > 0) {
                             $inputRuangan.prop('disabled', false);
+                            $inputRuangan.addClass('border-primary');
                             data.forEach(item => {
                                 $inputRuangan.append(
                                     `<option value="${item.id_ruangan}">${item.nama_ruangan}</option>`
                                 );
                             });
+                        } else {
+                            $inputRuangan.prop('disabled', true);
+                            $inputRuangan.removeClass('border-primary');
                         }
                     });
                 }
             });
 
-
+            // Ruangan
             $('#inputRuangan').on('change', function() {
                 const idRuangan = $(this).val();
                 const $inputFasilitas = $('#inputFasilitas');
@@ -171,12 +213,17 @@
                 if (idRuangan) {
                     $.get(`/laporan/get-fasilitas/${idRuangan}`, function(data) {
                         if (Array.isArray(data) && data.length > 0) {
+                            $inputFasilitas.prop('disabled', false);
+                            $inputFasilitas.addClass('border-primary');
                             data.forEach(item => {
                                 // Misalnya item.jumlah berisi jumlah maksimal fasilitas
                                 $inputFasilitas.append(
                                     `<option value="${item.id_fasilitas}" data-max="${item.jumlah_fasilitas}">${item.nama_fasilitas}</option>`
                                 );
                             });
+                        } else {
+                            $inputFasilitas.prop('disabled', true);
+                            $inputFasilitas.removeClass('border-primary');
                         }
                     });
                 }
@@ -195,8 +242,79 @@
             });
         });
 
+        // validasi form
+        $(function() {
+            $("#form-tambah").validate({
+                rules: {
+                    id_gedung: {
+                        required: true,
+                    },
+                    id_lantai: {
+                        required: true,
+                    },
+                    id_ruangan: {
+                        required: true,
+                    }
+                },
+                errorElement: 'span',
+                errorPlacement: function(error, element) {
+                    error.addClass('invalid-feedback');
+                    element.closest('.form-group').append(error);
+                },
+                highlight: function(element, errorClass, validClass) {
+                    $(element).addClass('border-danger');
+                },
+                unhighlight: function(element, errorClass, validClass) {
+                    $(element).removeClass('border-danger');
+                }
+            })
+        })
+
+        // validasi form modal
+        $(function() {
+            $('#form-tambah-modal').validate({
+                rules: {
+                    id_kategori_kerusakan: {
+                        required: true
+                    },
+                    id_fasilitas: {
+                        required: true
+                    },
+                    jumlah_kerusakan: {
+                        required: true,
+                        number: true,
+                        min: 1,
+                        max: function() {
+                            return $('#inputFasilitas option:selected').data('max') || 999;
+                        }
+                    },
+                    path_foto: {
+                        required: true
+                    },
+                    deskripsi: {
+                        required: true
+                    }
+                },
+                errorElement: 'span',
+                errorPlacement: function(error, element) {
+                    error.addClass('invalid-feedback');
+                    element.closest('.form-group').append(error);
+                },
+                highlight: function(element) {
+                    $(element).addClass('border-danger');
+                },
+                unhighlight: function(element) {
+                    $(element).removeClass('border-danger');
+                }
+            });
+        });
+
         // modal form
         $('#simpanPelaporan').on('click', (e) => {
+
+            const isValidModal = $('#form-tambah-modal').valid();
+            if (!isValidModal) return;
+
             e.preventDefault();
             let inputLaporanModal = {
                 idKerusakan: $('#inputKategori').val(),
@@ -208,10 +326,6 @@
                 deskripsi: $('#inputDeskripsi').val(),
             }
 
-            if (!inputLaporanModal.idKerusakan || !inputLaporanModal.idFasilitas || !inputLaporanModal.deskripsi || !inputLaporanModal.foto || !inputLaporanModal.jumlahKerusakan) {
-                alert("Semua field wajib diisi.");
-                return;
-            }
             fileArray.push(inputLaporanModal.foto);
             tambahRow(inputLaporanModal);
             $('#form-tambah-modal')[0].reset();
@@ -273,18 +387,38 @@
             $('#laporan-fasilitas').append(cardHtml);
         }
 
+        // hapus row
         $('#laporan-fasilitas').on('click', '.btnHapusRow', function() {
             $(this).closest('section').remove();
         });
 
+        // tambah laporan
         $('#form-tambah').on('submit', function(e) {
             e.preventDefault();
+
+            const isValid = $('#form-tambah').valid();
+            if (!isValid) return;
+            if ($('#laporan-fasilitas').children().length === 0) {
+                e.preventDefault();
+                $('#container-fasilitas').removeClass('border-primary');
+                $('#container-fasilitas').addClass('border-danger');
+                $('#error-fasilitas-row').text('At least one report must be added.');
+                $('html, body').animate({
+                    scrollTop: $('#error-fasilitas-row').offset().top - 100
+                }, 500);
+                return false;
+            } else {
+                $('#error-fasilitas-row').text('');
+                $('#container-fasilitas').removeClass('border-danger');
+                $('#container-fasilitas').addClass('border-primary');
+            }
 
             const formData = new FormData(this);
 
             $('#laporan-fasilitas section').each(function(index) {
                 formData.append('id_fasilitas[]', $(this).find('input[name="id_fasilitas[]"]').val());
-                formData.append('id_kategori_kerusakan[]', $(this).find('input[name="id_kategori_kerusakan[]"]').val());
+                formData.append('id_kategori_kerusakan[]', $(this).find(
+                    'input[name="id_kategori_kerusakan[]"]').val());
                 formData.append('jumlah_rusak[]', $(this).find('input[name="jumlah_rusak[]"]').val());
                 formData.append('deskripsi[]', $(this).find('input[name="deskripsi[]"]').val());
                 // file object harus disimpan dari JS array yang kamu pegang sendiri

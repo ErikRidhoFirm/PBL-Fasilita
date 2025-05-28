@@ -1,64 +1,93 @@
 @empty($fasilitas)
-  <div class="modal-dialog"><div class="modal-content">
-    <div class="modal-body">
-      <div class="alert alert-danger">Data tidak ditemukan</div>
-    </div>
+  <div class="modal-dialog modal-dialog-centered"><div class="modal-content">
+    <div class="modal-body"><div class="alert alert-danger">Data tidak ditemukan.</div></div>
   </div></div>
 @else
-<div class="modal-dialog modal-dialog-centered">
-  <div class="modal-content">
+<div class="modal-dialog modal-lg modal-dialog-centered">
+  <div class="modal-content rounded-4 shadow-lg border-0">
 
-    <div class="modal-header bg-warning text-white">
-      <h5 class="modal-title"><i class="mdi mdi-pencil"></i> Edit Fasilitas</h5>
-      <button type="button" class="btn-close btn-close-white"
-              data-bs-dismiss="modal" aria-label="Close"></button>
+    <!-- HEADER -->
+    <div class="modal-header text-white"
+         style="background:linear-gradient(135deg,#eab308 0%,#facc15 100%);">
+      <h5 class="modal-title"><i class="bi bi-pencil-square me-2"></i> Edit Fasilitas</h5>
+      <button type="button" class="btn-close btn-close-white" data-dismiss="modal" aria-label="Close">x</button>
     </div>
 
-    <form id="form-fasilitas-edit"
+    <!-- FORM -->
+    <form id="form-edit-fasilitas"
           action="{{ route('fasilitas.update', $fasilitas) }}"
           method="POST">
       @csrf
       @method('PUT')
+
       <div class="modal-body p-4">
-        <div class="mb-3">
+
+        <div class="form-group mb-3">
           <label>Nama Fasilitas</label>
-          <input name="nama_fasilitas" type="text" class="form-control"
+          <input type="text" name="nama_fasilitas" class="form-control"
                  value="{{ $fasilitas->nama_fasilitas }}" required maxlength="100">
-          <small class="error-text text-danger"></small>
+          <small id="error-nama_fasilitas" class="error-text text-danger small"></small>
         </div>
-        <div class="mb-3">
+
+        <div class="form-group">
           <label>Jumlah</label>
-          <input name="jumlah_fasilitas" type="number" class="form-control"
+          <input type="number" name="jumlah_fasilitas" class="form-control"
                  value="{{ $fasilitas->jumlah_fasilitas }}" required min="1">
-          <small class="error-text text-danger"></small>
+          <small id="error-jumlah_fasilitas" class="error-text text-danger small"></small>
         </div>
+
       </div>
+
       <div class="modal-footer border-0">
-        <button type="button" class="btn btn-light"
-                data-bs-dismiss="modal">Tutup</button>
-        <button type="submit" class="btn btn-primary">Simpan</button>
+        <button type="submit" class="btn btn-primary">
+          <i class="bi bi-save me-1"></i>Simpan
+        </button>
       </div>
     </form>
-
   </div>
 </div>
 
+<!-- ─── Script AJAX khusus modal ini ─── -->
 <script>
-$('#form-fasilitas-edit').on('submit', function(e){
-  e.preventDefault();
-  $.ajax({
-    url: this.action,
-    type: 'PUT',
-    data: $(this).serialize(),
-    success(res){
-      $('#myModal').modal('hide');
-      Swal.fire('Berhasil', res.message, 'success');
-      tableFasilitas.ajax.reload(null,false);
-    },
-    error(err){
-      Swal.fire('Error', err.responseJSON?.message||err.statusText, 'error');
-    }
+$(function () {
+
+  // inisiasi validate
+  $('#form-edit-fasilitas').validate({
+     rules:{
+        nama_fasilitas:{ required:true, maxlength:100 },
+        jumlah_fasilitas:{ required:true, digits:true, min:1 }
+     },
+     submitHandler: sendAjax
   });
+
+  // fungsi kirim AJAX
+  function sendAjax(form){
+      $.ajax({
+        url : form.action,
+        type: form.method,
+        data: $(form).serialize(),
+        success(res){
+          if(res.status){
+            $('#myModal').modal('hide');
+            Swal.fire('Berhasil', res.message, 'success');
+            if(typeof tableFasilitas !== 'undefined'){
+              tableFasilitas.ajax.reload();
+            }
+          }else{
+            $('.error-text').text('');
+            if(res.msgField){
+               $.each(res.msgField, (n,v)=>$('#error-'+n).text(v[0]));
+            }
+            Swal.fire('Gagal', res.message ?? 'Terjadi kesalahan', 'error');
+          }
+        },
+        error(xhr){
+          Swal.fire('Error '+xhr.status, xhr.statusText, 'error');
+        }
+      });
+      return false;
+  }
+
 });
 </script>
 @endempty

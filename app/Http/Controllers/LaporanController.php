@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
+use App\Models\Fasilitas;
 use App\Models\Gedung;
+use App\Models\KategoriKerusakan;
 use App\Models\Lantai;
 use App\Models\Status;
 use App\Models\Laporan;
@@ -100,11 +102,13 @@ class LaporanController extends Controller
         $gedung = Gedung::all();
         $lantai = Lantai::all();
         $ruangan = Ruangan::all();
+        $kategoriKerusakan = KategoriKerusakan::all();
 
         return view('laporan.create', [
             'gedung' => $gedung,
             'lantai' => $lantai,
             'ruangan' => $ruangan,
+            'kategoriKerusakan' => $kategoriKerusakan,
             'activeMenu' => $activeMenu,
             'breadcrumbs' => $breadcrumbs
         ]);
@@ -120,47 +124,73 @@ class LaporanController extends Controller
         return response()->json(Ruangan::where('id_lantai', $idLantai)->get());
     }
 
+    public function getFasilitas($idRuangan)
+    {
+        return response()->json(Fasilitas::where('id_ruangan', $idRuangan)->get());
+    }
+
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
-        // cek apakah request berupa ajax
-        if ($request->ajax() || $request->wantsJson()) {
-            $rules = [
-                'id_pengguna' => 'required|integer',
-                'id_gedung' => 'required|integer',
-                'id_lantai' => 'required|integer',
-                'id_ruangan' => 'required|integer',
-                'is_active' => 'required|string',
-            ];
+        $request->validate([
+            'id_pengguna' => 'required|integer',
+            'id_gedung' => 'required|integer',
+            'id_lantai' => 'required|integer',
+            'id_ruangan' => 'required|integer',
+            'id_fasilitas' => 'required|array',
+            'id_fasilitas.*' => 'required|integer',
+            'id_kategori_kerusakan' => 'required|array',
+            'id_kategori_kerusakan.*' => 'required|integer',
+            'jumlah_rusak' => 'required|array',
+            'jumlah_rusak.*' => 'required|integer|min:1',
+            'deskripsi' => 'required|array',
+            'deskripsi.*' => 'required|string',
+            'path_foto' => 'required|array',
+            'path_foto.*' => 'required|file|image|max:2048', // max 2MB per file
+        ]);
 
-            // use Illuminate\Support\Facades\Validator;
-            $validator = Validator::make($request->all(), $rules);
+        try {
 
-            if ($validator->fails()) {
-                return response()->json([
-                    'status' => false, // response status, false: error/gagal, true: berhasil
-                    'message' => 'Validasi Gagal',
-                    'msgField' => $validator->errors(), // pesan error validasi
-                ]);
-            }
-
-            Laporan::create([
+            // Simpan laporan utama
+            $laporan = Laporan::create([
                 'id_pengguna' => $request->id_pengguna,
                 'id_gedung' => $request->id_gedung,
                 'id_lantai' => $request->id_lantai,
                 'id_ruangan' => $request->id_ruangan,
-                'is_active' => $request->is_active,
-                'created_at' => now()
+                'created_at' => now(),
             ]);
+
+            // Simpan detail laporan
+            foreach ($request->id_fasilitas as $index => $idFasilitas) {
+                $foto = $request->file('path_foto')[$index];
+                $fotoPath = $foto->store('uploads/laporan', 'public');
+
+                LaporanFasilitas::create([
+                    'id_laporan' => $laporan->id_laporan,
+                    'id_fasilitas' => $idFasilitas,
+                    'id_kategori_kerusakan' => $request->id_kategori_kerusakan[$index],
+                    'id_status' => 1,
+                    'jumlah_rusak' => $request->jumlah_rusak[$index],
+                    'deskripsi' => $request->deskripsi[$index],
+                    'path_foto' => $fotoPath,
+                    'is_active' => 1,
+                    'created_at' => now(),
+                ]);
+            }
 
             return response()->json([
                 'status' => true,
-                'message' => 'Data laporan berhasil disimpan'
+                'message' => 'Data laporan berhasil disimpan',
+                'redirect' => url('/laporan')
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Data laporan gagal disimpan: ' . $e->getMessage()
             ]);
         }
-        redirect('/');
     }
 
     public function formByLaporan($id_laporan)

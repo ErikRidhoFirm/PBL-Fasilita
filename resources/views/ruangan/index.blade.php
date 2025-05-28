@@ -21,14 +21,30 @@
   <div class="card">
   <div class="card-body">
 
-    <div class="d-flex justify-content-between mb-3">
-      <button class="btn btn-primary"
-              onclick="modalAction('{{ route('lantai.ruangan.create',$lantai) }}')">
-        <i class="mdi mdi-plus"></i> Tambah Ruangan
-      </button>
-    </div>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+  <h3 class="card-title my-5 w-25">Data Ruangan</h3>
+  <div>
+    <button class="btn btn-danger btn-sm mr-2" style="min-width: 80px; height: 40px;">
+      <a href="{{ route('lantai.ruangan.export_pdf', $lantai->id_lantai) }}"
+         class="text-white text-decoration-none d-flex align-items-center justify-content-center w-100 h-100"
+         target="_blank">
+        <i class="fa fa-file-pdf mr-1"></i> PDF
+      </a>
+    </button>
 
-    <table class="table table-hover" id="table-ruangan">
+    <button class="btn btn-success btn-sm mr-2" 
+            onclick="modalAction('{{ route('lantai.ruangan.import', $lantai) }}')" 
+            style="min-width: 100px; height: 40px;">
+      <i class="fa fa-file-import"></i> Import
+    </button>
+    <button class="btn btn-primary btn-sm" 
+            onclick="modalAction('{{ route('lantai.ruangan.create', $lantai) }}')" 
+            style="min-width: 120px; height: 40px;"> Tambah Ruangan
+    </button>
+  </div>
+</div>
+
+    <table class="table table-hover table-striped" id="table-ruangan">
       <thead>
         <tr>
           <th>No</th>

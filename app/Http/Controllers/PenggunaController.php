@@ -32,34 +32,44 @@ class PenggunaController extends Controller
     }
 
     public function list(Request $request)
-    {
-        $query = Pengguna::select('id_pengguna','username','nama','id_peran')
-                 ->with('peran:id_peran,nama_peran');
+{
+    $query = Pengguna::select('id_pengguna','username','nama','id_peran')
+             ->with('peran:id_peran,nama_peran');
 
-        // filter by role_id jika dikirim
-        if ($request->filled('role_id')) {
-            $query->where('id_peran', $request->role_id);
-        }
-
-        return DataTables::of($query)
-            ->addIndexColumn()
-            ->addColumn('aksi', function ($row) {
-                return '
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-info btn-sm" onclick="modalAction(\'' . route('pengguna.show', $row->id_pengguna) . '\')">
-                            <i class="mdi mdi-eye"></i>
-                        </button>
-                        <button type="button" class="btn btn-warning btn-sm" onclick="modalAction(\'' . route('pengguna.edit', $row->id_pengguna) . '\')">
-                            <i class="mdi mdi-pencil"></i>
-                        </button>
-                        <button type="button" class="btn btn-danger btn-sm" onclick="modalAction(\'' . route('pengguna.delete', $row->id_pengguna) . '\')">
-                            <i class="mdi mdi-delete"></i>
-                        </button>
-                    </div>';
-            })
-            ->rawColumns(['aksi'])
-            ->make(true);
+    // filter by role_id jika dikirim
+    if ($request->filled('role_id')) {
+        $query->where('id_peran', $request->role_id);
     }
+
+    return DataTables::of($query)
+        ->addIndexColumn()
+        ->addColumn('aksi', function ($row) {
+            $editBtn = '<button type="button" 
+                            class="btn btn-warning btn-sm btn-edit d-inline-flex align-items-center justify-content-center" 
+                            style="margin-right: 8px;" 
+                            onclick="modalAction(\'' . route('pengguna.edit', $row->id_pengguna) . '\')">
+                            <i class="mdi mdi-pencil m-0"></i>
+                        </button>';
+
+            $showBtn = '<button type="button" 
+                            class="btn btn-info btn-sm btn-show d-inline-flex align-items-center justify-content-center" 
+                            style="margin-right: 8px;" 
+                            onclick="modalAction(\'' . route('pengguna.show', $row->id_pengguna) . '\')">
+                            <i class="mdi mdi-file-document-box m-0"></i>
+                        </button>';
+
+            $deleteBtn = '<button type="button" 
+                            class="btn btn-danger btn-sm btn-delete d-inline-flex align-items-center justify-content-center" 
+                            onclick="modalAction(\'' . route('pengguna.delete', $row->id_pengguna) . '\')">
+                            <i class="mdi mdi-delete m-0"></i>
+                        </button>';
+
+            return '<div class="d-flex">' . $editBtn . $showBtn . $deleteBtn . '</div>';
+        })
+        ->rawColumns(['aksi'])
+        ->make(true);
+}
+
 
     /**
      * Show the form for creating a new resource.

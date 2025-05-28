@@ -51,7 +51,7 @@
                     </div>
                 @endif
 
-                <form id="form-register" method="POST" action="{{ route('register.store') }}" class="forms-sample"
+                <form id="form-register" method="POST" action="{{ route('register.store') }}" class="forms-sample pr-5"
                     novalidate>
                     @csrf
 
@@ -103,9 +103,34 @@
                 </p>
             </div>
 
-            <div class="col-md-7 rounded-lg px-0"
-                style="background-image: url('{{ asset('assets/images/bg-register2.png') }}'); background-size: cover;">
-                <!-- kanan dekorasi/skydash -->
+            <div class="col-md-7 px-0"
+                style="background-image: url('{{ asset('assets/images/bg-register2.png') }}'); border-radius: 30px">
+                <div class="d-flex flex-column h-100 justify-content-between">
+                    <div class="d-flex flex-row justify-content-between h-25">
+                        <div class="w-50 px-4">
+                            <div class="d-flex justify-content-around align-items-center border border-white text-white py-1 px-2 mt-5 w-100"
+                                style="border-radius: 30px 30px">
+                                <button type="button" class="btn btn-light btn-rounded btn-icon font-weight-bold"
+                                    style="color: #4B49AC">
+                                    <h3 class="m-0 font-weight-bold">?</h3>
+                                </button>
+                                <h5 class="m-0">
+                                    Jangan abaikan kerusakan.
+                                </h5>
+                            </div>
+                        </div>
+                        <div class="bg-white w-50 pl-3 " style="border-radius: 0 0 0 30px; margin-top: -1px; ">
+                            <div class="stretch-card transparent h-100 pb-3">
+                            <div class="card card-dark-blue d-flex" style="border-radius: 0 30px 0 30px; height: 100%;">
+                            <div class="card-body d-flex justify-content-center align-items-center text-center w-100" style="height: 100%;">
+                                <h5 class="m-0" style="line-height: 1.6;">
+                                    Laporan Ditindaklanjuti Dengan<br>
+                                    Cepat & Tepat
+                                </h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </main>

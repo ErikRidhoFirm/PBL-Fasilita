@@ -28,14 +28,34 @@
   <div class="card">
   <div class="card-body">
     <h4 class="card-title">Lantai — {{ $gedung->nama_gedung }}</h4>
-    <div class="mb-3"> <div class="d-flex justify-content-between">{{-- Tombol Kembali ke daftar Gedung --}}
-        </a><button class="btn btn-primary"
-              onclick="modalAction('{{ route('gedung.lantai.create',$gedung) }}')">
-        Tambah Lantai
-      </button></div>
-    </div>
 
-    <table class="table table-striped" id="table-lantai">
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h3 class="card-title my-5 w-25">Data Lantai</h3>
+  <div class="d-flex">
+    <!-- Tombol Export PDF -->
+    <a href="{{ route('gedung.lantai.export_pdf', $gedung->id_gedung) }}"
+       class="btn btn-danger btn-sm mr-2 d-flex align-items-center justify-content-center"
+       style="min-width: 80px; height: 40px;" target="_blank">
+      <i class="fa fa-file-pdf mr-1"></i> PDF
+    </a>
+
+    <!-- Tombol Import -->
+    <button class="btn btn-success btn-sm mr-2 d-flex align-items-center justify-content-center"
+            style="min-width: 100px; height: 40px;"
+            onclick="modalAction('{{ route('gedung.lantai.import', $gedung->id_gedung) }}')">
+      <i class="fa fa-file-import mr-1"></i> Import
+    </button>
+
+    <!-- Tombol Tambah -->
+    <button class="btn btn-primary btn-sm d-flex align-items-center justify-content-center"
+            style="min-width: 120px; height: 40px;"
+            onclick="modalAction('{{ route('gedung.lantai.create', $gedung->id_gedung) }}')">Tambah Lantai
+    </button>
+  </div>
+</div>
+
+
+    <table class="table table-hover table-striped" id="table-lantai">
       <thead>
         <tr>
           <th>No</th>

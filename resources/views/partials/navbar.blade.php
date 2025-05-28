@@ -90,6 +90,9 @@
         </li> --}}
         <li class="nav-item d-none d-lg-flex bg-transparent">
           <a class="nav-link" href="{{ route('profile.index') }}" >
+            <span class="mx-2">
+              {{ $authUser->username }}
+            </span>
             <img src="{{ $authUser->foto_profile ? asset('foto/' . $authUser->foto_profile) : asset('foto/default.jpg') }}" class="rounded-circle" alt="profile" style="max-height: 40px"/>
           </a>
         </li>

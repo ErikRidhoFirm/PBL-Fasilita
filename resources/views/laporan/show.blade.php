@@ -50,7 +50,8 @@
                         <div class="row my-2 py-3 border border-dark rounded-lg shadow-lg">
                             <div class="col-3"><img src="{{ asset('storage/' . $lf->path_foto) }}"
                                     class="w-100 h-100 border rounded-lg" alt=""
-                                    style="overflow: hidden; object-fit: cover; object-position: center"></div>
+                                    style="overflow: hidden; object-fit: cover; object-position: center">
+                                </div>
                             <div class="col-9">
                                 <table class="">
                                     <tr>

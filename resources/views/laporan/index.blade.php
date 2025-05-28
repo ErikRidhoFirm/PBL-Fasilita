@@ -17,7 +17,7 @@
                     @if (session('error'))
                         <div class="alert alert-danger">{{ session('error') }}</div>
                     @endif
-                    <table class="table table-hover table-striped" id="table-peran">
+                    <table class="table table-hover table-striped" id="table-Laporan">
                         <thead>
                             <tr>
                                 <th>No</th>
@@ -53,7 +53,7 @@
 
         var tableLaporan;
         $(document).ready(function() {
-            tableLaporan = $('#table-peran').DataTable({
+            tableLaporan = $('#table-Laporan').DataTable({
                 processing: true,
                 serverSide: true,
                 ajax: {

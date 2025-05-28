@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('foto_profile')->nullable();
             $table->timestamps();
 
-            $table->foreign('id_peran')->references('id_peran')->on('peran');
+            $table->foreign('id_peran')->references('id_peran')->on('peran')->onDelete('cascade');
         });
     }
 

@@ -19,10 +19,10 @@ return new class extends Migration
             $table->unsignedBigInteger('id_ruangan')->index();
             $table->timestamps();
 
-            $table->foreign('id_pengguna')->references('id_pengguna')->on('pengguna');
-            $table->foreign('id_gedung')->references('id_gedung')->on('gedung');
-            $table->foreign('id_lantai')->references('id_lantai')->on('lantai');
-            $table->foreign('id_ruangan')->references('id_ruangan')->on('ruangan');
+            $table->foreign('id_pengguna')->references('id_pengguna')->on('pengguna')->onDelete('cascade');
+            $table->foreign('id_gedung')->references('id_gedung')->on('gedung')->onDelete('cascade');
+            $table->foreign('id_lantai')->references('id_lantai')->on('lantai')->onDelete('cascade');
+            $table->foreign('id_ruangan')->references('id_ruangan')->on('ruangan')->onDelete('cascade');
         });
     }
 

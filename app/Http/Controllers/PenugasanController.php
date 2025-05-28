@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Status;
+use App\Models\Penilaian;
 use App\Models\Penugasan;
+use App\Models\Perbaikan;
 use Illuminate\Http\Request;
 use App\Models\LaporanFasilitas;
 use Illuminate\Support\Facades\Auth;
@@ -42,7 +44,7 @@ class PenugasanController extends Controller
                 return "<button class='btn btn-sm btn-outline-primary btn-detail'
                             data-bs-toggle='modal'
                             data-bs-target='#dynamicModal'
-                            data-url='".route('laporanFasilitas.show', $p->id_laporan_fasilitas)."'>
+                            data-url='".route('penugasan.show', $p->id_laporan_fasilitas)."'>
                             <i class='mdi mdi-wrench'></i>
                         </button>";
             })
@@ -68,16 +70,18 @@ class PenugasanController extends Controller
 
     public function perbaikanSubmit(Request $r, $id)
     {
-        $lapfas = LaporanFasilitas::findOrFail($id);
 
         // validasi
         $r->validate([
             'foto_perbaikan'      => 'required|image|max:4096',
             'deskripsi_perbaikan' => 'required|string',
+            'jenis_perbaikan'    => 'required|in:perbaikan,penggantian',
         ]);
 
+        $penugasan = Penugasan::where('id_laporan_fasilitas',$id)->first();
+
         // pastikan direktori uploads/perbaikan ada
-        $perbaikanDir = public_path('uploads/perbaikan');
+        $perbaikanDir = public_path('storage/uploads/perbaikan');
         if (! File::isDirectory($perbaikanDir)) {
             File::makeDirectory($perbaikanDir, 0755, true);
         }
@@ -88,11 +92,15 @@ class PenugasanController extends Controller
         $file->move($perbaikanDir, $filename);
         $path     = "uploads/perbaikan/{$filename}";
 
-        // update laporan fasilitas
-        $lapfas->update([
-            'path_foto_perbaikan' => $path,
+        Perbaikan::create([
+            'id_penugasan'        => $penugasan->id_penugasan,
+            'foto_perbaikan'      => $path,
             'deskripsi_perbaikan' => $r->deskripsi_perbaikan,
-            'id_status'           => Status::SELESAI,  // atau konstanta sesuai
+            'jenis_perbaikan'     => $r->jenis_perbaikan,
+        ]);
+
+        LaporanFasilitas::where('id_laporan_fasilitas', $id)->update([
+            'id_status' => Status::SELESAI,
         ]);
 
         // buat catatan riwayat

@@ -20,12 +20,12 @@
         {{-- Banner Foto Kerusakan --}}
         @if($lf->path_foto)
         <div class="mb-4 text-center">
-            <a href="{{ $lf->path_foto ? asset('uploads/laporan/'. $lf->path_foto) : asset('storage/'.$lf->path_foto) }}"
+            <a href="{{ $lf->path_foto ? asset('storage/'. $lf->path_foto) : asset('storage/'.$lf->path_foto) }}"
                data-bs-toggle="tooltip"
                data-bs-placement="bottom"
                title="Lihat gambar penuh"
                target="_blank"> <img
-                    src="{{ $lf->path_foto ? asset('uploads/laporan/'. $lf->path_foto) : asset('storage/'.$lf->path_foto) }}"
+                    src="{{ $lf->path_foto ? asset('storage/'. $lf->path_foto) : asset('storage/'.$lf->path_foto) }}"
                     alt="Foto Kerusakan: {{ !empty($lf->deskripsi) ? Str::limit($lf->deskripsi, 50) : 'Laporan Fasilitas' }}"
                     class="img-fluid rounded-3 mw-100 shadow"
                     style="max-height: 450px; object-fit: contain; border: 1px solid #dee2e6;">

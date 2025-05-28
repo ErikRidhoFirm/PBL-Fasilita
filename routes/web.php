@@ -302,12 +302,11 @@ Route::middleware(['auth'])->group(function () {
             Route::post ('/verifikasi', [LaporanController::class,'storeByLaporan'])->name('laporan.verifikasi.store');
         });
 
-        Route::prefix('laporan-fasilitas')->group(function(){
+        Route::prefix('riwayat-laporan')->group(function(){
             Route::get('/', [RiwayatLaporanFasilitasController::class, 'index'])->name('riwayat.index');
             Route::get('/list',[RiwayatLaporanFasilitasController::class, 'list'])->name('riwayat.list');
             Route::get('/{id}/riwayat', [RiwayatLaporanFasilitasController::class, 'show'])->name('riwayat.show');
-            Route::get('/{id}/riwayat/edit', [RiwayatLaporanFasilitasController::class, 'edit'])->name('riwayat.edit');
-            Route::put('/{id}/riwayat', [RiwayatLaporanFasilitasController::class, 'update'])->name('riwayat.update');
+            Route::get('/detail-modal/{id}', [RiwayatLaporanFasilitasController::class,'detailModal'])->name('riwayat.detailModal');
             Route::delete('/{id}', [RiwayatLaporanFasilitasController::class, 'destroy'])->name('riwayat.destroy');
         });
 
@@ -337,10 +336,10 @@ Route::middleware(['auth'])->group(function () {
         Route::prefix('penugasan')->group(function(){
             Route::get('/', [PenugasanController::class,'index'])->name('penugasan.index');
             Route::get('/list', [PenugasanController::class,'list'])->name('penugasan.list');
+            Route::get('/{id}/show', [PenugasanController::class, 'perbaikanForm'])->name('penugasan.show');
         });
 
-        Route::get('laporan-fasilitas/{id}/show', [PenugasanController::class, 'perbaikanForm'])->name('laporanFasilitas.show');
-        Route::post('laporan-fasilitas/{id}/perbaikan', [PenugasanController::class,'perbaikanSubmit'])->name('laporanFasilitas.perbaikan.submit');
+        Route::post('/{id}/perbaikan', [PenugasanController::class,'perbaikanSubmit'])->name('laporanFasilitas.perbaikan.submit');
 
 
     });

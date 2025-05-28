@@ -54,6 +54,14 @@
           <input type="file" name="foto_perbaikan" class="form-control" required>
         </div>
         <div class="mb-3">
+          <label class="form-label">Jenis Perbaikan</label>
+            <select name="jenis_perbaikan" class="form-select" required>
+                <option value="" disabled selected>Pilih jenis perbaikan</option>
+                <option value="penggantian">Penggantian</option>
+                <option value="perbaikan">Perbaikan</option>
+            </select>
+        </div>
+        <div class="mb-3">
           <label class="form-label">Deskripsi Perbaikan</label>
           <textarea name="deskripsi_perbaikan" class="form-control" rows="3" required></textarea>
         </div>

@@ -106,7 +106,6 @@ public function list(Request $request)
         $sk->laporanFasilitas()->update(['id_status'=>5]);
         $teknisi = Pengguna::findOrFail($r->teknisi_id);
 
-        // buat catatan riwayat
         RiwayatLaporanFasilitas::create([
             'id_laporan_fasilitas' => $sk->id_laporan_fasilitas,
             'id_status'            => Status::DITUGASKAN,

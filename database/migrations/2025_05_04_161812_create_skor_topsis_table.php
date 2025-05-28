@@ -18,8 +18,8 @@ return new class extends Migration
             $table->float('skor');
             $table->timestamps();
 
-            $table->foreign('id_skor_tipe')->references('id_skor_tipe')->on('skor_tipe');
-            $table->foreign('id_laporan_fasilitas')->references('id_laporan_fasilitas')->on('laporan_fasilitas');
+            $table->foreign('id_skor_tipe')->references('id_skor_tipe')->on('skor_tipe')->onDelete('cascade');
+            $table->foreign('id_laporan_fasilitas')->references('id_laporan_fasilitas')->on('laporan_fasilitas')->onDelete('cascade');
         });
     }
 

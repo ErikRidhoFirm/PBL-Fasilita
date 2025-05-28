@@ -26,4 +26,9 @@ class Penugasan extends Model
     {
         return $this->belongsTo(Pengguna::class, 'id_pengguna');
     }
+
+    public function perbaikan()
+    {
+        return $this->hasOne(Perbaikan::class, 'id_penugasan');
+    }
 }

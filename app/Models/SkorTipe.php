@@ -12,7 +12,9 @@ class SkorTipe extends Model
     protected $primaryKey = 'id_skor_tipe';
     protected $table = 'skor_tipe';
     protected $fillable = [
-        'tipe'
+        'tipe',
+        'alt_count',
+        'cri_count',
     ];
 
 

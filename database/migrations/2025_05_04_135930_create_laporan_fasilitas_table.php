@@ -23,10 +23,10 @@ return new class extends Migration
             $table->boolean('is_active')->default(true);
             $table->timestamps();
 
-            $table->foreign('id_laporan')->references('id_laporan')->on('laporan');
-            $table->foreign('id_fasilitas')->references('id_fasilitas')->on('fasilitas');
-            $table->foreign('id_kategori_kerusakan')->references('id_kategori_kerusakan')->on('kategori_kerusakan');
-            $table->foreign('id_status')->references('id_status')->on('status');
+            $table->foreign('id_laporan')->references('id_laporan')->on('laporan')->onDelete('cascade');
+            $table->foreign('id_fasilitas')->references('id_fasilitas')->on('fasilitas')->onDelete('cascade');
+            $table->foreign('id_kategori_kerusakan')->references('id_kategori_kerusakan')->on('kategori_kerusakan')->onDelete('cascade');
+            $table->foreign('id_status')->references('id_status')->on('status')->onDelete('cascade');
         });
     }
 

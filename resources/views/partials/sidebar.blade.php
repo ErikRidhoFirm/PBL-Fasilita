@@ -166,39 +166,53 @@
       {{-- EXTERNAL USER MENU (MHS/DSN/TDK) --}}
       {{-- ============================= --}}
       @if(auth()->user()->hasAnyRole(['MHS','DSN','TDK']))
-      <li class="nav-item">
-                <a class="nav-link" data-toggle="collapse" href="#user-management"
-                    aria-expanded="false" aria-controls="user-management">
-                    <i class="fas fa-users-cog menu-icon"></i>
-                    <span class="menu-title">Pelaporan</span>
-                    <i class="menu-arrow"></i>
-                </a>
-                <div class="collapse" id="user-management" data-parent="#sidebar">
-                    <ul class="nav flex-column sub-menu">
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('laporan.index') }}">
-                                <i class="fas fa-user-shield menu-icon"></i> Buat Laporan
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('riwayatPelapor.index') }}">
-                                <i class="fas fa-user-friends menu-icon"></i> Riwayat Laporan
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="collapse" href="#user-management"
+                aria-expanded="false" aria-controls="user-management">
+                <i class="fas fa-file-alt menu-icon"></i> <!-- Ikon dokumen/laporan -->
+                <span class="menu-title">Pelaporan</span>
+                <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="user-management" data-parent="#sidebar">
+                <ul class="nav flex-column sub-menu">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('laporan.index') }}">
+                            <i class="fas fa-plus-circle menu-icon"></i> <!-- Ikon tambah/buat baru -->
+                            Buat Laporan
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('riwayatPelapor.index') }}">
+                            <i class="fas fa-history menu-icon"></i> <!-- Ikon riwayat -->
+                            Riwayat Laporan
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </li>
       @endif
 
       {{-- ============================= --}}
       {{-- TECHNICIAN MENU               --}}
       {{-- ============================= --}}
       @if(auth()->user()->hasRole('TNS'))
-        <li class="nav-item">
-          <a class="nav-link" href="{{ route('tugas.index') }}">
-            <i class="icon-wrench menu-icon"></i>
-            <span class="menu-title">Daftar Tugas</span>
-          </a>
+      <li class="nav-item">
+            <a class="nav-link" data-toggle="collapse" href="#user-management"
+                aria-expanded="false" aria-controls="user-management">
+                <i class="fas fa-file-alt menu-icon"></i> <!-- Ikon dokumen/laporan -->
+                <span class="menu-title">Penugasan</span>
+                <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="user-management" data-parent="#sidebar">
+                <ul  class="nav flex-column sub-menu">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('penugasan.index') }}">
+                            <i class="mdi mdi-clipboard-text"></i>
+                            <span>Daftar Tugas</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </li>
       @endif
 

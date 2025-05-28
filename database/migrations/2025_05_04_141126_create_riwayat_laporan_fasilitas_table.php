@@ -19,9 +19,9 @@ return new class extends Migration
             $table->text('catatan');
             $table->timestamps();
 
-            $table->foreign('id_laporan_fasilitas')->references('id_laporan_fasilitas')->on('laporan_fasilitas');
-            $table->foreign('id_status')->references('id_status')->on('status');
-            $table->foreign('id_pengguna')->references('id_pengguna')->on('pengguna');
+            $table->foreign('id_laporan_fasilitas')->references('id_laporan_fasilitas')->on('laporan_fasilitas')->onDelete('cascade');
+            $table->foreign('id_status')->references('id_status')->on('status')->onDelete('cascade');
+            $table->foreign('id_pengguna')->references('id_pengguna')->on('pengguna')->onDelete('cascade');
         });
     }
 

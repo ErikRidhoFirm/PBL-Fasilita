@@ -45,13 +45,13 @@ class RiwayatPelaporController extends Controller
         $lf = LaporanFasilitas::with([
                     'laporan',
                     'fasilitas.ruangan.lantai.gedung',
-                    'status','riwayat.status','riwayat.pengguna'
+                    'status','riwayatLaporanFasilitas.status','riwayatLaporanFasilitas.pengguna'
                 ])
                 ->whereHas('laporan', fn($q)=> $q->where('id_pengguna',Auth::id()))
                 ->findOrFail($id);
 
         // cek apakah status terakhir = Edit Laporan
-        $last = $lf->riwayat->sortBy('created_at')->last();
+        $last = $lf->riwayatLaporanFasilitas->sortBy('created_at')->last();
 
         return view('riwayatPelapor.show', [
             'lf'      => $lf,
@@ -61,50 +61,47 @@ class RiwayatPelaporController extends Controller
 
     public function edit($id)
     {
-        $lf = LaporanFasilitas::with('riwayat.status')
+        $lf = LaporanFasilitas::with('riwayatLaporanFasilitas.status')
                 ->whereHas('laporan', fn($q)=> $q->where('id_pengguna',Auth::id()))
                 ->findOrFail($id);
 
         // hanya jika status terakhir = Edit Laporan
-        $last = $lf->riwayat->sortBy('created_at')->last();
-        if (! $last || $last->status->nama_status !== 'Edit Laporan') {
-            abort(403, 'Anda tidak diizinkan mengedit laporan ini.');
-        }
+        $last = $lf->riwayatLaporanFasilitas->sortBy('created_at')->last();
+           if (!$last || !in_array($last->status->id_status, [1, 2])) {
+                abort(403, 'Anda tidak diizinkan mengedit laporan ini.');
+            }
 
         return view('riwayatPelapor.edit', compact('lf'));
     }
 
-    public function update(Request $r, $id)
+    public function update(Request $request, $id)
     {
-        $lf = LaporanFasilitas::whereHas('laporan', fn($q)=> $q->where('id_pengguna',Auth::id()))
+        $lf = LaporanFasilitas::whereHas('laporan', fn($q) => $q->where('id_pengguna', Auth::id()))
                 ->findOrFail($id);
 
-        // validasi input
-        $r->validate([
-            'jumlah_rusak' => 'required|integer|min:1',
-            'deskripsi'    => 'required|string',
-            'path_foto'    => 'nullable|image|max:2048',
+        $validated = $request->validate([
+            'deskripsi' => 'required|string',
+            'path_foto' => 'nullable|image|max:2048',
         ]);
 
-        // simpan perubahan
-        $lf->jumlah_rusak = $r->input('jumlah_rusak');
-        $lf->deskripsi    = $r->input('deskripsi');
-        if ($file = $r->file('path_foto')) {
-            $lf->path_foto = $file->store('laporan_foto','public');
-        }
-        // kembalikan ke “Menunggu Aktivasi” (id_status=1)
-        $lf->id_status = 1;
-        $lf->save();
+        // Update record
+        $lf->update([
+            'deskripsi' => $validated['deskripsi'],
+            'path_foto' => $request->file('path_foto') ?
+                        $request->file('path_foto')->store('laporan_foto', 'public') :
+                        $lf->path_foto,
+            'id_status' => 1
+        ]);
 
-        // catat riwayat
-        $lf->riwayat()->create([
-            'id_status'   => 1,
+        // Add history record
+        $lf->riwayatLaporanFasilitas()->create([
+            'id_status' => 1,
             'id_pengguna' => Auth::id(),
-            'catatan'     => 'Mahasiswa edit ulang laporan',
+            'catatan' => 'Mahasiswa edit ulang laporan',
         ]);
 
-        return redirect()
-               ->route('riwayatPelapor.show',$id)
-               ->with('success','Laporan diperbarui. Menunggu konfirmasi admin.');
+        return response()->json([
+            'message' => 'Laporan berhasil diperbarui!'
+        ]);
     }
 }

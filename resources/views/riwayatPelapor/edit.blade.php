@@ -7,22 +7,19 @@
   $fasilitas= $lf->fasilitas;
   $kategori = $lf->kategoriKerusakan;
 @endphp
+<div class="modal-content">
+  <div class="modal-header bg-warning text-dark">
+    <h5 class="modal-title">
+      <i class="mdi mdi-pencil-box me-2"></i>Edit Laporan
+    </h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  </div>
 
-<div class="modal-dialog modal-lg modal-dialog-centered">
-  <div class="modal-content">
-
-    <div class="modal-header bg-warning text-dark">
-      <h5 class="modal-title">
-        <i class="mdi mdi-pencil-box me-2"></i>Edit Laporan
-      </h5>
-      <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-    </div>
-
-    <form id="form-edit-laporan"
-          action="{{ route('riwayatPelapor.update', $lf->id_laporan_fasilitas) }}"
-          method="POST"
-          enctype="multipart/form-data">
-      @csrf @method('PUT')
+  <form id="form-edit-laporan"
+        action="{{ route('riwayatPelapor.update', $lf->id_laporan_fasilitas) }}"
+        method="POST"
+        enctype="multipart/form-data">
+    @csrf @method('PUT')
 
       <div class="modal-body">
 
@@ -91,49 +88,65 @@
 
       </div> {{-- /.modal-body --}}
 
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-          Batal
-        </button>
-        <button type="submit" class="btn btn-primary">
-          Simpan Perubahan
-        </button>
-      </div>
-    </form>
-  </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+        <i class="mdi mdi-close me-1"></i> Batal
+      </button>
+      <button type="submit" class="btn btn-warning">
+        <i class="mdi mdi-content-save me-1"></i> Simpan
+      </button>
+    </div>
+  </form>
 </div>
 
 {{-- JS untuk AJAX submit --}}
 <script>
-  $('#form-edit-laporan').on('submit', function(e) {
+$(document).ready(function() {
+  // Delegate form submission to the document level
+  $(document).on('submit', '#form-edit-laporan', function(e) {
     e.preventDefault();
-    const $f = $(this),
-          url = $f.attr('action'),
-          data = new FormData(this);
+    const $form = $(this);
+    const submitBtn = $form.find('button[type="submit"]');
+    const originalText = submitBtn.html();
+
+    // Show loading state
+    submitBtn.prop('disabled', true).html(`
+      <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+      Menyimpan...
+    `);
 
     $.ajax({
-      url: url,
-      method: 'POST',        // Laravel expects POST + hidden _method=PUT
-      data: data,
+      url: $form.attr('action'),
+      method: 'POST',
+      data: new FormData(this),
       processData: false,
       contentType: false,
-      success(res) {
+      success: function(response) {
         $('#myModal').modal('hide');
-        Swal.fire('Berhasil', res.message, 'success');
-        // refresh tabel riwayat
-        if (window.tableRiwayat) tableRiwayat.ajax.reload();
+        Swal.fire({
+          title: 'Berhasil!',
+          text: response.message,
+          icon: 'success'
+        }).then(() => {
+          window.location.reload();
+        });
       },
-      error(xhr) {
-        // validasi & error handling
-        let errs = xhr.responseJSON.errors || {};
-        Object.keys(errs).forEach(field => {
-          const $inp = $f.find('[name="'+field+'"]');
-          $inp.addClass('is-invalid')
-               .closest('.mb-3')
-               .append('<div class="invalid-feedback">'+ errs[field][0] +'</div>');
+      error: function(xhr) {
+        submitBtn.prop('disabled', false).html(originalText);
+
+        // Clear previous errors
+        $form.find('.is-invalid').removeClass('is-invalid');
+        $form.find('.invalid-feedback').remove();
+
+        // Show new errors
+        const errors = xhr.responseJSON?.errors || {};
+        Object.keys(errors).forEach(field => {
+          const $input = $form.find(`[name="${field}"]`);
+          $input.addClass('is-invalid')
+                .after(`<div class="invalid-feedback">${errors[field][0]}</div>`);
         });
       }
     });
-    return false;
   });
+});
 </script>

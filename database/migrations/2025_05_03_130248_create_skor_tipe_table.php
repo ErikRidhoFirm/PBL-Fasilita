@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('skor_tipe', function (Blueprint $table) {
             $table->id('id_skor_tipe');
             $table->enum('tipe', ['mahasiswa', 'dosen', 'tendik', 'global']);
+            $table->unsignedInteger('alt_count');
+            $table->unsignedInteger('cri_count');
             $table->timestamps();
         });
     }

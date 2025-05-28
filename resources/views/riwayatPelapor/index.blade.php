@@ -19,7 +19,7 @@
         // fallback jika ada status baru
         $m = $icons[$status] ?? ['mdi-file-outline','text-secondary'];
       @endphp
-      
+
 
       <div class="col-6 col-md-4 col-lg-2">
         <div class="card border-0 shadow-sm rounded-3 h-100">
@@ -74,12 +74,13 @@
                 <td>
                   @php
                     $badge = match($item->status->nama_status){
-                      'Menunggu Aktivasi'=>'bg-warning text-dark',
-                      'Aktivasi Laporan'=>'bg-success',
-                      'Laporan Diproses'=>'bg-primary',
-                      'Laporan Diterima'=>'bg-success',
-                      'Laporan Ditolak'=>'bg-danger',
-                      'Edit Laporan'=>'bg-info text-white',
+                      'Menunggu'=>'bg-warning text-dark',
+                      'Selesai'=>'bg-success text-light',
+                      'Valid'=>'bg-primary text-light',
+                      'Tidak Valid'=>'bg-warning text-dark',
+                      'Ditolak'=>'bg-danger text-light',
+                      'Ditugaskan'=>'bg-info text-light',
+                      'Ditutup'=>'bg-secondary',
                       default=>'bg-secondary',
                     };
                   @endphp
@@ -89,10 +90,12 @@
                 </td>
                 <td>
                   {{-- Tombol Edit --}}
-                  <a href="{{ route('riwayatPelapor.edit', $item->id_laporan_fasilitas) }}"
-                     class="btn btn-sm btn-outline-warning me-1">
-                    <i class="mdi mdi-pencil-box-outline"></i>
-                  </a>
+                   @if(in_array($item->status->id_status, [1, 2]))
+                        <button onclick="modalAction('{{ route('riwayatPelapor.edit', $item->id_laporan_fasilitas) }}')"
+                            class="btn btn-sm btn-outline-warning me-1">
+                            <i class="mdi mdi-pencil-box-outline"></i>
+                        </button>
+                    @endif
                   {{-- Tombol Detail --}}
                   <a href="{{ route('riwayatPelapor.show', $item->id_laporan_fasilitas) }}"
                      class="btn btn-sm btn-outline-primary">
@@ -112,4 +115,20 @@
     </div>
   </div>
 </div>
+
+  <div id="myModal" class="modal fade" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <!-- Modal content will be loaded here -->
+  </div>
+</div>
 @endsection
+
+@push('js')
+<script>
+  function modalAction(url) {
+    $('#myModal .modal-dialog').load(url, function() {
+      $('#myModal').modal('show');
+    });
+  }
+</script>
+@endpush

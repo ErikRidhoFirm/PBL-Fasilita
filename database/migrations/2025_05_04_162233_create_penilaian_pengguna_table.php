@@ -19,8 +19,8 @@ return new class extends Migration
             $table->text('komentar')->nullable();
             $table->timestamps();
 
-            $table->foreign('id_laporan')->references('id_laporan')->on('laporan');
-            $table->foreign('id_pengguna')->references('id_pengguna')->on('pengguna');
+            $table->foreign('id_laporan')->references('id_laporan')->on('laporan')->onDelete('cascade');
+            $table->foreign('id_pengguna')->references('id_pengguna')->on('pengguna')->onDelete('cascade');
         });
     }
 

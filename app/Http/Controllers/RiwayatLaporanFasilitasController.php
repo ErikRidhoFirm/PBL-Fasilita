@@ -71,19 +71,13 @@ class RiwayatLaporanFasilitasController extends Controller
                 $lapfasId = $r->id_laporan_fasilitas;
 
                 $showUrl = route('riwayat.show', $lapfasId);
-                $editUrl = route('riwayat.edit', $lapfasId);
                 $delUrl  = route('riwayat.destroy', $lapfasId);
 
                 return
-                "<button class='btn btn-sm btn-info' onclick=\"modalAction('$showUrl')\">
-                    <i class='mdi mdi-eye'></i>
-                </button> ".
-                "<button class='btn btn-sm btn-warning' onclick=\"modalAction('$editUrl')\">
-                    <i class='mdi mdi-pencil'></i>
-                </button> ".
-                "<button class='btn btn-sm btn-danger btn-delete' data-url='$delUrl'>
-                    <i class='mdi mdi-trash'></i>
-                </button>";
+                "<a href='$showUrl'
+                    class='btn btn-sm btn-outline-primary'>
+                    <i class='mdi mdi-file-document-box'></i>
+                </a> ";
             })
             ->rawColumns(['aksi'])
             ->make(true);
@@ -117,35 +111,39 @@ class RiwayatLaporanFasilitasController extends Controller
                     ->orderBy('created_at')
                     ->get();
 
-        return view('riwayat.show', [
-            'lapfas'   => $lapfas,
-            'riwayats' => $riwayats,
-        ]);
+        return view('riwayat.show', compact('lapfas','riwayats'));
     }
+
+
+    public function detailModal($riwayatId)
+    {
+        $riwayat = RiwayatLaporanFasilitas::with([
+            'laporanFasilitas.fasilitas',
+            'laporanFasilitas.laporan.pengguna',
+            'status',
+            'pengguna.peran',
+            'laporanFasilitas.penilaian.skorKriteriaLaporan.kriteria',
+            'laporanFasilitas.penugasan.perbaikan',
+            'laporanFasilitas.penugasan.teknisi',
+        ])->findOrFail($riwayatId);
+
+        // also find the “Valid” timestamp and “Ditugaskan” timestamp for durasi
+        $all = RiwayatLaporanFasilitas::where('id_laporan_fasilitas', $riwayat->id_laporan_fasilitas)
+                     ->orderBy('created_at')
+                     ->get();
+        $t_valid = optional($all->firstWhere(fn($r)=> $r->status->nama_status==='Valid'))->created_at;
+        $t_tug   = optional($all->firstWhere(fn($r)=> $r->status->nama_status==='Ditugaskan'))->created_at;
+
+        return view('riwayat.detail_modal', compact('riwayat','t_valid','t_tug'));
+    }
+
 
     /**
      * Show the form for editing the specified resource.
      */
     public function edit($lapfasId)
     {
-        // ambil laporan fasilitas beserta relasi untuk header/modal
-        $lapfas = LaporanFasilitas::with([
-            'fasilitas',
-            'laporan.pengguna',
-            'laporan.gedung',
-            'laporan.lantai',
-            'laporan.ruangan',
-        ])->findOrFail($lapfasId);
-
-        // ambil entri riwayat terakhir
-        $riwayat = RiwayatLaporanFasilitas::where('id_laporan_fasilitas', $lapfasId)
-                    ->orderByDesc('id_riwayat_laporan_fasilitas')
-                    ->firstOrFail();
-
-        // semua opsi status
-        $statuses = Status::all();
-
-        return view('riwayat.edit', compact('lapfas','riwayat','statuses'));
+        //
     }
 
     /**
@@ -153,35 +151,7 @@ class RiwayatLaporanFasilitasController extends Controller
      */
     public function update(Request $request, $lapfasId)
     {
-        $request->validate([
-            'riwayat_id'    => 'required|exists:riwayat_laporan_fasilitas,id_riwayat_laporan_fasilitas',
-            'new_status_id' => 'required|exists:status,id_status',
-            'catatan'       => 'nullable|string',
-        ]);
-
-        // ambil laporan fasilitas
-        $lapfas = LaporanFasilitas::findOrFail($lapfasId);
-
-        // cek entri terakhir sesuai riwayat_id
-        $last = RiwayatLaporanFasilitas::where('id_laporan_fasilitas', $lapfasId)
-                  ->orderByDesc('id_riwayat_laporan_fasilitas')
-                  ->first();
-        abort_if($last->id_riwayat_laporan_fasilitas != $request->riwayat_id, 403,
-                 'Hanya entry terakhir yang boleh diubah.');
-
-        // update main status
-        $lapfas->id_status = $request->new_status_id;
-        $lapfas->save();
-
-        // buat entri baru di riwayat
-        RiwayatLaporanFasilitas::create([
-            'id_laporan_fasilitas' => $lapfasId,
-            'id_status'            => $request->new_status_id,
-            'id_pengguna'          => auth()->id(),
-            'catatan'              => $request->catatan,
-        ]);
-
-        return response()->json(['message'=>'Status berhasil diperbarui.']);
+        //
     }
 
     /**
@@ -189,35 +159,6 @@ class RiwayatLaporanFasilitasController extends Controller
      */
     public function destroy($lapfasId)
     {
-        $lf = LaporanFasilitas::whereHas('laporan', fn($q)=> $q->where('id_pengguna',Auth::id()))
-                ->findOrFail($id);
 
-        // validasi input
-        $r->validate([
-            'jumlah_rusak' => 'required|integer|min:1',
-            'deskripsi'    => 'required|string',
-            'path_foto'    => 'nullable|image|max:2048',
-        ]);
-
-        // simpan perubahan
-        $lf->jumlah_rusak = $r->input('jumlah_rusak');
-        $lf->deskripsi    = $r->input('deskripsi');
-        if ($file = $r->file('path_foto')) {
-            $lf->path_foto = $file->store('laporan_foto','public');
-        }
-        // kembalikan ke “Menunggu Aktivasi” (id_status=1)
-        $lf->id_status = 1;
-        $lf->save();
-
-        // catat riwayat
-        $lf->riwayat()->create([
-            'id_status'   => 1,
-            'id_pengguna' => Auth::id(),
-            'catatan'     => 'Mahasiswa edit ulang laporan',
-        ]);
-
-        return redirect()
-               ->route('riwayatPelapor.show',$id)
-               ->with('success','Laporan diperbarui. Menunggu konfirmasi admin.');
     }
 }

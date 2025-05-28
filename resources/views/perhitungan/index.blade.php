@@ -27,47 +27,18 @@
         Berikut adalah data alternatif yang akan dievaluasi beserta skor awal berdasarkan kriteria yang ada. Anda dapat mengubah skor melalui tombol "Edit".
     </p>
     <div class="table-responsive">
-        <table class="table table-bordered table-hover">
-            <thead class="thead-light">
+        <table id="tbl-alternatif" class="table table-bordered">
+            <thead>
                 <tr>
-                    <th>No.</th>
-                    <th>Alternatif (Fasilitas & Pelapor)</th>
-                    @foreach($kriterias as $k)
-                        <th class="text-center">{{ $k->kode_kriteria }} <br><small>({{ $k->tipe_kriteria }})</small></th>
-                    @endforeach
-                    <th class="text-center">Aksi</th>
+                <th>No</th>
+                <th>Alternatif</th>
+                <th>Pelapor</th>
+                @foreach($kriterias as $k)
+                    <th class="text-center">{{ $k->kode_kriteria }}</th>
+                @endforeach
+                <th>Aksi</th>
                 </tr>
             </thead>
-            <tbody>
-                @forelse($alternatifs as $index => $alt)
-                    <tr>
-                        <td>{{ $index + 1 }}</td>
-                        <td>
-                            <strong>{{ $alt->fasilitas->nama_fasilitas }}</strong>
-                            <br><small class="text-muted">Pelapor: {{ $alt->laporan->pengguna->nama }}</small>
-                        </td>
-                        @foreach($kriterias as $k)
-                            @php
-                                $sk = $alt->penilaian
-                                        ->first()?->skorKriteriaLaporan
-                                        ->firstWhere('id_kriteria', $k->id_kriteria);
-                            @endphp
-                            <td class="text-center">{{ $sk->nilai_mentah ?? '-' }}</td>
-                        @endforeach
-                        <td class="text-center">
-                            <button class="btn btn-sm btn-warning" onclick="modalAction('{{ route('spk.edit', $alt->id_laporan_fasilitas) }}')" title="Edit Skor">
-                                <i class="mdi mdi-pencil"></i> Edit
-                            </button>
-                        </td>
-                    </tr>
-                @empty
-                    <tr>
-                        <td colspan="{{ count($kriterias) + 3 }}" class="text-center">
-                            <i class="fas fa-exclamation-circle me-2"></i> Tidak ada data alternatif tersedia.
-                        </td>
-                    </tr>
-                @endforelse
-            </tbody>
         </table>
     </div>
 
@@ -220,33 +191,93 @@
         </table>
       </div>
     @endif
+<div id="modalContainer" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+      <!-- Content will be loaded here by JavaScript -->
+    </div>
 
   </div>
 </div>
 
-{{-- Modal Container --}}
-<div id="modalContainer" class="modal fade" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
-  {{-- Content will be loaded here by JavaScript --}}
-</div>
+
 
 @endsection
 
 @push('js')
 <script>
 function modalAction(url) {
-  // Show a loading state in the modal if needed
-  // $('#modalContainer').html('<div class="modal-dialog"><div class="modal-content"><div class="modal-body"><p>Loading...</p></div></div></div>').modal('show');
   $('#modalContainer').load(url, function() {
-    // Ensure the modal is properly initialized if Skydash uses a specific method
-    // For Bootstrap 5, this should be enough:
-    var modalInstance = new bootstrap.Modal(document.getElementById('modalContainer'));
-    modalInstance.show();
+    $(this).modal('show');
   });
 }
 
-// Ensure modal is properly dismissed to allow reloading content
-$('#modalContainer').on('hidden.bs.modal', function () {
-  $(this).empty(); // Clear content to avoid issues if loaded again
+$(function(){
+  let cols = [
+    { data: 'DT_RowIndex', orderable:false, searchable:false },
+    { data: 'alternatif', orderable:false, searchable:false  },
+    { data: 'pelapor', orderable:false, searchable:false  },
+    @foreach($kriterias as $k)
+      { data: '{{ $k->kode_kriteria }}', orderable:false, searchable:false  },
+    @endforeach
+    { data: 'aksi', orderable:false, searchable:false }
+  ];
+
+  let table = $('#tbl-alternatif').DataTable({
+    processing: true,
+    serverSide: true,
+    ajax: "{!! route('spk.alternatif.list') !!}",
+    columns: cols
+  });
+
+  // Handle edit button clicks
+  $(document).on('click', '.btn-edit', function() {
+    let url = $(this).data('url');
+    modalAction(url);
+  });
+
+  // Handle form submission
+  $(document).on('submit', '#form-edit', function(e) {
+    e.preventDefault();
+    let form = $(this);
+
+    $.ajax({
+      url: form.attr('action'),
+      method: form.attr('method'),
+      data: form.serialize(),
+      success: function(response) {
+        if (response.success) {
+          $('#modalContainer').modal('hide');
+          table.ajax.reload();
+          Swal.fire({
+            icon: 'success',
+            title: 'Berhasil',
+            text: response.message || 'Data berhasil diperbarui'
+          });
+        } else {
+          // Handle validation errors
+          $('.error-text').text('');
+          $.each(response.errors || {}, function(prefix, val) {
+            $('#error-' + prefix).text(val[0]);
+          });
+        }
+      },
+      error: function(xhr) {
+        let errors = xhr.responseJSON?.errors;
+        if (errors) {
+          $('.error-text').text('');
+          $.each(errors, function(prefix, val) {
+            $('#error-' + prefix).text(val[0]);
+          });
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: xhr.responseJSON?.message || 'Terjadi kesalahan'
+          });
+        }
+      }
+    });
+  });
 });
 </script>
+
 @endpush

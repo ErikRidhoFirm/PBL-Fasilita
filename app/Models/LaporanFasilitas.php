@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -26,10 +27,10 @@ class LaporanFasilitas extends Model
         'updated_at',
     ];
 
-   public function laporan()
-{
-    return $this->belongsTo(\App\Models\Laporan::class, 'id_laporan', 'id_laporan');
-}
+    public function laporan(): BelongsTo
+    {
+        return $this->belongsTo(Laporan::class, 'id_laporan', 'id_laporan');
+    }
 
     public function fasilitas(): BelongsTo
     {
@@ -56,9 +57,9 @@ class LaporanFasilitas extends Model
         return $this->hasMany(RiwayatLaporanFasilitas::class, 'id_laporan_fasilitas');
     }
 
-    public function penugasan(): HasMany
+    public function penugasan(): HasOne
     {
-        return $this->hasMany(Penugasan::class, 'id_laporan_fasilitas');
+        return $this->hasOne(Penugasan::class, 'id_laporan_fasilitas');
     }
 
     public function penilaian(): HasMany
@@ -69,10 +70,5 @@ class LaporanFasilitas extends Model
     public function skorTopsis(): HasMany
     {
         return $this->hasMany(SkorTopsis::class, 'id_laporan_fasilitas');
-    }
-
-    public function riwayat(): HasMany
-    {
-        return $this->hasMany(RiwayatLaporanFasilitas::class, 'id_laporan_fasilitas');
     }
 }

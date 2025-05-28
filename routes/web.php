@@ -14,17 +14,16 @@ use App\Http\Controllers\KriteriaController;
 use App\Http\Controllers\PenggunaController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FasilitasController;
+use App\Http\Controllers\PenugasanController;
 use App\Http\Controllers\SkorTopsisController;
 use App\Http\Controllers\VerifikasiController;
+use App\Http\Controllers\RiwayatPelaporController;
 use App\Http\Controllers\SkoringKriteriaController;
 use App\Http\Controllers\LaporanFasilitasController;
 use App\Http\Controllers\KategoriFasilitasController;
 use App\Http\Controllers\KategoriKerusakanController;
 use App\Http\Controllers\RiwayatLaporanFasilitasController;
-
-
-
-
+use App\Models\Penugasan;
 
 /*
 |--------------------------------------------------------------------------
@@ -333,27 +332,46 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/verifikasi', [LaporanController::class, 'storeByLaporan'])->name('laporan.verifikasi.store');
         });
 
-        Route::prefix('laporan-fasilitas')->group(function () {
+        Route::prefix('riwayat-laporan')->group(function(){
             Route::get('/', [RiwayatLaporanFasilitasController::class, 'index'])->name('riwayat.index');
             Route::get('/list', [RiwayatLaporanFasilitasController::class, 'list'])->name('riwayat.list');
             Route::get('/{id}/riwayat', [RiwayatLaporanFasilitasController::class, 'show'])->name('riwayat.show');
-            Route::get('/{id}/riwayat/edit', [RiwayatLaporanFasilitasController::class, 'edit'])->name('riwayat.edit');
-            Route::put('/{id}/riwayat', [RiwayatLaporanFasilitasController::class, 'update'])->name('riwayat.update');
+            Route::get('/detail-modal/{id}', [RiwayatLaporanFasilitasController::class,'detailModal'])->name('riwayat.detailModal');
             Route::delete('/{id}', [RiwayatLaporanFasilitasController::class, 'destroy'])->name('riwayat.destroy');
         });
 
-        Route::prefix('spk')->group(function () {
-            Route::get('/', [TopsisController::class, 'index'])->name('spk.index');
+
+        Route::prefix('spk')->group(function(){
+            Route::get('/', [TopsisController::class,'index'])->name('spk.index');
+            Route::get('/alternatif/list', [TopsisController::class,'listAlternatif'])->name('spk.alternatif.list');
             Route::post('/hitung', [TopsisController::class, 'hitung'])->name('spk.hitung');
             Route::get('/{id}/edit', [TopsisController::class, 'edit'])->name('spk.edit');
             Route::put('/{id}', [TopsisController::class, 'update'])->name('spk.update');
         });
 
-        Route::prefix('skor-topsis')->group(function () {
+        Route::prefix('skor-topsis')->group(function() {
             Route::get('/', [SkorTopsisController::class, 'index'])->name('skorTopsis.index');
             Route::get('/list', [SkorTopsisController::class, 'list'])->name('skorTopsis.list');
-            Route::post('/assign/{id}', [SkorTopsisController::class, 'assign'])->name('skorTopsis.assign');
+            Route::get('/{id}/assign', [SkorTopsisController::class,'assignForm'])->name('skorTopsis.assignForm');
+            Route::post('/{id}/assign', [SkorTopsisController::class,'assign'])->name('skorTopsis.assign');
         });
+
+        Route::prefix('verifikasi-perbaikan')->middleware('role:ADM,SPR')->group(function(){
+            Route::get('{id}/form', [PenugasanController::class,'verifyForm'])->name('verifikasi.perbaikan.form');
+            Route::post('{id}/form', [PenugasanController::class,'verify'])->name('verifikasi.perbaikan.submit');
+        });
+
+    });
+
+    Route::middleware(['role:ADM,TNS'])->group(function(){
+        Route::prefix('penugasan')->group(function(){
+            Route::get('/', [PenugasanController::class,'index'])->name('penugasan.index');
+            Route::get('/list', [PenugasanController::class,'list'])->name('penugasan.list');
+            Route::get('/{id}/show', [PenugasanController::class, 'perbaikanForm'])->name('penugasan.show');
+        });
+
+        Route::post('/{id}/perbaikan', [PenugasanController::class,'perbaikanSubmit'])->name('laporanFasilitas.perbaikan.submit');
+
     });
 
     // Route::middleware(['role:ADM,SPR'])->prefix('riwayat')->group(function () {
@@ -362,16 +380,15 @@ Route::middleware(['auth'])->group(function () {
     //     Route::get('/{id}', [RiwayatVerifikasiController::class, 'show'])->name('riwayat.show');
     // });
 
-    Route::middleware('auth')
-        ->prefix('riwayatPelapor')
-        ->name('riwayatPelapor.')
-        ->group(function () {
-            Route::get('/',    [RiwayatLaporanFasilitasController::class, 'index'])->name('index');
-            Route::get('/{id}', [RiwayatLaporanFasilitasController::class, 'show'])->name('show');
-            // hanya ketika status terakhir = Edit Laporan
-            Route::get('/{id}/edit',   [RiwayatLaporanFasilitasController::class, 'edit'])->name('edit');
-            Route::put('/{id}',        [RiwayatLaporanFasilitasController::class, 'update'])->name('update');
-        });
+
+    Route::middleware('role:MHS, DSN, TDK')->prefix('riwayatPelapor')
+     ->name('riwayatPelapor.')
+     ->group(function(){
+        Route::get('/',    [RiwayatPelaporController::class,'index'])->name('index');
+        Route::get('/{id}',[RiwayatPelaporController::class,'show'])->name('show');
+        Route::get('/{id}/edit',   [RiwayatPelaporController::class,'edit'])->name('edit');
+        Route::put('/{id}',        [RiwayatPelaporController::class,'update'])->name('update');
+    });
 
     Route::prefix('profile')->group(function () {
         Route::get('/', [ProfileController::class, 'index'])->name('profile.index');

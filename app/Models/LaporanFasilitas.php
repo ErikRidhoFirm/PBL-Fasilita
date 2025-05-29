@@ -71,4 +71,9 @@ class LaporanFasilitas extends Model
     {
         return $this->hasMany(SkorTopsis::class, 'id_laporan_fasilitas');
     }
+
+    public function penilaianPengguna(): HasOne
+    {
+        return $this->hasOne(PenilaianPengguna::class, 'id_laporan_fasilitas');
+    }
 }

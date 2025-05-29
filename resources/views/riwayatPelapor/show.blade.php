@@ -186,18 +186,113 @@
     </div>
   </div> {{-- End of Riwayat Status Card --}}
 
+  @php
+    $last = $lf->status->nama_status;
+     use Illuminate\Support\Str;
+  @endphp
+@if($last==='Selesai' && !$lf->penilaianPengguna)
+  <div class="text-center my-4">
+    <button id="btnFeedback" class="btn btn-outline-primary">
+      <i class="mdi mdi-star-outline me-1"></i> Berikan Feedback
+    </button>
+  </div>
+@elseif($last==='Selesai' && $lf->penilaianPengguna)
+  <div class="card shadow-sm my-4">
+    <div class="card-header bg-light py-3 d-flex justify-content-between align-items-center">
+    <h5 class="mb-0">Feedback Anda</h5>
+    <div class="d-flex">
+        <button id="btnEditFeedback"
+            class="btn btn-sm btn-outline-warning me-1"
+            title="Edit Feedback"
+            data-edit-url="{{ route('feedback.edit', $lf->penilaianPengguna->id_penilaian_pengguna) }}">
+        <i class="mdi mdi-pencil"></i>
+        </button>
+        <button id="btnDeleteFeedback"
+            class="btn btn-sm btn-outline-danger"
+            title="Hapus Feedback"
+            data-delete-url="{{ route('feedback.delete', $lf->penilaianPengguna->id_penilaian_pengguna) }}">
+        <i class="mdi mdi-delete"></i>
+        </button>
+    </div>
+  </div>
+    <div class="card-body">
+      <div class="mb-2">
+        {{-- Bintang rating --}}
+        @for($i = 1; $i <= 5; $i++)
+          @if($i <= $lf->penilaianPengguna->nilai)
+            <i class="mdi mdi-star fs-4 text-warning me-1"></i>
+          @else
+            <i class="mdi mdi-star-outline fs-4 text-muted me-1"></i>
+          @endif
+        @endfor
+      </div>
+      <p class="text-muted fst-italic">
+        {{ $lf->penilaianPengguna->komentar ?: '- Tidak ada komentar -' }}
+      </p>
+    </div>
+  </div>
+@endif
+
 </div>
+{{-- Modal container --}}
+<div id="modalFeedbackContainer" class="modal fade" tabindex="-1" aria-hidden="true"></div>
 
 @endsection
 
 @push('js')
 <script>
-// Initialize Bootstrap Tooltips
-document.addEventListener('DOMContentLoaded', function () {
-  var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-  var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-    return new bootstrap.Tooltip(tooltipTriggerEl)
-  })
-});
+$('#btnFeedback').on('click', ()=> {
+    $('#modalFeedbackContainer').load(
+      "{{ route('feedback.create', $lf->id_laporan_fasilitas) }}",
+      function(){
+        new bootstrap.Modal(this).show();
+      }
+    );
+  });
+
+  // buka form edit di modal
+  $(document).on('click', '#btnEditFeedback', function(){
+    let url = $(this).data('edit-url');
+    if (!url) return; // extra safety
+    $('#modalFeedbackContainer').load(url, function(){
+      new bootstrap.Modal(this).show();
+    });
+  });
+
+  // hapus dengan konfirmasi
+    $('#btnDeleteFeedback').on('click', () => {
+    Swal.fire({
+      title: 'Yakin menghapus feedback?',
+      text: "Tindakan ini tidak dapat dibatalkan.",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Ya, hapus!',
+      cancelButtonText: 'Batal',
+      reverseButtons: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+        let url = $('#btnDeleteFeedback').data('delete-url');
+        $.ajax({
+          url: url,
+          method: 'DELETE',
+          data: { _token: '{{ csrf_token() }}' },
+        }).done(res => {
+          if (res.status === 'success') {
+            Swal.fire({
+              icon: 'success',
+              title: 'Terhapus',
+              text: res.message,
+              timer: 1500,
+              showConfirmButton: false
+            }).then(() => location.reload());
+          } else {
+            Swal.fire('Gagal', res.message, 'error');
+          }
+        }).fail(() => {
+          Swal.fire('Error', 'Gagal menghapus feedback.', 'error');
+        });
+      }
+    });
+  });
 </script>
 @endpush

@@ -52,7 +52,7 @@
         <div class="mb-3">
           <label class="form-label">Kategori Kerusakan</label>
           <input type="text" class="form-control"
-                 value="{{ $kategori->nama_kategori_kerusakan }}" disabled>
+                 value="{{ $kategori->nama_kerusakan }}" disabled>
         </div>
 
         {{-- Foto saat ini --}}

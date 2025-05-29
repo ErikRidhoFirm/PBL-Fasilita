@@ -143,19 +143,34 @@
       {{-- SARPRAS MENU                  --}}
       {{-- ============================= --}}
       @if(auth()->user()->hasRole('SPR'))
+         {{--SPK & Criteria --}}
         <li class="nav-item">
-          <a class="nav-link" data-toggle="collapse" href="#task-management" aria-expanded="false">
-            <i class="icon-wrench menu-icon"></i>
-            <span class="menu-title">Manajemen Tugas</span>
+          <a class="nav-link" data-toggle="collapse" href="#spk-management" aria-expanded="false">
+            <i class="fas fa-calculator menu-icon"></i>
+            <span class="menu-title">SPK & Kriteria</span>
             <i class="menu-arrow"></i>
           </a>
-          <div class="collapse" id="task-management">
+          <div class="collapse" id="spk-management">
             <ul class="nav flex-column sub-menu">
               <li class="nav-item">
-                {{-- <a class="nav-link" href="{{ route('spk.topsis') }}">SPK TOPSIS</a> --}}
+                <a class="nav-link" href="{{ route('kriteria.index') }}">
+                    <i class="fas fa-list-ol menu-icon"></i> Kriteria Penilaian
+                </a>
               </li>
               <li class="nav-item">
-                {{-- <a class="nav-link" href="{{ route('penugasan.index') }}">Penugasan Teknisi</a> --}}
+                <a class="nav-link" href="{{ route('skoring.index') }}">
+                     <i class="fas fa-star-half-alt menu-icon"></i> Skoring Kriteria
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ route('spk.index') }}">
+                     <i class="fas fa-calculator menu-icon"></i>Perhitungan
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ route('skorTopsis.index') }}">
+                     <i class="fas fa-tasks menu-icon"></i>Prioritas Perbaikan
+                </a>
               </li>
             </ul>
           </div>

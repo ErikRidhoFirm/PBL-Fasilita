@@ -22,7 +22,9 @@ use App\Http\Controllers\SkoringKriteriaController;
 use App\Http\Controllers\LaporanFasilitasController;
 use App\Http\Controllers\KategoriFasilitasController;
 use App\Http\Controllers\KategoriKerusakanController;
+use App\Http\Controllers\PenilaianPenggunaController;
 use App\Http\Controllers\RiwayatLaporanFasilitasController;
+use App\Models\PenilaianPengguna;
 use App\Models\Penugasan;
 
 /*
@@ -381,14 +383,23 @@ Route::middleware(['auth'])->group(function () {
     // });
 
 
-    Route::middleware('role:MHS, DSN, TDK')->prefix('riwayatPelapor')
-     ->name('riwayatPelapor.')
-     ->group(function(){
-        Route::get('/',    [RiwayatPelaporController::class,'index'])->name('index');
-        Route::get('/{id}',[RiwayatPelaporController::class,'show'])->name('show');
-        Route::get('/{id}/edit',   [RiwayatPelaporController::class,'edit'])->name('edit');
-        Route::put('/{id}',        [RiwayatPelaporController::class,'update'])->name('update');
+    Route::middleware(['role:MHS,DSN,TDK'])->group(function(){
+        Route::prefix('riwayatPelapor')->group(function(){
+            Route::get('/',    [RiwayatPelaporController::class,'index'])->name('riwayatPelapor.index');
+            Route::get('/{id}',[RiwayatPelaporController::class,'show'])->name('riwayatPelapor.show');
+            Route::get('/{id}/edit',  [RiwayatPelaporController::class,'edit'])->name('riwayatPelapor.edit');
+            Route::put('/{id}', [RiwayatPelaporController::class,'update'])->name('riwayatPelapor.update');
+        });
+
+        Route::prefix('feedback')->group(function(){
+            Route::get('{id}/create', [PenilaianPenggunaController::class, 'create'])->name('feedback.create');
+            Route::post('{id}/store', [PenilaianPenggunaController::class, 'store'])->name('feedback.store');
+            Route::get('{id}/edit', [PenilaianPenggunaController::class, 'edit'])->name('feedback.edit');
+            Route::put('{id}/update', [PenilaianPenggunaController::class, 'update'])->name('feedback.update');
+            Route::delete('{id}/destroy', [PenilaianPenggunaController::class, 'destroy'])->name('feedback.delete');
+        });
     });
+
 
     Route::prefix('profile')->group(function () {
         Route::get('/', [ProfileController::class, 'index'])->name('profile.index');

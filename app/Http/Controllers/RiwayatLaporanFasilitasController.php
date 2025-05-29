@@ -99,6 +99,7 @@ class RiwayatLaporanFasilitasController extends Controller
     {
         $lapfas = LaporanFasilitas::with([
             'fasilitas',
+            'penilaianPengguna',
             'kategoriKerusakan',
             'laporan.pengguna',
             'laporan.gedung',

@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\LaporanFasilitas;
+use App\Models\Status;
 use Illuminate\Http\Request;
+use App\Models\LaporanFasilitas;
+use App\Models\PenilaianPengguna;
 use Illuminate\Support\Facades\Auth;
 
 class RiwayatPelaporController extends Controller
@@ -12,20 +14,20 @@ class RiwayatPelaporController extends Controller
     {
         $userId = Auth::id();
 
-        // hitung per-status
+        // hitung per-status sesuai dengan model Status
         $counts = [
-            'Menunggu Aktivasi'   => LaporanFasilitas::whereHas('laporan', fn($q)=> $q->where('id_pengguna',$userId))
-                                        ->where('id_status',1)->count(),
-            'Aktivasi Laporan'    => LaporanFasilitas::whereHas('laporan', fn($q)=> $q->where('id_pengguna',$userId))
-                                        ->where('id_status',2)->count(),
-            'Laporan Diproses'    => LaporanFasilitas::whereHas('laporan', fn($q)=> $q->where('id_pengguna',$userId))
-                                        ->where('id_status',3)->count(),
-            'Laporan Diterima'    => LaporanFasilitas::whereHas('laporan', fn($q)=> $q->where('id_pengguna',$userId))
-                                        ->where('id_status',4)->count(),
-            'Laporan Ditolak'     => LaporanFasilitas::whereHas('laporan', fn($q)=> $q->where('id_pengguna',$userId))
-                                        ->where('id_status',5)->count(),
-            'Edit Laporan'        => LaporanFasilitas::whereHas('laporan', fn($q)=> $q->where('id_pengguna',$userId))
-                                        ->where('id_status',6)->count(),
+            'Menunggu' => LaporanFasilitas::whereHas('laporan', fn($q) => $q->where('id_pengguna', $userId))
+                                ->where('id_status', Status::MENUNGGU)->count(),
+            'Tidak Valid' => LaporanFasilitas::whereHas('laporan', fn($q) => $q->where('id_pengguna', $userId))
+                                ->where('id_status', Status::TIDAK_VALID)->count(),
+            'Ditolak' => LaporanFasilitas::whereHas('laporan', fn($q) => $q->where('id_pengguna', $userId))
+                                ->where('id_status', Status::DITOLAK)->count(),
+            'Valid' => LaporanFasilitas::whereHas('laporan', fn($q) => $q->where('id_pengguna', $userId))
+                                ->where('id_status', Status::VALID)->count(),
+            'Ditugaskan' => LaporanFasilitas::whereHas('laporan', fn($q) => $q->where('id_pengguna', $userId))
+                                ->where('id_status', Status::DITUGASKAN)->count(),
+            'Selesai' => LaporanFasilitas::whereHas('laporan', fn($q) => $q->where('id_pengguna', $userId))
+                                ->where('id_status', Status::SELESAI)->count(),
         ];
 
         $reports = LaporanFasilitas::with([
@@ -33,11 +35,11 @@ class RiwayatPelaporController extends Controller
                         'fasilitas.ruangan.lantai.gedung',
                         'status'
                     ])
-                    ->whereHas('laporan', fn($q)=> $q->where('id_pengguna',$userId))
+                    ->whereHas('laporan', fn($q) => $q->where('id_pengguna', $userId))
                     ->orderByDesc('created_at')
                     ->get();
 
-        return view('riwayatPelapor.index', compact('counts','reports'));
+        return view('riwayatPelapor.index', compact('counts', 'reports'));
     }
 
     public function show($id)
@@ -64,12 +66,6 @@ class RiwayatPelaporController extends Controller
         $lf = LaporanFasilitas::with('riwayatLaporanFasilitas.status')
                 ->whereHas('laporan', fn($q)=> $q->where('id_pengguna',Auth::id()))
                 ->findOrFail($id);
-
-        // hanya jika status terakhir = Edit Laporan
-        $last = $lf->riwayatLaporanFasilitas->sortBy('created_at')->last();
-           if (!$last || !in_array($last->status->id_status, [1, 2])) {
-                abort(403, 'Anda tidak diizinkan mengedit laporan ini.');
-            }
 
         return view('riwayatPelapor.edit', compact('lf'));
     }

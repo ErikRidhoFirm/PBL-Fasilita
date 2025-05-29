@@ -13,13 +13,13 @@ return new class extends Migration
     {
         Schema::create('penilaian_pengguna', function (Blueprint $table) {
             $table->id('id_penilaian_pengguna');
-            $table->unsignedBigInteger('id_laporan')->index();
+            $table->unsignedBigInteger('id_laporan_fasilitas')->index();
             $table->unsignedBigInteger('id_pengguna')->index(); // id mahasiswa, dosen, tendik
             $table->integer('nilai');
             $table->text('komentar')->nullable();
             $table->timestamps();
 
-            $table->foreign('id_laporan')->references('id_laporan')->on('laporan')->onDelete('cascade');
+            $table->foreign('id_laporan_fasilitas')->references('id_laporan_fasilitas')->on('laporan_fasilitas')->onDelete('cascade');
             $table->foreign('id_pengguna')->references('id_pengguna')->on('pengguna')->onDelete('cascade');
         });
     }

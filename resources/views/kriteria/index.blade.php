@@ -25,7 +25,6 @@
                 <th>Nama Kriteria</th>
                 <th>Bobot</th>
                 <th>Tipe</th>
-                <th>Deskripsi</th>
                 <th>Aksi</th>
               </tr>
             </thead>
@@ -74,7 +73,6 @@
         { data: 'nama_kriteria', name: 'nama_kriteria' },
         { data: 'bobot_kriteria', name: 'bobot_kriteria' },
         { data: 'tipe_kriteria', name: 'tipe_kriteria' },
-        { data: 'deskripsi', name: 'deskripsi' },
         { data: 'aksi', name: 'aksi', orderable: false, searchable: false },
       ],
       error: function(xhr) {

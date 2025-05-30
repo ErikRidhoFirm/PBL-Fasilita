@@ -12,7 +12,7 @@
     <h5 class="modal-title">
       <i class="mdi mdi-pencil-box me-2"></i>Edit Laporan
     </h5>
-    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
   </div>
 
   <form id="form-edit-laporan"
@@ -89,7 +89,7 @@
       </div> {{-- /.modal-body --}}
 
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+      <button type="button" class="btn btn-secondary" data-dismiss="modal">
         <i class="mdi mdi-close me-1"></i> Batal
       </button>
       <button type="submit" class="btn btn-warning">

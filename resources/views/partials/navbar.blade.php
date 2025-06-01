@@ -93,7 +93,7 @@
             <span class="mx-2">
               {{ $authUser->username }}
             </span>
-            <img src="{{ $authUser->foto_profile ? asset('foto/' . $authUser->foto_profile) : asset('foto/default.jpg') }}" class="rounded-circle" alt="profile" style="max-height: 40px"/>
+            <img src="{{ $authUser->foto_profile ? asset('storage/uploads/profiles/' . $authUser->foto_profile) : asset('foto/default.jpg') }}" class="rounded-circle" alt="profile" style="max-height: 40px"/>
           </a>
         </li>
         {{-- <li class="nav-item nav-settings d-none d-lg-flex">

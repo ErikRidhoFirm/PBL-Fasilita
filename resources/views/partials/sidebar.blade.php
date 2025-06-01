@@ -191,7 +191,7 @@
             <div class="collapse" id="user-management" data-parent="#sidebar">
                 <ul class="nav flex-column sub-menu">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('laporan.index') }}">
+                        <a class="nav-link" href="{{ route('laporanPelapor.index') }}">
                             <i class="fas fa-plus-circle menu-icon"></i> <!-- Ikon tambah/buat baru -->
                             Buat Laporan
                         </a>

@@ -18,7 +18,7 @@
               <div class="form-group">
                   <label>Foto saat ini:</label><br>
                   <!-- Menampilkan foto profil dengan fallback default jika NULL -->
-                  <img src="{{ $user->foto_profile ? asset('foto/' . $user->foto_profile) : asset('foto/default.jpg') }}" 
+                  <img src="{{ $user->foto_profile ? asset('storage/uploads/profiles/' . $user->foto_profile) : asset('foto/default.jpg') }}"
                        alt="Foto Profil"
                        class="rounded-circle img-fluid mb-2"
                        width="100"><br>

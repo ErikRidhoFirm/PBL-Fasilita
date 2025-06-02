@@ -22,6 +22,7 @@ use App\Http\Controllers\SkoringKriteriaController;
 use App\Http\Controllers\LaporanFasilitasController;
 use App\Http\Controllers\KategoriFasilitasController;
 use App\Http\Controllers\KategoriKerusakanController;
+use App\Http\Controllers\PelaporLaporanFasilitasController;
 use App\Http\Controllers\PenilaianPenggunaController;
 use App\Http\Controllers\RiwayatLaporanFasilitasController;
 use App\Models\PenilaianPengguna;
@@ -290,6 +291,9 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/update/{id}', 'StatusController@update')->name('status.update');
             Route::delete('/destroy/{id}', 'StatusController@destroy')->name('status.destroy');
         });
+    });
+
+    Route::middleware(['role:ADM,SPR'])->group(function () {
 
         // Kriteria & Skoring Kriteria
         Route::prefix('kriteria')->group(function () {
@@ -314,19 +318,17 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/delete/{id}', [SkoringKriteriaController::class, 'confirm'])->name('skoring.confirm');
             Route::delete('/destroy/{id}', [SkoringKriteriaController::class, 'destroy'])->name('skoring.destroy');
         });
-    });
 
-    Route::middleware(['role:ADM,SPR'])->group(function () {
         Route::prefix('laporan')->group(function () {
             Route::get('/', [LaporanController::class, 'index'])->name('laporan.index');
             Route::get('/list', [LaporanController::class, 'list'])->name('laporan.list');
             Route::get('/show/{id}', [LaporanController::class, 'show'])->name('laporan.show');
             Route::get('/create', [LaporanController::class, 'create'])->name('laporan.create');
             Route::post('/store', [LaporanController::class, 'store'])->name('laporan.store');
-            Route::get('/edit/{id}', [LaporanController::class, 'edit'])->name('laporan.edit');
-            Route::put('/update/{id}', [LaporanController::class, 'update'])->name('laporan.update');
-            Route::get('/delete/{id}', [LaporanController::class, 'delete'])->name('laporan.delete');
-            Route::delete('/destroy/{id}', [LaporanController::class, 'destroy'])->name('laporan.destroy');
+            // Route::get('/edit/{id}', [LaporanController::class, 'edit'])->name('laporan.edit');
+            // Route::put('/update/{id}', [LaporanController::class, 'update'])->name('laporan.update');
+            // Route::get('/delete/{id}', [LaporanController::class, 'delete'])->name('laporan.delete');
+            // Route::delete('/destroy/{id}', [LaporanController::class, 'destroy'])->name('laporan.destroy');
             Route::get('/get-lantai/{idGedung}', [LaporanController::class, 'getLantai']);
             Route::get('/get-ruangan/{idLantai}', [LaporanController::class, 'getRuangan']);
             Route::get('/get-fasilitas/{idRuangan}', [LaporanController::class, 'getFasilitas']);
@@ -384,6 +386,19 @@ Route::middleware(['auth'])->group(function () {
 
 
     Route::middleware(['role:MHS,DSN,TDK'])->group(function(){
+        Route::prefix('laporanPelapor')->group(function(){
+            Route::get('/', [LaporanController::class, 'indexPelapor'])->name('laporanPelapor.index');
+            Route::get('/list', [LaporanController::class, 'listPelapor'])->name('laporanPelapor.list');
+            Route::get('/show/{id}', [LaporanController::class, 'show'])->name('laporanPelapor.show');
+            Route::get('/create', [LaporanController::class, 'create'])->name('laporanPelapor.create');
+            Route::post('/store', [LaporanController::class, 'store'])->name('laporanPelapor.store');
+        });
+
+        Route::prefix('vote')->group(function(){
+            Route::post('/{id}/vote', [PelaporLaporanFasilitasController::class, 'vote'])->name('vote.store');
+            Route::delete('/{id}/unvote', [PelaporLaporanFasilitasController::class, 'unvote'])->name('vote.destroy');
+        });
+
         Route::prefix('riwayatPelapor')->group(function(){
             Route::get('/',    [RiwayatPelaporController::class,'index'])->name('riwayatPelapor.index');
             Route::get('/{id}',[RiwayatPelaporController::class,'show'])->name('riwayatPelapor.show');

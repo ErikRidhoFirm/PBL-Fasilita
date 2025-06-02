@@ -16,11 +16,6 @@ class Pengguna extends Authenticatable
     protected $table = 'pengguna';
     protected $primaryKey = 'id_pengguna';
 
-    // 1) Default kolom foto_profile jika null
-    protected $attributes = [
-        'foto_profile' => 'default.jpg',
-    ];
-
     protected $fillable = [
         'id_peran',
         'username',

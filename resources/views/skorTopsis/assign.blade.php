@@ -1,26 +1,90 @@
-<div class="modal-dialog">
+<div class="modal-dialog modal-dialog-centered modal-lg w-75">
   <div class="modal-content">
-    <div class="modal-header">
-      <h5 class="modal-title">Tugaskan: {{ $lap->fasilitas->nama_fasilitas }}</h5>
-      <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    {{-- Header --}}
+    <div class="modal-header bg-primary text-white">
+      <h5 class="modal-title">
+        <i class="mdi mdi-account-wrench-outline me-2"></i>
+        Tugaskan Teknisi
+      </h5>
+      <button type="button" class="btn-close btn-close-white" data-dismiss="modal" aria-label="Close"></button>
     </div>
-    <div class="modal-body">
+
+    {{-- Body --}}
+    <div class="modal-body px-4 py-3">
+      {{-- Tampilkan Foto Fasilitas --}}
+      @if($lap->path_foto)
+        <div class="text-center mb-4">
+          <img src="{{ asset('storage/' . $lap->path_foto) }}"
+               alt="Foto Fasilitas"
+               class="img-fluid rounded"
+               style="max-height: 200px;">
+          <p class="text-muted mt-2 mb-0">Foto Fasilitas</p>
+        </div>
+      @else
+        <div class="alert alert-info mb-4">
+          <i class="mdi mdi-information-outline"></i> Tidak ada foto fasilitas
+        </div>
+      @endif
+      {{-- Tampilkan Data LaporanFasilitas dan Laporan --}}
+      <table class="table table-striped mb-4">
+        <tbody>
+          <tr>
+            <th style="width: 30%;">Nama Fasilitas</th>
+            <td>{{ $lap->fasilitas->nama_fasilitas }}</td>
+          </tr>
+          <tr>
+            <th>Gedung</th>
+            <td>{{ optional($lap->laporan->gedung)->nama_gedung ?? '-' }}</td>
+          </tr>
+          <tr>
+            <th>Lantai</th>
+            <td>{{ optional($lap->laporan->lantai)->nomor_lantai ?? '-' }}</td>
+          </tr>
+          <tr>
+            <th>Ruangan</th>
+            <td>{{ optional($lap->laporan->ruangan)->nama_ruangan ?? '-' }}</td>
+          </tr>
+          <tr>
+            <th>Deskripsi Kerusakan</th>
+            <td>{{ $lap->deskripsi ?? '-' }}</td>
+          </tr>
+          <tr>
+            <th>Pelapor</th>
+            <td>{{ $lap->laporan->pengguna->nama }} <small class="text-muted">({{ $lap->laporan->pengguna->email }})</small></td>
+          </tr>
+          <tr>
+            <th>Tanggal Laporan</th>
+            <td>{{ $lap->laporan->created_at->translatedFormat('d F Y H:i') }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      {{-- Form Input Teknisi --}}
       <form id="form-assign">
         @csrf
-        <div class="mb-3">
-          <label>Pilih Teknisi:</label>
-          <select name="teknisi_id" class="form-select" required>
-            <option value="">-- pilih --</option>
+
+        <div class="form-group mb-4">
+          <label for="teknisi_id" class="form-label fw-semibold">Pilih Teknisi</label>
+          <select name="teknisi_id" id="teknisi_id" class="form-control" required>
+            <option value="" selected>-- Pilih Teknisi --</option>
             @foreach($teknisis as $t)
               <option value="{{ $t->id_pengguna }}">{{ $t->nama }}</option>
             @endforeach
           </select>
+          <small id="error-teknisi_id" class="error-text form-text text-danger"></small>
         </div>
-        <button type="submit" class="btn btn-primary">Tugaskan</button>
+
+        <div class="text-end">
+          <button type="submit" class="btn btn-success">
+            <i class="mdi mdi-send me-1"></i> Tugaskan
+          </button>
+        </div>
       </form>
     </div>
   </div>
 </div>
+
+
 
 <script>
 $(function(){

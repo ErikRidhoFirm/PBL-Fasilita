@@ -1,7 +1,7 @@
 <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <!-- Header Modal -->
-      <div class="modal-header">
+      <div class="modal-header bg-primary text-white">
         <h5 class="modal-title">
           <i class="fas fa-user mr-2"></i>Detail Pengguna
         </h5>
@@ -16,7 +16,7 @@
           <!-- Kolom Foto Profil -->
           <div class="col-md-4 text-center mb-4 mb-md-0">
             <div class="position-relative d-inline-block">
-              <img src="{{ $pengguna->foto_profile ?? asset('images/default-avatar.png') }}"
+              <img src="{{ $pengguna->foto_profile ?? asset('foto/default.jpg') }}"
                    class="img-thumbnail rounded-circle border-primary"
                    style="width: 150px; height: 150px; object-fit: cover; border-width: 3px !important;"
                    alt="Foto Profil">

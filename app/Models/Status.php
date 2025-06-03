@@ -16,6 +16,14 @@ class Status extends Model
         'nama_status',
     ];
 
+    public const MENUNGGU                = 1;
+    public const TIDAK_VALID       = 2;
+    public const DITOLAK          = 3;
+    public const VALID           = 4;
+    public const DITUGASKAN                = 5;
+    public const SELESAI                 = 6;
+    public const DITUTUP                 = 7;
+
     public function laporan(): HasMany
     {
         return $this->hasMany(Laporan::class, 'id_status');

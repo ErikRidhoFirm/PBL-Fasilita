@@ -19,8 +19,8 @@ return new class extends Migration
             $table->integer('jumlah_fasilitas');
             $table->timestamps();
 
-            $table->foreign('id_ruangan')->references('id_ruangan')->on('ruangan');
-            $table->foreign('id_kategori')->references('id_kategori')->on('kategori_fasilitas');
+            $table->foreign('id_ruangan')->references('id_ruangan')->on('ruangan')->onDelete('cascade');
+            $table->foreign('id_kategori')->references('id_kategori')->on('kategori_fasilitas')->onDelete('cascade');
         });
     }
 

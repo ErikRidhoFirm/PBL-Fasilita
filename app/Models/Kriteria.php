@@ -16,11 +16,17 @@ class Kriteria extends Model
         'kode_kriteria',
         'nama_kriteria',
         'bobot_kriteria',
+        'tipe_kriteria',
         'deskripsi',
     ];
 
     public function skorKriteriaLaporan(): HasMany
     {
         return $this->hasMany(SkorKriteriaLaporan::class, 'id_kriteria');
+    }
+
+    public function skoringKriterias(): HasMany
+    {
+        return $this->hasMany(SkoringKriteria::class, 'id_kriteria');
     }
 }

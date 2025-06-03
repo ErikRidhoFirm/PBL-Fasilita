@@ -4,9 +4,10 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
+use Illuminate\Database\Seeder;
 use App\Models\KategoriFasilitas;
 use App\Models\KategoriKerusakan;
-use Illuminate\Database\Seeder;
+
 
 class DatabaseSeeder extends Seeder
 {
@@ -32,6 +33,9 @@ class DatabaseSeeder extends Seeder
             LantaiSeeder::class,
             RuanganSeeder::class,
             FasilitasSeeder::class,
+            SkoringKriteriaSeeder::class,
+            LaporanSeeder::class,
+            LaporanFasilitasSeeder::class,
         ]);
     }
 }

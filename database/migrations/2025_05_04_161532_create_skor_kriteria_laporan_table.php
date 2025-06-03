@@ -18,8 +18,8 @@ return new class extends Migration
             $table->integer('nilai_mentah');
             $table->timestamps();
 
-            $table->foreign('id_penilaian')->references('id_penilaian')->on('penilaian');
-            $table->foreign('id_kriteria')->references('id_kriteria')->on('kriteria');
+            $table->foreign('id_penilaian')->references('id_penilaian')->on('penilaian')->onDelete('cascade');
+            $table->foreign('id_kriteria')->references('id_kriteria')->on('kriteria')->onDelete('cascade');
         });
     }
 

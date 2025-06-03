@@ -1,23 +1,12 @@
-<nav class="sidebar sidebar-offcanvas w-auto" id="sidebar">
+<nav class="sidebar sidebar-offcanvas w-auto position-fixed" id="sidebar">
     <ul class="nav">
 
         {{-- Dashboard (all users) --}}
         <li class="nav-item">
-          <a class="nav-link" data-toggle="collapse" href="#user-management" aria-expanded="false">
-            <i class="icon-people menu-icon"></i>
-            <span class="menu-title">Manajemen Pengguna</span>
-            <i class="menu-arrow"></i>
-          </a>
-          <div class="collapse" id="user-management">
-            <ul class="nav flex-column sub-menu">
-              <li class="nav-item">
-                <a class="nav-link" href="{{ route('peran.index') }}">Peran & Hak Akses</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="">Daftar Pengguna</a>
-              </li>
-            </ul>
-          </div>
+            <a class="nav-link" href="{{ route('dashboard') }}">
+                <i class="fas fa-tachometer-alt menu-icon"></i>
+                <span class="menu-title">Dashboard</span>
+            </a>
         </li>
 
         {{-- ADMIN MENU --}}
@@ -61,21 +50,6 @@
                                 <i class="fas fa-university menu-icon"></i> Gedung
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('lantai.index') }}">
-                                <i class="fas fa-layer-group menu-icon"></i> Lantai
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('ruangan.index') }}">
-                                <i class="fas fa-door-open menu-icon"></i> Ruangan
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('fasilitas.index') }}">
-                                <i class="fas fa-couch menu-icon"></i> Fasilitas
-                            </a>
-                        </li>
                     </ul>
                 </div>
             </li>
@@ -90,32 +64,47 @@
           <div class="collapse" id="master-data">
             <ul class="nav flex-column sub-menu">
               <li class="nav-item">
-                <a class="nav-link" href="{{ route('kategoriF.index') }}">Kategori Fasilitas</a>
+                <a class="nav-link" href="{{ route('kategoriF.index') }}">
+                    <i class="fas fa-tags menu-icon"></i> Kategori Fasilitas
+                </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="{{ route('kategori_kerusakan.index') }}">Kategori Kerusakan</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="{{ route('status.index') }}">Status Laporan</a>
+                <a class="nav-link" href="{{ route('kategori_kerusakan.index') }}">
+                    <i class="fas fa-exclamation-triangle menu-icon"></i> Kategori Kerusakan
+                </a>
               </li>
             </ul>
           </div>
         </li>
 
-        {{-- SPK & Criteria --}}
+        {{--SPK & Criteria --}}
         <li class="nav-item">
           <a class="nav-link" data-toggle="collapse" href="#spk-management" aria-expanded="false">
-            <i class="icon-calculator menu-icon"></i>
+            <i class="fas fa-calculator menu-icon"></i>
             <span class="menu-title">SPK & Kriteria</span>
             <i class="menu-arrow"></i>
           </a>
           <div class="collapse" id="spk-management">
             <ul class="nav flex-column sub-menu">
               <li class="nav-item">
-                <a class="nav-link" href="{{ route('kriteria.index') }}">Kriteria Penilaian</a>
+                <a class="nav-link" href="{{ route('kriteria.index') }}">
+                    <i class="fas fa-list-ol menu-icon"></i> Kriteria Penilaian
+                </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="{{ route('skoring.index') }}">Skoring Kriteria</a>
+                <a class="nav-link" href="{{ route('skoring.index') }}">
+                     <i class="fas fa-star-half-alt menu-icon"></i> Skoring Kriteria
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ route('spk.index') }}">
+                     <i class="fas fa-calculator menu-icon"></i>Perhitungan
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ route('skorTopsis.index') }}">
+                     <i class="fas fa-tasks menu-icon"></i>Prioritas Perbaikan
+                </a>
               </li>
             </ul>
           </div>
@@ -126,32 +115,69 @@
       {{-- ADMIN & SARPRAS MENU          --}}
       {{-- ============================= --}}
       @if(auth()->user()->hasAnyRole(['ADM','SPR']))
-      <li class="nav-item">
-        <a class="nav-link" href="">
-        {{-- <a class="nav-link" href="{{ route('verifikasi.index') }}"> --}}
-          <i class="fas fa-clipboard-check menu-icon"></i> <!-- Ganti ikon di sini -->
-          <span class="menu-title">Verifikasi Laporan</span>
-        </a>
-      </li>
-    @endif
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="collapse" href="#laporan-management"
+            aria-expanded="false" aria-controls="laporan-management">
+            <i class="fas fa-clipboard-list menu-icon"></i>
+            <span class="menu-title">Laporan</span>
+            <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="laporan-management" data-parent="#sidebar">
+            <ul class="nav flex-column sub-menu">
+                <li class="nav-item">
+                <a class="nav-link" href="{{ route('laporan.index') }}">
+                    <i class="fas fa-clipboard-check menu-icon"></i> Verifikasi Laporan
+                </a>
+                </li>
+                <li class="nav-item">
+                <a class="nav-link" href="{{ route('riwayat.index') }}">
+                    <i class="fas fa-history menu-icon"></i> Riwayat Laporan
+                </a>
+                </li>
+
+                <li class="nav-item">
+  <a class="nav-link" href="{{ route('riwayat-perbaikan.index') }}">
+    <i class="fas fa-tools menu-icon"></i> Riwayat Perbaikan
+  </a>
+</li>
+
+            </ul>
+            </div>
+        </li>
+        @endif
 
       {{-- ============================= --}}
       {{-- SARPRAS MENU                  --}}
       {{-- ============================= --}}
       @if(auth()->user()->hasRole('SPR'))
+         {{--SPK & Criteria --}}
         <li class="nav-item">
-          <a class="nav-link" data-toggle="collapse" href="#task-management" aria-expanded="false">
-            <i class="icon-wrench menu-icon"></i>
-            <span class="menu-title">Manajemen Tugas</span>
+          <a class="nav-link" data-toggle="collapse" href="#spk-management" aria-expanded="false">
+            <i class="fas fa-calculator menu-icon"></i>
+            <span class="menu-title">SPK & Kriteria</span>
             <i class="menu-arrow"></i>
           </a>
-          <div class="collapse" id="task-management">
+          <div class="collapse" id="spk-management">
             <ul class="nav flex-column sub-menu">
               <li class="nav-item">
-                <a class="nav-link" href="{{ route('spk.topsis') }}">SPK TOPSIS</a>
+                <a class="nav-link" href="{{ route('kriteria.index') }}">
+                    <i class="fas fa-list-ol menu-icon"></i> Kriteria Penilaian
+                </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="{{ route('penugasan.index') }}">Penugasan Teknisi</a>
+                <a class="nav-link" href="{{ route('skoring.index') }}">
+                     <i class="fas fa-star-half-alt menu-icon"></i> Skoring Kriteria
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ route('spk.index') }}">
+                     <i class="fas fa-calculator menu-icon"></i>Perhitungan
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ route('skorTopsis.index') }}">
+                     <i class="fas fa-tasks menu-icon"></i>Prioritas Perbaikan
+                </a>
               </li>
             </ul>
           </div>
@@ -163,16 +189,28 @@
       {{-- ============================= --}}
       @if(auth()->user()->hasAnyRole(['MHS','DSN','TDK']))
         <li class="nav-item">
-          <a class="nav-link" href="{{ route('laporan.create') }}">
-            <i class="icon-note menu-icon"></i>
-            <span class="menu-title">Buat Laporan</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{{ route('laporan.index') }}">
-            <i class="icon-clock menu-icon"></i>
-            <span class="menu-title">Riwayat Laporan</span>
-          </a>
+            <a class="nav-link" data-toggle="collapse" href="#user-management"
+                aria-expanded="false" aria-controls="user-management">
+                <i class="fas fa-file-alt menu-icon"></i> <!-- Ikon dokumen/laporan -->
+                <span class="menu-title">Pelaporan</span>
+                <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="user-management" data-parent="#sidebar">
+                <ul class="nav flex-column sub-menu">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('laporan.index') }}">
+                            <i class="fas fa-plus-circle menu-icon"></i> <!-- Ikon tambah/buat baru -->
+                            Buat Laporan
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('riwayatPelapor.index') }}">
+                            <i class="fas fa-history menu-icon"></i> <!-- Ikon riwayat -->
+                            Riwayat Laporan
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </li>
       @endif
 
@@ -180,11 +218,30 @@
       {{-- TECHNICIAN MENU               --}}
       {{-- ============================= --}}
       @if(auth()->user()->hasRole('TNS'))
-        <li class="nav-item">
-          <a class="nav-link" href="{{ route('tugas.index') }}">
-            <i class="icon-wrench menu-icon"></i>
-            <span class="menu-title">Daftar Tugas</span>
-          </a>
+      <li class="nav-item">
+            <a class="nav-link" data-toggle="collapse" href="#user-management"
+                aria-expanded="false" aria-controls="user-management">
+                <i class="fas fa-file-alt menu-icon"></i> <!-- Ikon dokumen/laporan -->
+                <span class="menu-title">Penugasan</span>
+                <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="user-management" data-parent="#sidebar">
+                <ul  class="nav flex-column sub-menu">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('penugasan.index') }}">
+                            <i class="mdi mdi-clipboard-text"></i>
+                            <span>Daftar Tugas</span>
+                        </a>
+                    </li>
+                    {{-- 2) Riwayat Perbaikan (baru ditambahkan) --}}
+      <li class="nav-item">
+        <a class="nav-link" href="{{ route('riwayat-perbaikan-teknisi.index') }}">
+          <i class="fas fa-history menu-icon"></i>
+          Riwayat Perbaikan
+        </a>
+      </li>
+                </ul>
+            </div>
         </li>
       @endif
 

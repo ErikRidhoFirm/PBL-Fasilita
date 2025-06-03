@@ -18,7 +18,7 @@ return new class extends Migration
             $table->integer('nilai_referensi');
             $table->timestamps();
 
-    $table->foreign('id_kriteria')->references('id_kriteria')->on('kriteria');
+    $table->foreign('id_kriteria')->references('id_kriteria')->on('kriteria')->onDelete('cascade');
         });
     }
 

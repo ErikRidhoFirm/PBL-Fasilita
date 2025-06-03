@@ -10,8 +10,7 @@
 
     <div class="modal-header bg-danger text-white">
       <h5 class="modal-title"><i class="mdi mdi-trash-can"></i> Hapus Fasilitas</h5>
-      <button type="button" class="btn-close btn-close-white"
-              data-bs-dismiss="modal" aria-label="Close"></button>
+      <button type="button" class="btn-close btn-close-white" data-dismiss="modal" aria-label="Close">x</button>
     </div>
 
     <form id="form-fasilitas-delete"
@@ -23,8 +22,6 @@
         Yakin menghapus fasilitas <strong>{{ $fasilitas->nama_fasilitas }}</strong>?
       </div>
       <div class="modal-footer border-0">
-        <button type="button" class="btn btn-light"
-                data-bs-dismiss="modal">Batal</button>
         <button type="submit" class="btn btn-danger">Ya, Hapus</button>
       </div>
     </form>

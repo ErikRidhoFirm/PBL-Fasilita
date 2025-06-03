@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('nama_ruangan');
             $table->timestamps();
 
-            $table->foreign('id_lantai')->references('id_lantai')->on('lantai');
+            $table->foreign('id_lantai')->references('id_lantai')->on('lantai')->onDelete('cascade');
         });
     }
 

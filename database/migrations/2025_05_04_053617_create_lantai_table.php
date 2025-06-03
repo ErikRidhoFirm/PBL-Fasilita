@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('nomor_lantai');
             $table->timestamps();
 
-            $table->foreign('id_gedung')->references('id_gedung')->on('gedung');
+            $table->foreign('id_gedung')->references('id_gedung')->on('gedung')->onDelete('cascade');
         });
     }
 

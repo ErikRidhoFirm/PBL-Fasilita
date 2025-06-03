@@ -15,8 +15,10 @@ class StatusSeeder extends Seeder
     {
         $status = [
             ['nama_status' => 'Menunggu'],
-            ['nama_status' => 'Terverifikasi'],
-            ['nama_status' => 'Diproses'],
+            ['nama_status' => 'Tidak Valid'],
+            ['nama_status' => 'Ditolak'],
+            ['nama_status' => 'Valid'],
+            ['nama_status' => 'Ditugaskan'],
             ['nama_status' => 'Selesai'],
             ['nama_status' => 'Ditutup'],
         ];

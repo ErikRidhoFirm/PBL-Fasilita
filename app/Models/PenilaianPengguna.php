@@ -13,7 +13,7 @@ class PenilaianPengguna extends Model
     protected $table = 'penilaian_pengguna';
     protected $primaryKey = 'id_penilaian_pengguna';
     protected $fillable = [
-        'id_laporan',
+        'id_laporan_fasilitas',
         'id_pengguna',
         'nilai',
         'komentar',
@@ -21,7 +21,7 @@ class PenilaianPengguna extends Model
 
     public function laporan(): BelongsTo
     {
-        return $this->belongsTo(Laporan::class, 'id_laporan');
+        return $this->belongsTo(Laporan::class, 'id_laporan_fasilitas');
     }
 
     public function pengguna(): BelongsTo

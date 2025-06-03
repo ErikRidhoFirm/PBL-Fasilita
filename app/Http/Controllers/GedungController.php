@@ -6,6 +6,9 @@ use App\Models\Gedung;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Yajra\DataTables\Facades\DataTables;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Validator;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class GedungController extends Controller
 {
@@ -22,33 +25,29 @@ class GedungController extends Controller
 
         return DataTables::of($data)
             ->addIndexColumn()
+            // Kolom PILIH, tombol full-width dan warna primer
+        ->addColumn('pilih', function($row){
+    return '<button
+                onclick="window.location=\''.route('gedung.lantai.index',$row->id_gedung).'\'"
+                class="btn btn-primary btn-pilih">
+                <i class="mdi mdi-layers"></i>
+                <span class="ms-1">Pilih</span>
+            </button>';
+})
             ->addColumn('aksi', function ($row) {
                 return '
-                <div class="btn-group">
-
-                    <!-- tombol PILIH (lihat lantai) -->
-                    <button onclick="window.location=\'' .
-                        route('gedung.lantai.index', $row->id_gedung) . '\'"
-                        class="btn btn-success btn-sm">
-                        <i class="mdi mdi-layers mr-1"></i>Pilih
+                <div>
+                    <button onclick="modalAction(\'' . route('gedung.edit', $row->id_gedung) . '\')" class="btn btn-warning btn-sm" style="margin-right:8px;">
+                        <i class="mdi mdi-pencil m-0"></i>
                     </button>
 
-                    <!-- tombol EDIT -->
-                    <button onclick="modalAction(\'' .
-                        route('gedung.edit', $row->id_gedung) . '\')"
-                        class="btn btn-warning btn-sm">
-                        <i class="mdi mdi-pencil"></i>
-                    </button>
-
-                    <!-- tombol HAPUS -->
-                    <button onclick="modalAction(\'' .
-                        route('gedung.delete', $row->id_gedung) . '\')"
-                        class="btn btn-danger btn-sm">
-                        <i class="mdi mdi-delete"></i>
+                    <button onclick="modalAction(\'' . route('gedung.delete', $row->id_gedung) . '\')" class="btn btn-danger btn-sm">
+                        <i class="mdi mdi-delete m-0"></i>
                     </button>
                 </div>';
             })
-            ->rawColumns(['aksi'])
+
+            ->rawColumns(['pilih', 'aksi']) // kolom yang berisi HTML
             ->make(true);
     }
 
@@ -104,5 +103,79 @@ class GedungController extends Controller
     public function show(Gedung $gedung)
     {
         return view('gedung.show', compact('gedung'));
+    }
+
+
+    public function import()
+    {
+        return view('gedung.import');
+    }
+
+    public function importAjax(Request $request)
+    {
+        if ($request->ajax() || $request->wantsJson()) {
+            $rules = [
+                'file_gedung' => ['required', 'mimes:xlsx', 'max:2048'],
+            ];
+
+            $validator = Validator::make($request->all(), $rules);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Validasi Gagal',
+                    'msgField' => $validator->errors(),
+                ]);
+            }
+
+            $file = $request->file('file_gedung');
+            $reader = IOFactory::createReader('Xlsx');
+            $reader->setReadDataOnly(true);
+            $spreadsheet = $reader->load($file->getPathname());
+            $sheet = $spreadsheet->getActiveSheet();
+            $rows = $sheet->toArray(null, true, true, true);
+
+            $insert = [];
+            foreach ($rows as $i => $row) {
+                if ($i === 1) continue; // skip header
+                if (empty($row['A']) && empty($row['B'])) continue;
+
+                $insert[] = [
+                    'kode_gedung' => $row['A'],
+                    'nama_gedung' => $row['B'],
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ];
+            }
+
+            if (count($insert) === 0) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Tidak ada data yang diimport'
+                ]);
+            }
+
+            Gedung::insertOrIgnore($insert);
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Data berhasil diimport'
+            ]);
+        }
+
+        return redirect()->route('gedung.index');
+    }
+
+
+    /* ----------  EXPORT PDF  ---------- */
+    public function exportPdf()
+    {
+        $gedung = Gedung::select('id_gedung', 'kode_gedung', 'nama_gedung')
+            ->orderBy('kode_gedung')
+            ->get();
+
+        $pdf = PDF::loadView('gedung.export_pdf', compact('gedung'))
+            ->setPaper('A4', 'portrait');
+
+        return $pdf->stream('Laporan_Gedung_' . date('Y-m-d_H-i-s') . '.pdf');
     }
 }

@@ -18,7 +18,7 @@ class SkorTopsis extends Model
         'skor',
     ];
 
-    public function run(): BelongsTo
+    public function skorTipe(): BelongsTo
     {
         return $this->belongsTo(SkorTipe::class, 'id_skor_tipe');
     }

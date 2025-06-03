@@ -1,17 +1,21 @@
-@if(isset($breadcrumbs) && is_array($breadcrumbs))
+@if(isset($breadcrumbs) && is_array($breadcrumbs) && count($breadcrumbs) > 0)
 <nav aria-label="breadcrumb" class="mt-3 mb-4">
-  <ol class="breadcrumb bg-light px-3 py-2 rounded shadow-sm mb-0">
+  <ol class="breadcrumb bg-white border px-3 py-2 rounded shadow-sm mb-0" style="--bs-breadcrumb-divider: '>';">
     @foreach($breadcrumbs as $breadcrumb)
-      @if(!$loop->last)
-        <li class="breadcrumb-item d-flex align-items-center">
-          <i class="fas fa-angle-right text-muted mr-2"></i>
-          <a href="{{ $breadcrumb['url'] }}" class="text-decoration-none text-primary">
+      @if(!$loop->last && isset($breadcrumb['url']))
+        <li class="breadcrumb-item">
+          <a href="{{ $breadcrumb['url'] }}" class="text-decoration-none text-primary fw-medium">
+            @if($loop->first && (strtolower($breadcrumb['title']) === 'home' || strtolower($breadcrumb['title']) === 'dashboard'))
+              <i class="fas fa-home me-1"></i>
+            @endif
             {{ $breadcrumb['title'] }}
           </a>
         </li>
       @else
-        <li class="breadcrumb-item active d-flex align-items-center text-muted" aria-current="page">
-          <i class="fas fa-angle-right text-muted mr-2"></i>
+        <li class="breadcrumb-item active text-muted" aria-current="page">
+          @if($loop->first && (strtolower($breadcrumb['title']) === 'home' || strtolower($breadcrumb['title']) === 'dashboard'))
+            <i class="fas fa-home me-1"></i>
+          @endif
           {{ $breadcrumb['title'] }}
         </li>
       @endif

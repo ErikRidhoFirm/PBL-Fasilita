@@ -29,11 +29,6 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-warning" data-dismiss="modal">Tutup</button>
-                <form action="{{ url('/kategori-fasilitas/delete/' . $kategori->id_kategori) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus data ini?')">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="btn btn-danger">Hapus</button>
-                </form>
             </div>
         @endempty
     </div>

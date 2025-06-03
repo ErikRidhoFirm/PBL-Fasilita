@@ -41,7 +41,7 @@ class FasilitasSeeder extends Seeder
             [
                 'id_ruangan' => 1,
                 'id_kategori' => 4,
-                'nama_fasilitas' => 'LCD Proyektor',
+                'nama_fasilitas' => 'Layar Proyektor',
                 'jumlah_fasilitas' => 1,
             ],
         ];

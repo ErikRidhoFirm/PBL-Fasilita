@@ -53,47 +53,18 @@ class LaporanFasilitasSeeder extends Seeder
                 'created_at'            => now(),
                 'updated_at'            => now(),
             ],
-            // Laporan ID 3 - First facility report
-            [
-                'id_laporan'            => 3,
-                'id_fasilitas'          => 1, // Kursi
-                'id_kategori_kerusakan' => 10, // Ringan
-                'id_status'             => 1,
-                'jumlah_rusak'          => 2,
-                'path_foto'             => 'uploads/laporan/lap3_foto1.jpg',
-                'deskripsi'             => 'Dua kursi di baris depan kaki tidak stabil.',
-                'is_active'             => true,
-                'created_at'            => now()->subDays(2),
-                'updated_at'            => now()->subDays(2),
-            ],
-            // Laporan ID 3 - Second facility report
             [
                 'id_laporan'            => 3,
                 'id_fasilitas'          => 3, // Papan Tulis
                 'id_kategori_kerusakan' => 10, // Ringan
                 'id_status'             => 1,
                 'jumlah_rusak'          => 1,
-                'path_foto'             => 'uploads/laporan/lap3_foto2.jpg',
+                'path_foto'             => 'uploads/laporan/lap4_foto1.jpg',
                 'deskripsi'             => 'Papan tulis sulit dibersihkan, bekas spidol menempel.',
                 'is_active'             => true,
                 'created_at'            => now()->subDays(2),
                 'updated_at'            => now()->subDays(2),
             ],
-
-            // Laporan ID 4 - First facility report
-            [
-                'id_laporan'            => 4,
-                'id_fasilitas'          => 4, // Proyektor
-                'id_kategori_kerusakan' => 3, // Berat
-                'id_status'             => 1,
-                'jumlah_rusak'          => 1,
-                'path_foto'             => 'uploads/laporan/lap4_foto1.jpg',
-                'deskripsi'             => 'Proyektor gambar buram dan berkedip-kedip.',
-                'is_active'             => true,
-                'created_at'            => now()->subDays(2),
-                'updated_at'            => now()->subDays(2),
-            ],
-            // Laporan ID 4 - Second facility report
             [
                 'id_laporan'            => 4,
                 'id_fasilitas'          => 5, // LCD Proyektor
@@ -106,218 +77,7 @@ class LaporanFasilitasSeeder extends Seeder
                 'created_at'            => now()->subDays(2),
                 'updated_at'            => now()->subDays(2),
             ],
-            // Laporan ID 3 - First facility report
-            [
-                'id_laporan'            => 3,
-                'id_fasilitas'          => 1, // Kursi
-                'id_kategori_kerusakan' => 10, // Ringan
-                'id_status'             => 1,
-                'jumlah_rusak'          => 2,
-                'path_foto'             => 'uploads/laporan/lap3_foto1.jpg',
-                'deskripsi'             => 'Dua kursi di baris depan kaki tidak stabil.',
-                'is_active'             => true,
-                'created_at'            => now()->subDays(2),
-                'updated_at'            => now()->subDays(2),
-            ],
-            // Laporan ID 3 - Second facility report
-            [
-                'id_laporan'            => 3,
-                'id_fasilitas'          => 3, // Papan Tulis
-                'id_kategori_kerusakan' => 10, // Ringan
-                'id_status'             => 1,
-                'jumlah_rusak'          => 1,
-                'path_foto'             => 'uploads/laporan/lap3_foto2.jpg',
-                'deskripsi'             => 'Papan tulis sulit dibersihkan, bekas spidol menempel.',
-                'is_active'             => true,
-                'created_at'            => now()->subDays(2),
-                'updated_at'            => now()->subDays(2),
-            ],
 
-            // Laporan ID 4 - First facility report
-            [
-                'id_laporan'            => 4,
-                'id_fasilitas'          => 4, // Proyektor
-                'id_kategori_kerusakan' => 3, // Berat
-                'id_status'             => 1,
-                'jumlah_rusak'          => 1,
-                'path_foto'             => 'uploads/laporan/lap4_foto1.jpg',
-                'deskripsi'             => 'Proyektor gambar buram dan berkedip-kedip.',
-                'is_active'             => true,
-                'created_at'            => now()->subDays(2),
-                'updated_at'            => now()->subDays(2),
-            ],
-            // Laporan ID 4 - Second facility report
-            [
-                'id_laporan'            => 4,
-                'id_fasilitas'          => 5, // LCD Proyektor
-                'id_kategori_kerusakan' => 2, // Sedang
-                'id_status'             => 1,
-                'jumlah_rusak'          => 1,
-                'path_foto'             => 'uploads/laporan/lap4_foto2.jpg',
-                'deskripsi'             => 'LCD proyektor warna tidak akurat.',
-                'is_active'             => true,
-                'created_at'            => now()->subDays(2),
-                'updated_at'            => now()->subDays(2),
-            ],
-            // Laporan ID 3 - First facility report
-            [
-                'id_laporan'            => 3,
-                'id_fasilitas'          => 1, // Kursi
-                'id_kategori_kerusakan' => 10, // Ringan
-                'id_status'             => 1,
-                'jumlah_rusak'          => 2,
-                'path_foto'             => 'uploads/laporan/lap3_foto1.jpg',
-                'deskripsi'             => 'Dua kursi di baris depan kaki tidak stabil.',
-                'is_active'             => true,
-                'created_at'            => now()->subDays(2),
-                'updated_at'            => now()->subDays(2),
-            ],
-            // Laporan ID 3 - Second facility report
-            [
-                'id_laporan'            => 3,
-                'id_fasilitas'          => 3, // Papan Tulis
-                'id_kategori_kerusakan' => 10, // Ringan
-                'id_status'             => 1,
-                'jumlah_rusak'          => 1,
-                'path_foto'             => 'uploads/laporan/lap3_foto2.jpg',
-                'deskripsi'             => 'Papan tulis sulit dibersihkan, bekas spidol menempel.',
-                'is_active'             => true,
-                'created_at'            => now()->subDays(2),
-                'updated_at'            => now()->subDays(2),
-            ],
-
-            // Laporan ID 4 - First facility report
-            [
-                'id_laporan'            => 4,
-                'id_fasilitas'          => 4, // Proyektor
-                'id_kategori_kerusakan' => 3, // Berat
-                'id_status'             => 1,
-                'jumlah_rusak'          => 1,
-                'path_foto'             => 'uploads/laporan/lap4_foto1.jpg',
-                'deskripsi'             => 'Proyektor gambar buram dan berkedip-kedip.',
-                'is_active'             => true,
-                'created_at'            => now()->subDays(2),
-                'updated_at'            => now()->subDays(2),
-            ],
-            // Laporan ID 4 - Second facility report
-            [
-                'id_laporan'            => 4,
-                'id_fasilitas'          => 5, // LCD Proyektor
-                'id_kategori_kerusakan' => 2, // Sedang
-                'id_status'             => 1,
-                'jumlah_rusak'          => 1,
-                'path_foto'             => 'uploads/laporan/lap4_foto2.jpg',
-                'deskripsi'             => 'LCD proyektor warna tidak akurat.',
-                'is_active'             => true,
-                'created_at'            => now()->subDays(2),
-                'updated_at'            => now()->subDays(2),
-            ],
-            // Laporan ID 3 - First facility report
-            [
-                'id_laporan'            => 3,
-                'id_fasilitas'          => 1, // Kursi
-                'id_kategori_kerusakan' => 10, // Ringan
-                'id_status'             => 1,
-                'jumlah_rusak'          => 2,
-                'path_foto'             => 'uploads/laporan/lap3_foto1.jpg',
-                'deskripsi'             => 'Dua kursi di baris depan kaki tidak stabil.',
-                'is_active'             => true,
-                'created_at'            => now()->subDays(2),
-                'updated_at'            => now()->subDays(2),
-            ],
-            // Laporan ID 3 - Second facility report
-            [
-                'id_laporan'            => 3,
-                'id_fasilitas'          => 3, // Papan Tulis
-                'id_kategori_kerusakan' => 10, // Ringan
-                'id_status'             => 1,
-                'jumlah_rusak'          => 1,
-                'path_foto'             => 'uploads/laporan/lap3_foto2.jpg',
-                'deskripsi'             => 'Papan tulis sulit dibersihkan, bekas spidol menempel.',
-                'is_active'             => true,
-                'created_at'            => now()->subDays(2),
-                'updated_at'            => now()->subDays(2),
-            ],
-
-            // Laporan ID 4 - First facility report
-            [
-                'id_laporan'            => 4,
-                'id_fasilitas'          => 4, // Proyektor
-                'id_kategori_kerusakan' => 3, // Berat
-                'id_status'             => 1,
-                'jumlah_rusak'          => 1,
-                'path_foto'             => 'uploads/laporan/lap4_foto1.jpg',
-                'deskripsi'             => 'Proyektor gambar buram dan berkedip-kedip.',
-                'is_active'             => true,
-                'created_at'            => now()->subDays(2),
-                'updated_at'            => now()->subDays(2),
-            ],
-            // Laporan ID 4 - Second facility report
-            [
-                'id_laporan'            => 4,
-                'id_fasilitas'          => 5, // LCD Proyektor
-                'id_kategori_kerusakan' => 2, // Sedang
-                'id_status'             => 1,
-                'jumlah_rusak'          => 1,
-                'path_foto'             => 'uploads/laporan/lap4_foto2.jpg',
-                'deskripsi'             => 'LCD proyektor warna tidak akurat.',
-                'is_active'             => true,
-                'created_at'            => now()->subDays(2),
-                'updated_at'            => now()->subDays(2),
-            ],
-            // Laporan ID 3 - First facility report
-            [
-                'id_laporan'            => 3,
-                'id_fasilitas'          => 1, // Kursi
-                'id_kategori_kerusakan' => 10, // Ringan
-                'id_status'             => 1,
-                'jumlah_rusak'          => 2,
-                'path_foto'             => 'uploads/laporan/lap3_foto1.jpg',
-                'deskripsi'             => 'Dua kursi di baris depan kaki tidak stabil.',
-                'is_active'             => true,
-                'created_at'            => now()->subDays(2),
-                'updated_at'            => now()->subDays(2),
-            ],
-            // Laporan ID 3 - Second facility report
-            [
-                'id_laporan'            => 3,
-                'id_fasilitas'          => 3, // Papan Tulis
-                'id_kategori_kerusakan' => 10, // Ringan
-                'id_status'             => 1,
-                'jumlah_rusak'          => 1,
-                'path_foto'             => 'uploads/laporan/lap3_foto2.jpg',
-                'deskripsi'             => 'Papan tulis sulit dibersihkan, bekas spidol menempel.',
-                'is_active'             => true,
-                'created_at'            => now()->subDays(2),
-                'updated_at'            => now()->subDays(2),
-            ],
-
-            // Laporan ID 4 - First facility report
-            [
-                'id_laporan'            => 4,
-                'id_fasilitas'          => 4, // Proyektor
-                'id_kategori_kerusakan' => 3, // Berat
-                'id_status'             => 1,
-                'jumlah_rusak'          => 1,
-                'path_foto'             => 'uploads/laporan/lap4_foto1.jpg',
-                'deskripsi'             => 'Proyektor gambar buram dan berkedip-kedip.',
-                'is_active'             => true,
-                'created_at'            => now()->subDays(2),
-                'updated_at'            => now()->subDays(2),
-            ],
-            // Laporan ID 4 - Second facility report
-            [
-                'id_laporan'            => 4,
-                'id_fasilitas'          => 5, // LCD Proyektor
-                'id_kategori_kerusakan' => 2, // Sedang
-                'id_status'             => 1,
-                'jumlah_rusak'          => 1,
-                'path_foto'             => 'uploads/laporan/lap4_foto2.jpg',
-                'deskripsi'             => 'LCD proyektor warna tidak akurat.',
-                'is_active'             => true,
-                'created_at'            => now()->subDays(2),
-                'updated_at'            => now()->subDays(2),
-            ],
         ];
 
         foreach ($laporanF as $data) {

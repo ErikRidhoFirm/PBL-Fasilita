@@ -44,22 +44,22 @@ class PenggunaController extends Controller
     return DataTables::of($query)
         ->addIndexColumn()
         ->addColumn('aksi', function ($row) {
-            $editBtn = '<button type="button" 
-                            class="btn btn-warning btn-sm btn-edit d-inline-flex align-items-center justify-content-center" 
-                            style="margin-right: 8px;" 
+            $editBtn = '<button type="button"
+                            class="btn btn-warning btn-sm btn-edit d-inline-flex align-items-center justify-content-center"
+                            style="margin-right: 8px;"
                             onclick="modalAction(\'' . route('pengguna.edit', $row->id_pengguna) . '\')">
                             <i class="mdi mdi-pencil m-0"></i>
                         </button>';
 
-            $showBtn = '<button type="button" 
-                            class="btn btn-info btn-sm btn-show d-inline-flex align-items-center justify-content-center" 
-                            style="margin-right: 8px;" 
+            $showBtn = '<button type="button"
+                            class="btn btn-info btn-sm btn-show d-inline-flex align-items-center justify-content-center"
+                            style="margin-right: 8px;"
                             onclick="modalAction(\'' . route('pengguna.show', $row->id_pengguna) . '\')">
                             <i class="mdi mdi-file-document-box m-0"></i>
                         </button>';
 
-            $deleteBtn = '<button type="button" 
-                            class="btn btn-danger btn-sm btn-delete d-inline-flex align-items-center justify-content-center" 
+            $deleteBtn = '<button type="button"
+                            class="btn btn-danger btn-sm btn-delete d-inline-flex align-items-center justify-content-center"
                             onclick="modalAction(\'' . route('pengguna.delete', $row->id_pengguna) . '\')">
                             <i class="mdi mdi-delete m-0"></i>
                         </button>';
@@ -76,10 +76,9 @@ class PenggunaController extends Controller
      */
     public function create()
     {
-        // ambil daftar peran untuk pilihan dropdown
+
         $peran = Peran::select('id_peran','nama_peran')->get();
 
-        // return view yang hanya berisi markup modal
         return view('pengguna.create', compact('peran'));
     }
 

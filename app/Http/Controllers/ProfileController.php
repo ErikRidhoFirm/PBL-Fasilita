@@ -42,20 +42,22 @@ class ProfileController extends Controller
         $user = Pengguna::find(Auth::id());
 
         if (! $request->hasFile('foto')) {
-            return redirect()->back(); 
+            return redirect()->back();
         }
 
         // Hapus foto lama jika ada
-        // if ($user->foto_profile && Storage::exists('public/foto/' . $user->foto_profile)) {
-        //     Storage::delete('public/foto/' . $user->foto_profile);
-        // }
+        if ($user->foto_profile) {
+            Storage::delete('public/uploads/profiles/' . $user->foto_profile);
+        }
 
         // Simpan foto baru
         $file = $request->file('foto');
         $filename = time() . '_' . $file->getClientOriginalName();
-        $file->move(public_path('foto'), $filename);
 
-        // Simpan nama file ke kolom foto_profil
+        // Simpan file ke storage
+        $path = $file->storeAs('public/uploads/profiles', $filename);
+
+        // Simpan nama file ke database (hanya nama file, tanpa path)
         $user->foto_profile = $filename;
         $user->save();
 

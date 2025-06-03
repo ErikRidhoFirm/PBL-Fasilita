@@ -6,9 +6,11 @@
             <div class="card-body w-auto">
                 <div class="d-flex justify-content-between align-items-center">
                     <h3 class="card-title my-5 w-25">Data Laporan</h3>
+                    @if ($authUser->peran->kode_peran == 'ADM')
                     <a href="{{ url('laporan/create') }}" class="btn btn-primary h-25 w-25" >
                         Tambah Laporan
                     </a>
+                    @endif
                 </div>
                 <div class="table-responsive">
                     @if (session('success'))

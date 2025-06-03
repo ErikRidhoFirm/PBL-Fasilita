@@ -26,6 +26,10 @@ use App\Http\Controllers\PenilaianPenggunaController;
 use App\Http\Controllers\RiwayatLaporanFasilitasController;
 use App\Models\PenilaianPengguna;
 use App\Models\Penugasan;
+use App\Http\Controllers\RiwayatPerbaikanController;
+use App\Http\Controllers\RiwayatPerbaikanTeknisiController;
+use App\Http\Controllers\PelaporDashboardController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -42,7 +46,7 @@ use App\Models\Penugasan;
 //     return view('welcome');
 // });
 
-
+Route::get('/welcome', [\App\Http\Controllers\LandingPageController::class, 'index'])->name('landing.index');
 Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
 Route::post('/register', [AuthController::class, 'register'])->name('register.store');
 Route::get('/login',    [AuthController::class, 'showLogin'])->name('login');
@@ -314,6 +318,15 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/delete/{id}', [SkoringKriteriaController::class, 'confirm'])->name('skoring.confirm');
             Route::delete('/destroy/{id}', [SkoringKriteriaController::class, 'destroy'])->name('skoring.destroy');
         });
+
+        Route::prefix('riwayat-perbaikan')->name('riwayat-perbaikan.')->group(function () {
+            Route::get('/', [RiwayatPerbaikanController::class, 'index'])->name('index');
+            Route::get('/list', [RiwayatPerbaikanController::class, 'list'])->name('list');
+            Route::get('/{perbaikan}', [RiwayatPerbaikanController::class, 'show'])->name('show');
+            Route::get('/{perbaikan}/edit', [RiwayatPerbaikanController::class, 'edit'])->name('edit');
+            Route::put('/{perbaikan}', [RiwayatPerbaikanController::class, 'update'])->name('update');
+        });
+        
     });
 
     Route::middleware(['role:ADM,SPR'])->group(function () {
@@ -373,7 +386,22 @@ Route::middleware(['auth'])->group(function () {
         });
 
         Route::post('/{id}/perbaikan', [PenugasanController::class,'perbaikanSubmit'])->name('laporanFasilitas.perbaikan.submit');
+        Route::get(
+        '/riwayat-perbaikan-teknisi',
+        [RiwayatPerbaikanTeknisiController::class, 'index']
+    )->name('riwayat-perbaikan-teknisi.index');
 
+    // JSON untuk DataTable (server-side)
+    Route::get(
+        '/riwayat-perbaikan-teknisi/list',
+        [RiwayatPerbaikanTeknisiController::class, 'list']
+    )->name('riwayat-perbaikan-teknisi.list');
+
+    // Show/detail (modal) — memanggil partial show yang sudah dibuat
+    Route::get(
+        '/riwayat-perbaikan-teknisi/{perbaikan}',
+        [RiwayatPerbaikanTeknisiController::class, 'show']
+    )->name('riwayat-perbaikan-teknisi.show');
     });
 
     // Route::middleware(['role:ADM,SPR'])->prefix('riwayat')->group(function () {
@@ -398,6 +426,8 @@ Route::middleware(['auth'])->group(function () {
             Route::put('{id}/update', [PenilaianPenggunaController::class, 'update'])->name('feedback.update');
             Route::delete('{id}/destroy', [PenilaianPenggunaController::class, 'destroy'])->name('feedback.delete');
         });
+
+        Route::get('/dashboard-pelapor', [PelaporDashboardController::class, 'index'])->name('dashboard-pelapor.index');
     });
 
 

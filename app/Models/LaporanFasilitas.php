@@ -32,6 +32,7 @@ class LaporanFasilitas extends Model
         return $this->belongsTo(Laporan::class, 'id_laporan', 'id_laporan');
     }
 
+
     public function fasilitas(): BelongsTo
     {
         return $this->belongsTo(Fasilitas::class, 'id_fasilitas');

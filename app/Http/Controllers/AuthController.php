@@ -51,40 +51,38 @@ class AuthController extends Controller
 
     public function showLogin()
     {
-        if (Auth::check()) {
-            return redirect('/');
-        } else {
             return view('auth.login');
-        }
     }
 
     public function login(Request $request)
-    {
-        $c = $request->validate([
-            'username' => 'required|string',
-            'password' => 'required|string',
-        ]);
+{
+    $c = $request->validate([
+        'username' => 'required|string',
+        'password' => 'required|string',
+    ]);
 
-        if (Auth::guard('web')->attempt($c, $request->boolean('remember'))) {
-            $request->session()->regenerate();
-            return response()->json([
-                'status' => true,
-                'message' => 'Login Berhasil',
-                'redirect' => url('/')
-            ]);
-        }
+    if (Auth::guard('web')->attempt($c, $request->boolean('remember'))) {
+        $request->session()->regenerate();
 
         return response()->json([
-            'status' => false,
-            'errors' => ['username' => 'Username atau password salah']
-        ], 422);
+            'status'   => true,
+            'message'  => 'Login Berhasil',
+            // Arahkan ke route('dashboard') bukan url('/')
+            'redirect' => route('dashboard'),
+        ]);
     }
+
+    return response()->json([
+        'status' => false,
+        'errors' => ['username' => 'Username atau password salah']
+    ], 422);
+}
 
     public function logout(Request $request)
     {
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect()->route('login');
+        return redirect()->route('landing.index')->with('success', 'Anda telah berhasil logout');
     }
 }

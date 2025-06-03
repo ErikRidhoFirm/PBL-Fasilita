@@ -427,11 +427,11 @@ Route::middleware(['auth'])->group(function () {
 
 
 
-    Route::get('/icons', function () {
-        return view('pages.icons.index');
-    });
 });
 
+Route::get('/icons', function () {
+    return view('pages.icons.index');
+});
 
 Route::get('/forms', function () {
     return view('pages.forms.index');

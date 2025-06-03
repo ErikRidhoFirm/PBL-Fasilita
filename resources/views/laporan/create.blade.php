@@ -149,6 +149,9 @@
         let fileArray = [];
         // form select change
         $(function() {
+
+            // const baseURL = window.location.origin + '/PBL-Fasilita/public';
+            const baseURL = $('meta[name="base-url"]').attr('content');
             // Gedung
             $('#inputGedung').on('change', function() {
                 const idGedung = $(this).val();
@@ -161,7 +164,9 @@
                     true);
 
                 if (idGedung) {
-                    $.get(`/laporan/get-lantai/${idGedung}`, function(data) {
+                    $.get(`${baseURL}/laporan/get-lantai/${idGedung}`, function(data) {
+                        console.log(`${baseURL}/laporan/get-lantai/${idGedung}`);
+                        
                         if (Array.isArray(data) && data.length > 0) {
                             $inputLantai.prop('disabled', false);
                             $inputLantai.addClass('border-primary');
@@ -187,7 +192,7 @@
                     true);
 
                 if (idLantai) {
-                    $.get(`/laporan/get-ruangan/${idLantai}`, function(data) {
+                    $.get(`${baseURL}/laporan/get-ruangan/${idLantai}`, function(data) {
                         if (Array.isArray(data) && data.length > 0) {
                             $inputRuangan.prop('disabled', false);
                             $inputRuangan.addClass('border-primary');
@@ -214,7 +219,7 @@
                 $jumlahKerusakan.val('').removeAttr('max'); // Reset max saat ruangan diganti
 
                 if (idRuangan) {
-                    $.get(`/laporan/get-fasilitas/${idRuangan}`, function(data) {
+                    $.get(`${baseURL}/laporan/get-fasilitas/${idRuangan}`, function(data) {
                         if (Array.isArray(data) && data.length > 0) {
                             $inputFasilitas.prop('disabled', false);
                             $inputFasilitas.addClass('border-primary');

@@ -6,7 +6,7 @@ use App\Models\Peran;
 use App\Models\Pengguna;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -17,31 +17,33 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
-        try{
+        try {
 
             $data = $request->validate([
                 'nama' => 'required|string|max:255',
                 'username' => 'required|string|unique:pengguna,username',
                 'password' => 'required|string|confirmed|min:5',
+                'email' => 'required|string',
             ]);
-            
+
             $roleId = Peran::where('kode_peran', 'MHS')->value('id_peran');
-            
+
             Pengguna::create([
                 'id_peran' => $roleId,
                 'nama' => $data['nama'],
                 'username' => $data['username'],
                 'password' => $data['password'],
+                'email' => $data['email'],
                 'foto_profile' => 'default.jpg', // ← default foto profil
             ]);
-            
+
             return response()->json([
                 'status' => true,
                 'message' => 'Registrasi berhasil',
                 // 'redirect' => url('/login')
             ]);
             return redirect('login');
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             return response()->json([
                 'status' => false,
                 'message' => $e->getMessage()

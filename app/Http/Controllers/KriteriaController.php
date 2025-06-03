@@ -28,7 +28,7 @@ class KriteriaController extends Controller
 
      public function list()
     {
-        $query = Kriteria::select('id_kriteria','kode_kriteria','nama_kriteria','bobot_kriteria', 'tipe_kriteria', 'deskripsi');
+        $query = Kriteria::select('id_kriteria','kode_kriteria','nama_kriteria','bobot_kriteria', 'tipe_kriteria');
         return DataTables::of($query)
             ->addIndexColumn()
             ->addColumn('aksi', fn($kriteria) =>

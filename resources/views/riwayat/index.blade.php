@@ -87,7 +87,7 @@
         });
 
 
-        $('#filter-status, #filter-petugas').on('change', ()=> table.ajax.reload());
+        $('#filter-status, #filter-petugas').on('change', ()=> tableLaporanFasilitas.ajax.reload());
 
 
         $(document).on('click','.btn-delete',function(){

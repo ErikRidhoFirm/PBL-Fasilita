@@ -30,6 +30,22 @@ class LaporanSeeder extends Seeder
                 'created_at'  => now()->subDays(2),
                 'updated_at'  => now()->subDays(2),
             ],
+            [
+                'id_pengguna' => 3,
+                'id_gedung'   => 1,
+                'id_lantai'   => 5,
+                'id_ruangan'  => 1,
+                'created_at'  => now()->subDays(2),
+                'updated_at'  => now()->subDays(2),
+            ],
+            [
+                'id_pengguna' => 4,
+                'id_gedung'   => 1,
+                'id_lantai'   => 5,
+                'id_ruangan'  => 1,
+                'created_at'  => now()->subDays(2),
+                'updated_at'  => now()->subDays(2),
+            ],
 
         ];
 

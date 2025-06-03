@@ -3,25 +3,26 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
-use App\Models\Fasilitas;
 use App\Models\Gedung;
-use App\Models\KategoriKerusakan;
 use App\Models\Lantai;
 use App\Models\Status;
 use App\Models\Laporan;
 use App\Models\Ruangan;
 use App\Models\Kriteria;
 use App\Models\Pengguna;
+use App\Models\Fasilitas;
 use App\Models\Penilaian;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use App\Models\LaporanFasilitas;
+use App\Models\KategoriKerusakan;
 use App\Models\PenilaianPengguna;
 use Illuminate\Support\Facades\DB;
 use App\Models\SkorKriteriaLaporan;
+use Illuminate\Support\Facades\Auth;
 use App\Models\RiwayatLaporanFasilitas;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
 
 class LaporanController extends Controller
 {
@@ -36,7 +37,8 @@ class LaporanController extends Controller
         ];
 
         $activeMenu = 'laporan';
-        return view('laporan.index', compact('activeMenu', 'breadcrumbs'));
+        $authUser = Auth::user();
+        return view('laporan.index', compact('activeMenu', 'breadcrumbs', 'authUser'));
     }
 
     public function list()
@@ -110,7 +112,8 @@ class LaporanController extends Controller
             'ruangan' => $ruangan,
             'kategoriKerusakan' => $kategoriKerusakan,
             'activeMenu' => $activeMenu,
-            'breadcrumbs' => $breadcrumbs
+            'breadcrumbs' => $breadcrumbs,
+            'authUser' => Auth::user(),
         ]);
     }
 
@@ -263,27 +266,80 @@ class LaporanController extends Controller
         ]);
     }
 
+    public function indexPelapor()
+    {
+        $breadcrumbs = [
+            ['title' => 'Dashboard', 'url' => route('dashboard')],
+            ['title' => 'Halaman Laporan', 'url' => route('laporanPelapor.index')]
+        ];
+
+        $activeMenu = 'laporan';
+        return view('laporanPelapor.index', compact('activeMenu', 'breadcrumbs'));
+    }
+
+    // RiwayatLaporanFasilitasController.php (atau controller yang kamu gunakan)
+    public function listPelapor(Request $request)
+    {
+        // ID user login
+        $userId = $request->user()->id_pengguna;
+
+        // Query dasar: hanya LaporanFasilitas yang id_status = 1
+        $query = LaporanFasilitas::with([
+            'fasilitas',
+            'laporan.gedung',
+            'laporan.lantai',
+            'laporan.ruangan',
+        ])->where('id_status', 1);
+
+        // Misalnya 8 kartu per halaman
+        $perPage = 8;
+        $page    = $request->get('page', 1);
+
+        $paginated = $query->orderBy('id_laporan_fasilitas', 'desc')
+                           ->paginate($perPage, ['*'], 'page', $page);
+
+        // Mapping hasil paginate ke format JSON yang di‐inginkan
+        $data = $paginated->getCollection()->map(function ($lf) use ($userId) {
+            return [
+                'id_laporan_fasilitas' => $lf->id_laporan_fasilitas,
+                'nama_fasilitas'       => optional($lf->fasilitas)->nama_fasilitas,
+                'path_foto'            => $lf->path_foto,
+                'nama_gedung'          => optional($lf->laporan->gedung)->nama_gedung,
+                'nomor_lantai'         => optional($lf->laporan->lantai)->nomor_lantai,
+                'nama_ruangan'         => optional($lf->laporan->ruangan)->nama_ruangan,
+                'votes_count'          => $lf->pelaporLaporanFasilitas()->count(),
+                'voted_by_me'          => $lf->pelaporLaporanFasilitas()
+                                            ->where('id_pengguna', $userId)
+                                            ->exists(),
+            ];
+        });
+
+        // Gantikan koleksi paginate ke array data
+        $paginated->setCollection($data);
+
+        return response()->json($paginated);
+    }
+
 
     // /**
     //  * Display the specified resource.
     //  */
-    // public function show($id)
-    // {
-    //     $laporan = Laporan::find($id);
-    //     $laporanFasilitas = LaporanFasilitas::with([
-    //         'fasilitas',
-    //         'kategoriKerusakan',
-    //         'status',
-    //         'riwayatLaporanFasilitas',
-    //         'penugasan',
-    //         'penilaian',
-    //         'skorTopsis'
-    //     ])->where('id_laporan', $id)->get();
-    //     return view('laporan.show', [
-    //         'laporan' => $laporan,
-    //         'laporanFasilitas' => $laporanFasilitas
-    //     ],);
-    // }
+    public function show($id)
+    {
+        $laporanFasilitas = LaporanFasilitas::with([
+            'laporan.gedung',
+            'laporan.lantai',
+            'laporan.ruangan',
+            'laporan.pengguna',
+            'fasilitas',
+            'kategoriKerusakan',
+            'status',
+        ])->findOrFail($id);
+
+        return view('laporanPelapor.show', [
+            'laporanFasilitas' => $laporanFasilitas
+        ]);
+    }
 
     /**
      * Show the form for editing the specified resource.

@@ -26,7 +26,7 @@
     <link rel="stylesheet" href="{{ asset('assets/vendors/mdi/css/materialdesignicons.min.css') }}">
 
     <!-- endinject -->
-    <link rel="shortcut icon" href="{{ asset('assets/images/favicon.png') }}" />
+    <link rel="shortcut icon" href="{{ asset('assets/images/fasilita-icon.png') }}" />
 </head>
 
 <body>
@@ -43,17 +43,24 @@
                             <h6>Sistem pelaporan dan perbaikan fasilitas kampus yang cepat dan terpercaya.</h6>
                         </div>
                         <div class="form-group">
-                            <label for="username">Username</label>
-                            <input type="text" class="form-control @error('username') is-invalid @enderror"
-                                name="username" id="username" placeholder="Username">
-                            @error('username')
+                            <label for="usernameOrEmail">Username Atau Email</label>
+                            <input type="text" class="form-control @error('usernameOrEmail') is-invalid @enderror"
+                                name="usernameOrEmail" id="usernameOrEmail" placeholder="Masukkan Username atau Email">
+                            @error('usernameOrEmail')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="form-group">
                             <label for="password">Password</label>
-                            <input type="password" class="form-control @error('password') is-invalid @enderror"
-                                name="password" id="password" placeholder="Password">
+                            <div class="input-group">
+                                <input type="password" class="form-control @error('password') is-invalid @enderror"
+                                    name="password" id="password" placeholder="Masukkan Password">
+                                <div class="input-group-append">
+                                    <button class="btn btn-sm btn-primary rounded-right" type="button">
+                                        <i class="mdi mdi-eye" id="togglePassword"></i>
+                                    </button>
+                                </div>
+                            </div>
                             @error('password')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -85,19 +92,21 @@
                         </div>
                         <div class="bg-white w-50 pl-3" style="border-radius: 0 0 0 30px; margin-top: -1px;">
                             <div class="stretch-card transparent h-100 pb-3">
-                        <div class="card card-dark-blue d-flex" style="border-radius: 0 30px 0 30px; height: 100%;">
-                            <div class="card-body d-flex justify-content-center align-items-center text-center w-100" style="height: 100%;">
-                                <h5 class="m-0" style="line-height: 1.6;">
-                                    Laporan Ditindaklanjuti Dengan<br>
-                                    Cepat & Tepat
-                                </h5>
+                                <div class="card card-dark-blue d-flex"
+                                    style="border-radius: 0 30px 0 30px; height: 100%;">
+                                    <div class="card-body d-flex justify-content-center align-items-center text-center w-100"
+                                        style="height: 100%;">
+                                        <h5 class="m-0" style="line-height: 1.6;">
+                                            Laporan Ditindaklanjuti Dengan<br>
+                                            Cepat & Tepat
+                                        </h5>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    </div>
                 </div>
             </div>
-        </div>
     </main>
 
     <!-- plugins:js -->
@@ -151,10 +160,20 @@
             }
         });
 
+        $('#togglePassword').click(function() {
+            $(this).toggleClass("mdi-eye mdi-eye-off");
+            var input = $('#password');
+            if (input.attr("type") == "password") {
+                input.attr("type", "text");
+            } else {
+                input.attr("type", "password");
+            }
+        });
+
         $(document).ready(function() {
             $("#form-login").validate({
                 rules: {
-                    username: {
+                    usernameOrEmail: {
                         required: true,
                         minlength: 4,
                         maxlength: 20
@@ -166,8 +185,8 @@
                     }
                 },
                 messages: {
-                    username: {
-                        required: "Harap isi username",
+                    usernameOrEmail: {
+                        required: "Harap isi username atau email",
                         minlength: "Username minimal 4 karakter"
                     },
                     password: {
@@ -219,6 +238,7 @@
                 }
             });
         });
+        
     </script>
 </body>
 

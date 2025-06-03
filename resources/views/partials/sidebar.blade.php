@@ -134,6 +134,13 @@
                     <i class="fas fa-history menu-icon"></i> Riwayat Laporan
                 </a>
                 </li>
+
+                <li class="nav-item">
+  <a class="nav-link" href="{{ route('riwayat-perbaikan.index') }}">
+    <i class="fas fa-tools menu-icon"></i> Riwayat Perbaikan
+  </a>
+</li>
+
             </ul>
             </div>
         </li>
@@ -226,6 +233,13 @@
                             <span>Daftar Tugas</span>
                         </a>
                     </li>
+                    {{-- 2) Riwayat Perbaikan (baru ditambahkan) --}}
+      <li class="nav-item">
+        <a class="nav-link" href="{{ route('riwayat-perbaikan-teknisi.index') }}">
+          <i class="fas fa-history menu-icon"></i>
+          Riwayat Perbaikan
+        </a>
+      </li>
                 </ul>
             </div>
         </li>

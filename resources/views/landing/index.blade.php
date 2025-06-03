@@ -31,14 +31,6 @@
             --bg-gray: #f9fafb;
             --bg-dark: #111827;
             --black: #000000;
-            
-            /* Spacing Variables */
-            --section-spacing-y: 120px;
-            --section-spacing-y-mobile: 80px;
-            --content-spacing: 2.5rem;
-            --card-spacing: 1.75rem;
-            --text-spacing: 1.25rem;
-            --element-spacing: 1rem;
         }
 
         /* Base Styles */
@@ -186,7 +178,7 @@
 
         /* UPDATED: Navigation Styles */
         .navbar {
-            padding: 1.25rem 0;
+            padding: 1rem 0;
             backdrop-filter: blur(10px);
             background-color: rgba(255, 255, 255, 0.95) !important;
             border-bottom: 1px solid rgba(0, 0, 0, 0.05);
@@ -206,7 +198,7 @@
             font-weight: 500;
             text-decoration: none;
             transition: color 0.3s ease;
-            padding: 0.5rem 1.25rem;
+            padding: 0.5rem 1rem;
         }
 
         .navbar-nav-centered .nav-link:hover {
@@ -238,7 +230,7 @@
             background-color: var(--primary-color);
             border-color: var(--primary-color);
             border-radius: 50px;
-            padding: 12px 28px;
+            padding: 12px 24px;
             font-weight: 500;
             color: white !important;
             text-decoration: none;
@@ -258,7 +250,7 @@
             border: 1px solid #d1d5db;
             color: var(--text-gray);
             border-radius: 50px;
-            padding: 12px 28px;
+            padding: 12px 24px;
             font-weight: 500;
             background: white;
             text-decoration: none;
@@ -308,13 +300,13 @@
             font-weight: 800;
             color: var(--primary-color);
             line-height: 1.1;
-            margin-bottom: 2.5rem;
+            margin-bottom: 2rem;
         }
 
         .hero-subtitle {
             font-size: 1.25rem;
             color: var(--text-gray);
-            margin-bottom: 2.5rem;
+            margin-bottom: 2rem;
             max-width: 600px;
             margin-left: auto;
             margin-right: auto;
@@ -323,32 +315,34 @@
         .badge-custom {
             background-color: var(--primary-color);
             color: white;
-            padding: 10px 20px;
+            padding: 8px 16px;
             border-radius: 50px;
             font-size: 0.875rem;
             font-weight: 500;
-            margin-bottom: 1.5rem;
+            margin-bottom: 2rem;
             display: inline-block;
         }
 
-        .section-light, .section-dark, .section-gray {
-            padding: var(--section-spacing-y) 0;
+        .section-light {
+            background-color: white;
+            padding: 80px 0;
         }
 
         .section-dark {
             background-color: var(--black);
             color: white;
-            padding: var(--section-spacing-y) 0;
+            padding: 80px 0;
         }
 
         .section-gray {
             background-color: var(--bg-gray);
-            padding: var(--section-spacing-y) 0;
+            padding: 80px 0;
         }
 
         /* UPDATED: Endorsement Section with Logo Containers */
         .endorsement-section {
-            padding: var(--section-spacing-y) 0;
+            background-color: white;
+            padding: 60px 0;
             border-bottom: 1px solid #e5e7eb;
         }
 
@@ -374,7 +368,7 @@
             background: white;
             border: 1px solid #e5e7eb;
             border-radius: 12px;
-            padding: var(--card-spacing);
+            padding: 2rem;
             height: 100%;
             transition: all 0.3s ease;
             display: flex;
@@ -394,7 +388,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
             flex-shrink: 0;
         }
 
@@ -416,7 +410,7 @@
             background: #1f2937;
             border: 1px solid #374151;
             border-radius: 12px;
-            padding: var(--card-spacing);
+            padding: 2rem;
             height: 100%;
             transition: all 0.3s ease;
             display: flex;
@@ -572,8 +566,6 @@
             overflow: hidden;
             box-shadow: 0 25px 50px rgba(0,0,0,0.15);
             background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-            margin-top: 3rem;
-            margin-bottom: 1rem;
         }
 
         .dashboard-preview img {
@@ -619,7 +611,7 @@
         .footer-dark {
             background-color: #000;
             color: white;
-            padding: 80px 0 40px;
+            padding: 60px 0 30px;
         }
 
         .footer-link {
@@ -654,16 +646,6 @@
         }
 
         @media (max-width: 992px) {
-            :root {
-                --section-spacing-y: 100px;
-                --content-spacing: 2rem;
-                --card-spacing: 1.5rem;
-            }
-            
-            .row.g-5 {
-                --bs-gutter-y: 2.5rem;
-            }
-            
             .hero-title {
                 font-size: 3rem;
             }
@@ -690,21 +672,6 @@
         }
 
         @media (max-width: 768px) {
-            :root {
-                --section-spacing-y: var(--section-spacing-y-mobile);
-                --content-spacing: 1.75rem;
-                --card-spacing: 1.25rem;
-                --text-spacing: 1rem;
-            }
-            
-            .row.g-4 {
-                --bs-gutter-y: 1.5rem;
-            }
-            
-            .row.g-5 {
-                --bs-gutter-y: 2rem;
-            }
-            
             .hero-title {
                 font-size: 2.5rem;
             }
@@ -789,7 +756,7 @@
             background: white;
             border: 2px solid #f1f5f9;
             border-radius: 20px;
-            padding: var(--card-spacing);
+            padding: 2.5rem;
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
@@ -820,15 +787,11 @@
 
         .role-card-header {
             text-align: center;
-            margin-bottom: 2.5rem;
+            margin-bottom: 2rem;
         }
 
         .role-card-content {
             flex: 1;
-        }
-
-        .role-card-content p {
-            margin-bottom: 2rem;
         }
 
         .role-icon {
@@ -876,13 +839,18 @@
         .feature-item {
             display: flex;
             align-items: center;
-            margin-bottom: 1rem;
+            margin-bottom: 0.75rem;
             font-size: 0.95rem;
             color: var(--text-gray);
         }
 
         .feature-item:last-child {
             margin-bottom: 0;
+        }
+
+        .feature-item i {
+            width: 20px;
+            flex-shrink: 0;
         }
 
         /* Responsive adjustments for role cards */
@@ -910,599 +878,6 @@
                 font-size: 1.5rem;
             }
         }
-
-/* UPDATED: Enhanced Logo Container Styles */
-.logo-container-enhanced {
-    background: white;
-    border-radius: 24px;
-    padding: 3.5rem 2.5rem;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.08);
-    transition: all 0.4s ease;
-    border: 2px solid #f8fafc;
-    position: relative;
-    overflow: hidden;
-    margin-bottom: 1.5rem;
-}
-
-.logo-container-enhanced::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, var(--primary-color), #8b5cf6);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.logo-container-enhanced:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 20px 50px rgba(79, 70, 229, 0.15);
-    border-color: var(--primary-color);
-}
-
-.logo-container-enhanced:hover::before {
-    opacity: 1;
-}
-
-.logo-wrapper {
-    position: relative;
-    min-height: 120px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 1.5rem;
-}
-
-.official-logo {
-    max-height: 100px;
-    max-width: 100%;
-    width: auto;
-    height: auto;
-    object-fit: contain;
-    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
-    transition: all 0.3s ease;
-}
-
-.logo-container-enhanced:hover .official-logo {
-    transform: scale(1.05);
-    filter: drop-shadow(0 6px 12px rgba(0,0,0,0.15));
-}
-
-.logo-fallback {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    padding: 2rem;
-    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-    border-radius: 16px;
-    border: 2px dashed #cbd5e1;
-    min-height: 120px;
-}
-
-.fallback-icon {
-    width: 60px;
-    height: 60px;
-    background: var(--primary-color);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 1rem;
-}
-
-.fallback-icon i {
-    color: white;
-    font-size: 1.5rem;
-}
-
-.logo-info h5 {
-    color: var(--text-dark);
-    font-size: 1.1rem;
-}
-
-.logo-info p {
-    color: var(--text-gray);
-    font-size: 0.9rem;
-}
-
-/* Partnership Benefits Styles */
-.benefit-card {
-    padding: 2.5rem 1.5rem;
-    background: #f8fafc;
-    border-radius: 16px;
-    transition: all 0.3s ease;
-    border: 1px solid #e2e8f0;
-    margin-bottom: 1rem;
-}
-
-.benefit-card:hover {
-    background: white;
-    transform: translateY(-4px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-}
-
-.benefit-icon {
-    width: 50px;
-    height: 50px;
-    background: linear-gradient(135deg, var(--primary-color), #8b5cf6);
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 1.5rem;
-    color: white;
-    font-size: 1.25rem;
-}
-
-/* Responsive adjustments for logos */
-@media (max-width: 992px) {
-    .logo-container-enhanced {
-        padding: 2.5rem 1.5rem;
-        margin-bottom: 2rem;
-    }
-    
-    .official-logo {
-        max-height: 80px;
-    }
-    
-    .logo-wrapper {
-        min-height: 100px;
-    }
-}
-
-@media (max-width: 768px) {
-    .logo-container-enhanced {
-        padding: 2rem 1rem;
-    }
-    
-    .official-logo {
-        max-height: 70px;
-    }
-    
-    .logo-wrapper {
-        min-height: 90px;
-    }
-    
-    .benefit-card {
-        padding: 1.5rem 1rem;
-        margin-bottom: 1rem;
-    }
-}
-
-@media (max-width: 576px) {
-    .logo-container-enhanced {
-        padding: 1.5rem 1rem;
-    }
-    
-    .official-logo {
-        max-height: 60px;
-    }
-    
-    .logo-wrapper {
-        min-height: 80px;
-    }
-    
-    .benefit-card {
-        padding: 1.5rem 1rem;
-        margin-bottom: 1rem;
-    }
-}
-
-/* General Spacing Adjustments */
-p {
-    margin-bottom: var(--text-spacing);
-}
-
-h1, h2, h3, h4, h5, h6 {
-    margin-bottom: var(--element-spacing);
-}
-
-/* Section Header Spacing */
-.section-header {
-    margin-bottom: 3.5rem;
-}
-
-/* Margin Bottom Utilities */
-.mb-5 {
-    margin-bottom: 3rem !important;
-}
-
-.mb-4 {
-    margin-bottom: 2rem !important;
-}
-
-.mb-3 {
-    margin-bottom: 1.5rem !important;
-}
-
-/* Row Gutter Adjustments */
-.row.g-4 {
-    --bs-gutter-y: 2rem;
-}
-
-.row.g-5 {
-    --bs-gutter-y: 3rem;
-}
-
-/* Responsive Spacing Adjustments */
-@media (max-width: 992px) {
-    .row.g-5 {
-        --bs-gutter-y: 2.5rem;
-    }
-}
-
-@media (max-width: 768px) {
-    .row.g-4 {
-        --bs-gutter-y: 1.5rem;
-    }
-    
-    .row.g-5 {
-        --bs-gutter-y: 2rem;
-    }
-}
-
-/* UPDATED: Role Card Styles */
-.role-card {
-    background: white;
-    border: 2px solid #f1f5f9;
-    border-radius: 20px;
-    padding: var(--card-spacing);
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-}
-
-.role-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 20px 40px rgba(79, 70, 229, 0.15);
-    border-color: var(--primary-color);
-}
-
-.role-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, var(--primary-color), #8b5cf6);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.role-card:hover::before {
-    opacity: 1;
-}
-
-.role-card-header {
-    text-align: center;
-    margin-bottom: 2.5rem;
-}
-
-.role-card-content {
-    flex: 1;
-}
-
-.role-card-content p {
-    margin-bottom: 2rem;
-}
-
-.role-icon {
-    width: 80px;
-    height: 80px;
-    border-radius: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 1.5rem;
-    font-size: 2rem;
-    color: white;
-    position: relative;
-    overflow: hidden;
-}
-
-.role-icon::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: inherit;
-    opacity: 0.1;
-    border-radius: inherit;
-}
-
-.role-icon.students {
-    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-}
-
-.role-icon.technician {
-    background: linear-gradient(135deg, #10b981, #047857);
-}
-
-.role-icon.admin {
-    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
-}
-
-.role-features {
-    margin-top: 1.5rem;
-}
-
-.feature-item {
-    display: flex;
-    align-items: center;
-    margin-bottom: 1rem;
-    font-size: 0.95rem;
-    color: var(--text-gray);
-}
-
-.feature-item:last-child {
-    margin-bottom: 0;
-}
-
-/* Responsive adjustments for role cards */
-@media (max-width: 992px) {
-    .role-card {
-        padding: 2rem;
-        margin-bottom: 1rem;
-    }
-    
-    .role-icon {
-        width: 70px;
-        height: 70px;
-        font-size: 1.75rem;
-    }
-}
-
-@media (max-width: 768px) {
-    .role-card {
-        padding: 1.5rem;
-    }
-    
-    .role-icon {
-        width: 60px;
-        height: 60px;
-        font-size: 1.5rem;
-    }
-}
-
-/* UPDATED: Enhanced Logo Container Styles */
-.logo-container-enhanced {
-    background: white;
-    border-radius: 24px;
-    padding: 3.5rem 2.5rem;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.08);
-    transition: all 0.4s ease;
-    border: 2px solid #f8fafc;
-    position: relative;
-    overflow: hidden;
-    margin-bottom: 1.5rem;
-}
-
-.logo-container-enhanced::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, var(--primary-color), #8b5cf6);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.logo-container-enhanced:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 20px 50px rgba(79, 70, 229, 0.15);
-    border-color: var(--primary-color);
-}
-
-.logo-container-enhanced:hover::before {
-    opacity: 1;
-}
-
-.logo-wrapper {
-    position: relative;
-    min-height: 120px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 1.5rem;
-}
-
-.official-logo {
-    max-height: 100px;
-    max-width: 100%;
-    width: auto;
-    height: auto;
-    object-fit: contain;
-    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
-    transition: all 0.3s ease;
-}
-
-.logo-container-enhanced:hover .official-logo {
-    transform: scale(1.05);
-    filter: drop-shadow(0 6px 12px rgba(0,0,0,0.15));
-}
-
-.logo-fallback {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    padding: 2rem;
-    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-    border-radius: 16px;
-    border: 2px dashed #cbd5e1;
-    min-height: 120px;
-}
-
-.fallback-icon {
-    width: 60px;
-    height: 60px;
-    background: var(--primary-color);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 1rem;
-}
-
-.fallback-icon i {
-    color: white;
-    font-size: 1.5rem;
-}
-
-.logo-info h5 {
-    color: var(--text-dark);
-    font-size: 1.1rem;
-}
-
-.logo-info p {
-    color: var(--text-gray);
-    font-size: 0.9rem;
-}
-
-/* Partnership Benefits Styles */
-.benefit-card {
-    padding: 2.5rem 1.5rem;
-    background: #f8fafc;
-    border-radius: 16px;
-    transition: all 0.3s ease;
-    border: 1px solid #e2e8f0;
-    margin-bottom: 1rem;
-}
-
-.benefit-card:hover {
-    background: white;
-    transform: translateY(-4px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-}
-
-.benefit-icon {
-    width: 50px;
-    height: 50px;
-    background: linear-gradient(135deg, var(--primary-color), #8b5cf6);
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 1.5rem;
-    color: white;
-    font-size: 1.25rem;
-}
-
-/* Responsive adjustments for logos */
-@media (max-width: 992px) {
-    .logo-container-enhanced {
-        padding: 2.5rem 1.5rem;
-        margin-bottom: 2rem;
-    }
-    
-    .official-logo {
-        max-height: 80px;
-    }
-    
-    .logo-wrapper {
-        min-height: 100px;
-    }
-}
-
-@media (max-width: 768px) {
-    .logo-container-enhanced {
-        padding: 2rem 1rem;
-    }
-    
-    .official-logo {
-        max-height: 70px;
-    }
-    
-    .logo-wrapper {
-        min-height: 90px;
-    }
-    
-    .benefit-card {
-        padding: 1.5rem 1rem;
-        margin-bottom: 1rem;
-    }
-}
-
-@media (max-width: 576px) {
-    .logo-container-enhanced {
-        padding: 1.5rem 1rem;
-    }
-    
-    .official-logo {
-        max-height: 60px;
-    }
-    
-    .logo-wrapper {
-        min-height: 80px;
-    }
-    
-    .benefit-card {
-        padding: 1.5rem 1rem;
-        margin-bottom: 1rem;
-    }
-}
-
-/* General Spacing Adjustments */
-p {
-    margin-bottom: var(--text-spacing);
-}
-
-h1, h2, h3, h4, h5, h6 {
-    margin-bottom: var(--element-spacing);
-}
-
-/* Section Header Spacing */
-.section-header {
-    margin-bottom: 3.5rem;
-}
-
-/* Margin Bottom Utilities */
-.mb-5 {
-    margin-bottom: 3rem !important;
-}
-
-.mb-4 {
-    margin-bottom: 2rem !important;
-}
-
-.mb-3 {
-    margin-bottom: 1.5rem !important;
-}
-
-/* Row Gutter Adjustments */
-.row.g-4 {
-    --bs-gutter-y: 2rem;
-}
-
-.row.g-5 {
-    --bs-gutter-y: 3rem;
-}
-
-/* Responsive Spacing Adjustments */
-@media (max-width: 992px) {
-    .row.g-5 {
-        --bs-gutter-y: 2.5rem;
-    }
-}
-
-@media (max-width: 768px) {
-    .row.g-4 {
-        --bs-gutter-y: 1.5rem;
-    }
-    
-    .row.g-5 {
-        --bs-gutter-y: 2rem;
-    }
-}
     </style>
 </head>
 <body>
@@ -1536,12 +911,14 @@ h1, h2, h3, h4, h5, h6 {
                 <!-- Centered Navigation Menu -->
                 <nav class="navbar-nav-centered d-none d-lg-flex">
                     <a class="btn btn-primary-custom" href="{{ url('/') }}">Home</a>
+                    <a class="nav-link" href="{{ url('/laporan') }}">Laporan</a>
                 </nav>
 
                 <!-- Mobile Navigation Menu -->
                 <nav class="navbar-nav d-lg-none w-100">
                     <div class="d-flex flex-column align-items-center">
                         <a class="btn btn-primary-custom mb-2" href="{{ url('/') }}">Home</a>
+                        <a class="nav-link" href="{{ url('/laporan') }}">Laporan</a>
                     </div>
                 </nav>
 
@@ -1559,7 +936,7 @@ h1, h2, h3, h4, h5, h6 {
     HERO SECTION - UPDATED: Assets Integration
     ========================================
     -->
-    <section class="hero-section text-center" style="padding-top: 100px; padding-bottom: 120px;">
+    <section class="hero-section text-center">
         <div class="container">
             <!-- Badge -->
             <div class="badge-custom">
@@ -1602,29 +979,56 @@ h1, h2, h3, h4, h5, h6 {
             </div>
         </div>
     </section>
-
-    <!-- 
+             <!-- 
     ========================================
-    SISTEM PELAPORAN SECTION - NEW: Role-based Cards
+    ENDORSEMENT SECTION - UPDATED: Logo Assets
     ========================================
     -->
-    <section class="section-light" style="padding: 100px 0;">
-        <div class="container">
-            <!-- Section Header -->
-            <div class="text-center mb-5 section-header">
-                <div class="badge-custom mb-3">
-                    <i class="fas fa-users me-2"></i>Sistem Terintegrasi
-                </div>
-                <h2 class="fw-bold text-primary mb-4" style="font-size: 3rem; line-height: 1.2;">
-                    Sistem Pelaporan<br>
-                    untuk Semua Pengguna
-                </h2>
-                <p class="text-muted fs-5 mx-auto" style="max-width: 700px;">
-                    FASILITA dirancang untuk melayani berbagai peran dalam ekosistem kampus, 
-                    dari mahasiswa hingga teknisi, dengan antarmuka yang disesuaikan untuk setiap kebutuhan.
-                </p>
-            </div>
+    <section class="endorsement-section">
+        <div class="container text-center">
+            <h2 class="fw-semibold mb-5">Didukung resmi oleh Polinema</h2>
 
+            <div class="row justify-content-center g-4">
+                <!-- UPDATED: Polinema Logo -->
+                <div class="col-md-4">
+                    <div class="logo-container">
+                        <img src="{{ asset('assets/images/logos/polinema-logo.png') }}" 
+                             alt="Politeknik Negeri Malang - Official Partner" 
+                             class="logo-image-large responsive-image"
+                             loading="lazy"
+                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        
+                        <!-- Fallback for Polinema logo -->
+                        <div class="image-error d-none">
+                            <i class="fas fa-university"></i>
+                            <p class="mb-0 small">Polinema Logo</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- UPDATED: JTI Logo -->
+                <div class="col-md-4">
+                    <div class="logo-container">
+                        <img src="{{ asset('assets/images/logos/jti-logo.png') }}" 
+                             alt="Jurusan Teknologi Informasi - Department Partner" 
+                             class="logo-image-large responsive-image"
+                             loading="lazy"
+                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        
+                        <!-- Fallback for JTI logo -->
+                        <div class="image-error d-none">
+                            <i class="fas fa-code"></i>
+                            <p class="mb-0 small">JTI Logo</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Role Cards Section -->
+    <section class="role-cards-section">
+        <div class="container">
             <!-- Role Cards Grid -->
             <div class="row g-4 mb-5">
                 <!-- Mahasiswa, Dosen, Tendik Card -->
@@ -1752,119 +1156,7 @@ h1, h2, h3, h4, h5, h6 {
         </div>
     </section>
 
-    <!-- 
-    ========================================
-    ENDORSEMENT SECTION - UPDATED: Official Logo Integration
-    ========================================
-    -->
-    <section class="endorsement-section">
-        <div class="container">
-            <!-- Section Header -->
-            <div class="text-center mb-5 section-header">
-                <div class="badge-custom mb-3">
-                    <i class="fas fa-shield-alt me-2"></i>Dukungan Resmi
-                </div>
-                <h2 class="fw-bold text-primary mb-3" style="font-size: 2.5rem;">
-                    Didukung Resmi oleh<br>
-                    Politeknik Negeri Malang
-                </h2>
-                <p class="text-muted fs-5 mx-auto" style="max-width: 600px;">
-                    FASILITA dikembangkan dengan dukungan penuh dari institusi pendidikan terkemuka 
-                    untuk memastikan kualitas dan keberlanjutan sistem.
-                </p>
-            </div>
-
-            <!-- Logo Display Grid -->
-            <div class="row justify-content-center align-items-center g-5">
-                <!-- Polinema Logo -->
-                <div class="col-lg-5 col-md-6">
-                    <div class="logo-container-enhanced">
-                        <div class="logo-wrapper">
-                            <img src="{{ asset('assets/images/logos/polinema-logo.png') }}" 
-                                 alt="Politeknik Negeri Malang - Official Partner" 
-                                 class="official-logo responsive-image"
-                                 loading="lazy"
-                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                        
-                            <!-- Fallback for Polinema logo -->
-                            <div class="logo-fallback d-none">
-                                <div class="fallback-icon">
-                                    <i class="fas fa-university"></i>
-                                </div>
-                                <div class="fallback-text">
-                                    <h5 class="fw-bold mb-1">Politeknik Negeri Malang</h5>
-                                    <p class="text-muted small mb-0">Official Institution Partner</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="logo-info text-center mt-3">
-                            <h5 class="fw-bold text-primary mb-1">Politeknik Negeri Malang</h5>
-                            <p class="text-muted small mb-0">Institusi Pendidikan Utama</p>
-                        </div>
-                    </div>
-                </div>
-            
-                <!-- JTI Logo -->
-                <div class="col-lg-5 col-md-6">
-                    <div class="logo-container-enhanced">
-                        <div class="logo-wrapper">
-                            <img src="{{ asset('assets/images/logos/jti-logo.png') }}" 
-                                 alt="Jurusan Teknologi Informasi - Department Partner" 
-                                 class="official-logo responsive-image"
-                                 loading="lazy"
-                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                        
-                            <!-- Fallback for JTI logo -->
-                            <div class="logo-fallback d-none">
-                                <div class="fallback-icon">
-                                    <i class="fas fa-code"></i>
-                                </div>
-                                <div class="fallback-text">
-                                    <h5 class="fw-bold mb-1">Jurusan Teknologi Informasi</h5>
-                                    <p class="text-muted small mb-0">Department Partner</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="logo-info text-center mt-3">
-                            <h5 class="fw-bold text-primary mb-1">Jurusan Teknologi Informasi</h5>
-                            <p class="text-muted small mb-0">Departemen Pengembang</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Partnership Benefits -->
-            <div class="row g-4 mt-5" style="margin-top: 4rem !important;">
-                <div class="col-md-4">
-                    <div class="benefit-card text-center">
-                        <div class="benefit-icon">
-                            <i class="fas fa-certificate"></i>
-                        </div>
-                        <h6 class="fw-bold mb-2">Kualitas Terjamin</h6>
-                        <p class="text-muted small mb-0">Dikembangkan sesuai standar akademik dan industri</p>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="benefit-card text-center">
-                        <div class="benefit-icon">
-                            <i class="fas fa-handshake"></i>
-                        </div>
-                        <h6 class="fw-bold mb-2">Dukungan Berkelanjutan</h6>
-                        <p class="text-muted small mb-0">Maintenance dan pengembangan yang berkesinambungan</p>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="benefit-card text-center">
-                        <div class="benefit-icon">
-                            <i class="fas fa-shield-check"></i>
-                        </div>
-                        <h6 class="fw-bold mb-2">Keamanan Data</h6>
-                        <p class="text-muted small mb-0">Perlindungan data sesuai standar institusi pendidikan</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+   
 
     <!-- 
     ========================================
@@ -1874,7 +1166,7 @@ h1, h2, h3, h4, h5, h6 {
     <section class="section-light">
         <div class="container">
             <!-- Section Header -->
-            <div class="row align-items-center mb-5 section-header">
+            <div class="row align-items-center mb-5">
                 <div class="col-md-1">
                     <div class="bg-light rounded" style="width: 32px; height: 32px;"></div>
                 </div>
@@ -1946,7 +1238,7 @@ h1, h2, h3, h4, h5, h6 {
             </div>
 
             <!-- UPDATED: Dashboard Interface Image -->
-            <div class="mb-5" style="margin-bottom: 4rem !important;">
+            <div class="mb-5">
                 <div class="media-container aspect-ratio-16-9">
                     <img src="{{ asset('assets/images/dashboard-interface.jpg') }}" 
                          alt="FASILITA Dashboard Interface - Antarmuka Sistem Pelaporan" 
@@ -2005,7 +1297,7 @@ h1, h2, h3, h4, h5, h6 {
     -->
     <section class="section-dark">
         <div class="container">
-            <div class="row align-items-center g-5" style="--bs-gutter-y: 3.5rem;">
+            <div class="row align-items-center g-5">
                 <div class="col-lg-6">
                     <div class="d-flex align-items-center mb-4">
                         <div class="bg-primary rounded d-flex align-items-center justify-content-center me-3" style="width: 48px; height: 48px;">
@@ -2049,7 +1341,7 @@ h1, h2, h3, h4, h5, h6 {
             </div>
 
             <!-- UPDATED: Feature Cards with Assets -->
-            <div class="row g-4 mt-5" style="margin-top: 4rem !important;">
+            <div class="row g-4 mt-5">
                 <!-- Feature Card 1 -->
                 <div class="col-md-6">
                     <div class="tool-card">
@@ -2123,7 +1415,7 @@ h1, h2, h3, h4, h5, h6 {
     <section class="section-light">
         <div class="container">
             <!-- Section Header -->
-            <div class="row align-items-center mb-5 section-header">
+            <div class="row align-items-center mb-5">
                 <div class="col-md-1">
                     <div class="bg-light rounded" style="width: 32px; height: 32px;"></div>
                 </div>
@@ -2140,7 +1432,7 @@ h1, h2, h3, h4, h5, h6 {
             </div>
 
             <!-- Feature Points -->
-            <div class="row g-4 mb-5" style="margin-bottom: 4rem !important;">
+            <div class="row g-4 mb-5">
                 <!-- Feature Point 1 -->
                 <div class="col-md-4">
                     <div class="d-flex">
@@ -2309,7 +1601,7 @@ h1, h2, h3, h4, h5, h6 {
     -->
     <section class="section-gray">
         <div class="container">
-            <div class="d-flex align-items-center mb-4 section-header">
+            <div class="d-flex align-items-center mb-4">
                 <div class="bg-primary rounded me-3" style="width: 24px; height: 24px;"></div>
                 <span class="text-primary fw-semibold">Our Team</span>
             </div>
@@ -2347,7 +1639,7 @@ h1, h2, h3, h4, h5, h6 {
             </div>
 
             <!-- UPDATED: Team Grid with Photos -->
-            <div class="row g-4" style="--bs-gutter-y: 2.5rem;">
+            <div class="row g-4">
                 <!-- Team Member 1 -->
                 <div class="col-md-3">
                     <div class="team-card">
@@ -2450,7 +1742,7 @@ h1, h2, h3, h4, h5, h6 {
     -->
     <footer class="footer-dark">
         <div class="container">
-            <div class="row g-4 mb-5" style="--bs-gutter-y: 2.5rem; margin-bottom: 3.5rem !important;">
+            <div class="row g-4 mb-5">
                 <!-- Logo -->
                 <div class="col-md-3">
                     <div class="d-flex align-items-center mb-4">

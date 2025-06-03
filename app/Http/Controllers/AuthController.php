@@ -53,59 +53,38 @@ class AuthController extends Controller
 
     public function showLogin()
     {
-        if (Auth::check()) {
-            return redirect('/');
-        } else {
             return view('auth.login');
-        }
     }
 
     public function login(Request $request)
-    {
-        $c = $request->validate([
-            'usernameOrEmail' => 'required|string',
-            'password' => 'required|string',
-        ]);
+{
+    $c = $request->validate([
+        'username' => 'required|string',
+        'password' => 'required|string',
+    ]);
 
-        $login = $c['usernameOrEmail'];
-        $password = $c['password'];
-
-        // Cek apakah yang dimasukkan adalah email atau username
-        $fieldType = filter_var($login, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
-
-        $user = Pengguna::where($fieldType, $login)->first();
-
-        // if (Auth::guard('web')->attempt($c, $request->boolean('remember'))) {
-        //     $request->session()->regenerate();
-        //     return response()->json([
-        //         'status' => true,
-        //         'message' => 'Login Berhasil',
-        //         'redirect' => url('/')
-        //     ]);
-        // }
-
-        if ($user && Hash::check($password, $user->password)) {
-            Auth::login($user, $request->boolean('remember'));
-            $request->session()->regenerate();
-
-            return response()->json([
-                'status' => true,
-                'message' => 'Login Berhasil',
-                'redirect' => url('/')
-            ]);
-        }
+    if (Auth::guard('web')->attempt($c, $request->boolean('remember'))) {
+        $request->session()->regenerate();
 
         return response()->json([
-            'status' => false,
-            'errors' => ['usernameOrEmail' => 'Username atau password salah']
-        ], 422);
+            'status'   => true,
+            'message'  => 'Login Berhasil',
+            // Arahkan ke route('dashboard') bukan url('/')
+            'redirect' => route('dashboard'),
+        ]);
     }
+
+    return response()->json([
+        'status' => false,
+        'errors' => ['username' => 'Username atau password salah']
+    ], 422);
+}
 
     public function logout(Request $request)
     {
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect()->route('login');
+        return redirect()->route('landing.index')->with('success', 'Anda telah berhasil logout');
     }
 }

@@ -132,7 +132,7 @@
         });
     </script>
     @stack('js')
-
+    
 
 </body>
 

@@ -456,10 +456,6 @@ Route::middleware(['auth'])->group(function () {
     });
 
 
-
-
-});
-
 Route::get('/icons', function () {
     return view('pages.icons.index');
 });

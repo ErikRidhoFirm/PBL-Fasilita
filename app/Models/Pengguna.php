@@ -21,7 +21,6 @@ class Pengguna extends Authenticatable
         'username',
         'nama',
         'password',
-        'email',
         'foto_profile',
     ];
 

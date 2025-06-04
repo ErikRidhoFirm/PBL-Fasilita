@@ -28,4 +28,6 @@ class PenilaianPengguna extends Model
     {
         return $this->belongsTo(Pengguna::class, 'id_pengguna');
     }
+
+    
 }

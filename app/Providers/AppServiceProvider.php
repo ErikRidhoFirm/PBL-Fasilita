@@ -2,9 +2,12 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
+use App\Models\RiwayatLaporanFasilitas;
+use Illuminate\Support\ServiceProvider;
+use App\Observers\RiwayatLaporanFasilitasObserver;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -21,10 +24,15 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // if (config('app.env') === 'local') {//Add commentMore actions
+        //     URL::forceScheme('https');
+        // }
+
         // mengambil data user yang telah login dan menampilkannya ke layout main
         View::composer('*', function ($view) {
             $view->with('authUser', Auth::user());
         });
-        
+
+        RiwayatLaporanFasilitas::observe(RiwayatLaporanFasilitasObserver::class);
     }
 }

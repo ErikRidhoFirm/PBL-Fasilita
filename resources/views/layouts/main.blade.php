@@ -34,6 +34,7 @@
     <!-- endinject -->
     <link rel="shortcut icon" href="{{ asset('assets/images/fasilita-icon.png') }}" />
 
+    {{-- <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"> --}}
 </head>
 
 <body>
@@ -132,7 +133,7 @@
         });
     </script>
     @stack('js')
-    
+
 
 </body>
 

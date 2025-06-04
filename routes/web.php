@@ -1,6 +1,8 @@
 <?php
 
+use App\Models\Penugasan;
 use App\Models\SkoringKriteria;
+use App\Models\PenilaianPengguna;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PeranController;
@@ -15,21 +17,20 @@ use App\Http\Controllers\PenggunaController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FasilitasController;
 use App\Http\Controllers\PenugasanController;
+use App\Http\Controllers\NotifikasiController;
 use App\Http\Controllers\SkorTopsisController;
 use App\Http\Controllers\VerifikasiController;
 use App\Http\Controllers\RiwayatPelaporController;
 use App\Http\Controllers\SkoringKriteriaController;
 use App\Http\Controllers\LaporanFasilitasController;
+use App\Http\Controllers\PelaporDashboardController;
+use App\Http\Controllers\RiwayatPerbaikanController;
 use App\Http\Controllers\KategoriFasilitasController;
 use App\Http\Controllers\KategoriKerusakanController;
-use App\Http\Controllers\PelaporLaporanFasilitasController;
 use App\Http\Controllers\PenilaianPenggunaController;
+use App\Http\Controllers\PelaporLaporanFasilitasController;
 use App\Http\Controllers\RiwayatLaporanFasilitasController;
-use App\Models\PenilaianPengguna;
-use App\Models\Penugasan;
-use App\Http\Controllers\RiwayatPerbaikanController;
 use App\Http\Controllers\RiwayatPerbaikanTeknisiController;
-use App\Http\Controllers\PelaporDashboardController;
 
 
 /*
@@ -330,8 +331,6 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/{perbaikan}/edit', [RiwayatPerbaikanController::class, 'edit'])->name('edit');
             Route::put('/{perbaikan}', [RiwayatPerbaikanController::class, 'update'])->name('update');
         });
-        
-    });
 
         Route::prefix('laporan')->group(function () {
             Route::get('/', [LaporanController::class, 'index'])->name('laporan.index');
@@ -381,6 +380,7 @@ Route::middleware(['auth'])->group(function () {
 
     });
 
+
     Route::middleware(['role:ADM,TNS'])->group(function(){
         Route::prefix('penugasan')->group(function(){
             Route::get('/', [PenugasanController::class,'index'])->name('penugasan.index');
@@ -390,21 +390,21 @@ Route::middleware(['auth'])->group(function () {
 
         Route::post('/{id}/perbaikan', [PenugasanController::class,'perbaikanSubmit'])->name('laporanFasilitas.perbaikan.submit');
         Route::get(
-        '/riwayat-perbaikan-teknisi',
-        [RiwayatPerbaikanTeknisiController::class, 'index']
-    )->name('riwayat-perbaikan-teknisi.index');
+            '/riwayat-perbaikan-teknisi',
+            [RiwayatPerbaikanTeknisiController::class, 'index']
+        )->name('riwayat-perbaikan-teknisi.index');
 
-    // JSON untuk DataTable (server-side)
-    Route::get(
-        '/riwayat-perbaikan-teknisi/list',
-        [RiwayatPerbaikanTeknisiController::class, 'list']
-    )->name('riwayat-perbaikan-teknisi.list');
+        // JSON untuk DataTable (server-side)
+        Route::get(
+            '/riwayat-perbaikan-teknisi/list',
+            [RiwayatPerbaikanTeknisiController::class, 'list']
+        )->name('riwayat-perbaikan-teknisi.list');
 
-    // Show/detail (modal) — memanggil partial show yang sudah dibuat
-    Route::get(
-        '/riwayat-perbaikan-teknisi/{perbaikan}',
-        [RiwayatPerbaikanTeknisiController::class, 'show']
-    )->name('riwayat-perbaikan-teknisi.show');
+        // Show/detail (modal) — memanggil partial show yang sudah dibuat
+        Route::get(
+            '/riwayat-perbaikan-teknisi/{perbaikan}',
+            [RiwayatPerbaikanTeknisiController::class, 'show']
+        )->name('riwayat-perbaikan-teknisi.show');
     });
 
     // Route::middleware(['role:ADM,SPR'])->prefix('riwayat')->group(function () {
@@ -443,6 +443,16 @@ Route::middleware(['auth'])->group(function () {
             Route::delete('{id}/destroy', [PenilaianPenggunaController::class, 'destroy'])->name('feedback.delete');
         });
 
+        Route::prefix('notifikasi')->group(function(){
+            Route::get('/', [NotifikasiController::class, 'index'])->name('notifikasi.index');
+            Route::post('/{id}/read', [NotifikasiController::class, 'markAsRead'])->name('notifikasi.markAsRead');
+            Route::post('/read-all', [NotifikasiController::class, 'markAllAsRead'])->name('notifikasi.markAllAsRead');
+            Route::delete('/{id}', [NotifikasiController::class, 'destroy'])->name('notifikasi.destroy');
+
+            // API untuk mendapatkan jumlah notifikasi belum dibaca (untuk badge)
+            Route::get('/api/unread-count', [NotifikasiController::class, 'getUnreadCount'])->name('notifikasi.unread-count');
+        });
+
         Route::get('/dashboard-pelapor', [PelaporDashboardController::class, 'index'])->name('dashboard-pelapor.index');
     });
 
@@ -454,6 +464,8 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/update-info', [ProfileController::class, 'update_info'])->name('profile.update_info');
         Route::post('/update-password', [ProfileController::class, 'update_password'])->name('profile.update_password');
     });
+
+});
 
 
 Route::get('/icons', function () {

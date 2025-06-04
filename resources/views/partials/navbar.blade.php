@@ -1,109 +1,72 @@
 <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
     <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
-      <a class=" mr-5" href="{{ route('dashboard') }}"><img src="{{ asset('assets/images/fasilita.png') }}" style="width: 80px;" class="mr-2" alt="logo"/></a>
-      {{-- <a class="navbar-brand brand-logo-mini" href="/"><img src="{{ asset('assets/images/fasilita.png') }}" class="w-100" alt="logo"/></a> --}}
+        <a class="mr-5" href="{{ route('dashboard') }}">
+            <img src="{{ asset('assets/images/fasilita.png') }}" style="width: 80px;" class="mr-2" alt="logo"/>
+        </a>
     </div>
     <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
-      {{-- <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
-        <span class="icon-menu"></span>
-      </button> --}}
-      <ul class="navbar-nav mr-lg-2">
-        <li class="nav-item nav-search d-none d-lg-block">
-          <div class="input-group">
-            <div class="input-group-prepend hover-cursor" id="navbar-search-icon">
-              <span class="input-group-text" id="search">
-                <i class="icon-search"></i>
-              </span>
-            </div>
-            <input type="text" class="form-control" id="navbar-search-input" placeholder="Search now" aria-label="search" aria-describedby="search">
-          </div>
-        </li>
-      </ul>
-      <ul class="navbar-nav navbar-nav-right">
-        <li class="nav-item dropdown">
-          <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#" data-toggle="dropdown">
+        <ul class="navbar-nav mr-lg-2">
+            <li class="nav-item nav-search d-none d-lg-block">
+                <div class="input-group">
+                    <div class="input-group-prepend hover-cursor" id="navbar-search-icon">
+                        <span class="input-group-text" id="search">
+                            <i class="icon-search"></i>
+                        </span>
+                    </div>
+                    <input type="text"
+                           class="form-control"
+                           id="navbar-search-input"
+                           placeholder="Search now"
+                           aria-label="search"
+                           aria-describedby="search">
+                </div>
+            </li>
+        </ul>
+
+        <ul class="navbar-nav navbar-nav-right">
+            @php
+                use Illuminate\Support\Facades\Auth;
+                $authUser = Auth::user();
+                // Hanya tampilkan ikon notifikasi untuk peran MHS, DSN, TDK
+                $allowedRoles = ['MHS', 'DSN', 'TDK'];
+                $userRole     = $authUser->peran->kode_peran ?? null;
+
+                // Hitung jumlah notifikasi belum dibaca untuk user ini
+                use App\Models\Notifikasi;
+                $unreadCount = $authUser->notifikasi()->where('is_read', false)->count();
+            @endphp
+
+            @if(in_array($userRole, $allowedRoles))
+    <li class="nav-item">
+        <a class="nav-link position-relative" href="{{ route('notifikasi.index') }}">
             <i class="icon-bell mx-0"></i>
-            <span class="count"></span>
-          </a>
-          <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="notificationDropdown">
-            <p class="mb-0 font-weight-normal float-left dropdown-header">Notifications</p>
-            <a class="dropdown-item preview-item">
-              <div class="preview-thumbnail">
-                <div class="preview-icon bg-success">
-                  <i class="ti-info-alt mx-0"></i>
-                </div>
-              </div>
-              <div class="preview-item-content">
-                <h6 class="preview-subject font-weight-normal">Application Error</h6>
-                <p class="font-weight-light small-text mb-0 text-muted">
-                  Just now
-                </p>
-              </div>
-            </a>
-            <a class="dropdown-item preview-item">
-              <div class="preview-thumbnail">
-                <div class="preview-icon bg-warning">
-                  <i class="ti-settings mx-0"></i>
-                </div>
-              </div>
-              <div class="preview-item-content">
-                <h6 class="preview-subject font-weight-normal">Settings</h6>
-                <p class="font-weight-light small-text mb-0 text-muted">
-                  Private message
-                </p>
-              </div>
-            </a>
-            <a class="dropdown-item preview-item">
-              <div class="preview-thumbnail">
-                <div class="preview-icon bg-info">
-                  <i class="ti-user mx-0"></i>
-                </div>
-              </div>
-              <div class="preview-item-content">
-                <h6 class="preview-subject font-weight-normal">New user registration</h6>
-                <p class="font-weight-light small-text mb-0 text-muted">
-                  2 days ago
-                </p>
-              </div>
-            </a>
-          </div>
-        </li>
-        {{-- <li class="nav-item nav-profile dropdown">
-          <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
-            <img src="{{ asset('assets/images/faces/face28.jpg') }}" alt="profile"/>
-          </a>
-          <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
-            <a class="dropdown-item nav-settings">
-              <i class="ti-settings text-primary"></i>
-              Profil
-            </a>
-            <a class="dropdown-item">
-              <i class="ti-settings text-primary"></i>
-              Settings
-            </a>
-            </a>
-            <a class="dropdown-item">
-              <i class="ti-power-off text-primary"></i>
-              Logout
-            </a>
-          </div>
-        </li> --}}
-        <li class="nav-item d-none d-lg-flex bg-transparent">
-          <a class="nav-link" href="{{ route('profile.index') }}" >
-            <span class="mx-2">
-              {{ $authUser->username }}
-            </span>
-            <img src="{{ $authUser->foto_profile ? asset('storage/uploads/profiles/' . $authUser->foto_profile) : asset('foto/default.jpg') }}" class="rounded-circle" alt="profile" style="max-height: 40px"/>
-          </a>
-        </li>
-        {{-- <li class="nav-item nav-settings d-none d-lg-flex">
-          <a class="nav-link" href="#" >
-            <img src="{{ asset('assets/images/faces/face28.jpg') }}" alt="profile" style="max-height: 40px"/>
-          </a>
-        </li> --}}
-      </ul>
-      <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
-        <span class="icon-menu"></span>
-      </button>
+            @if($unreadCount > 0)
+                {{-- Lingkaran indikator berwarna merah --}}
+                <span class="count bg-danger" style="position: absolute; top: 11px; right: -5px; width: 8px; height: 8px; border-radius: 50%;"></span>
+            @endif
+        </a>
+    </li>
+@endif
+
+            <li class="nav-item d-none d-lg-flex bg-transparent">
+                <a class="nav-link" href="{{ route('profile.index') }}">
+                    <span class="mx-2">
+                        {{ $authUser->username }}
+                    </span>
+                    <img src="{{ $authUser->foto_profile
+                                  ? asset('storage/uploads/profiles/' . $authUser->foto_profile)
+                                  : asset('foto/default.jpg') }}"
+                         class="rounded-circle"
+                         alt="profile"
+                         style="max-height: 40px"/>
+                </a>
+            </li>
+        </ul>
+
+        <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center"
+                type="button"
+                data-toggle="offcanvas">
+            <span class="icon-menu"></span>
+        </button>
     </div>
-  </nav>
+</nav>

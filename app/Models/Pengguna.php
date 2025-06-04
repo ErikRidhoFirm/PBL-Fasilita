@@ -89,4 +89,33 @@ class Pengguna extends Authenticatable
     {
         return $this->hasMany(PenilaianPengguna::class, 'id_pengguna');
     }
+
+    public function notifikasi(): HasMany
+    {
+        return $this->hasMany(Notifikasi::class, 'id_pengguna');
+    }
+
+        /**
+     * Get unread notifications
+     */
+    public function unreadNotifications()
+    {
+        return $this->notifikasi()->where('is_read', false);
+    }
+
+    /**
+     * Get unread notification count
+     */
+    public function getUnreadNotificationCountAttribute()
+    {
+        return $this->unreadNotifications()->count();
+    }
+
+    /**
+     * Mark all notifications as read
+     */
+    public function markAllNotificationsAsRead()
+    {
+        return $this->unreadNotifications()->update(['is_read' => true]);
+    }
 }

@@ -92,9 +92,6 @@
                         style="width:40px; height:40px; object-fit:cover;">
                   {{ optional($laporanFasilitas->laporan->pengguna)->nama ?? '–' }}
                   <br>
-                  <small class="text-muted">
-                    {{ optional($laporanFasilitas->laporan->pengguna)->email ?? '' }}
-                  </small>
                 </dd>
 
                 <dt class="col-sm-4 text-muted">Tanggal Laporan</dt>

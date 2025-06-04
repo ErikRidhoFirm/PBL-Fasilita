@@ -93,9 +93,15 @@ class LaporanController extends Controller
      */
     public function create()
     {
+        $authUser = Auth::user();
+
+        $halamanLaporan = in_array($authUser->peran->kode_peran, ['ADM', 'DSN', 'TDK'])
+                            ? 'laporan.index'
+                            : 'laporanPelapor.index';
+
         $breadcrumbs = [
             ['title' => 'Dashboard', 'url' => route('dashboard')],
-            ['title' => 'Halaman Laporan', 'url' => route('laporan.index')],
+            ['title' => 'Halaman Laporan', 'url' => route($halamanLaporan)],
             ['title' => 'Tambah Laporan', 'url' => route('laporan.create')]
         ];
 
@@ -208,63 +214,63 @@ class LaporanController extends Controller
     }
 
     public function storeByLaporan(Request $r)
-    {
-        $r->validate([
-            'id_laporan'                 => ['required','exists:laporan,id_laporan'],
-            'details'                    => ['required','array'],
-            'details.*.id'               => ['required','integer','exists:laporan_fasilitas,id_laporan_fasilitas'],
-            'details.*.verif_status'    => ['required', Rule::in([
-                Status::VALID,
-                Status::TIDAK_VALID,
-                Status::DITOLAK,
-            ])],
-            'details.*.catatan'          => ['nullable','string','max:500'],
-            'details.*.skor'             => ['nullable','array'],
-            'details.*.skor.*'          => ['nullable','integer','min:1','max:5'],
+{
+    $r->validate([
+        'id_laporan'              => ['required','exists:laporan,id_laporan'],
+        'details'                 => ['required','array'],
+        'details.*.id'            => ['required','integer','exists:laporan_fasilitas,id_laporan_fasilitas'],
+        'details.*.verif_status'  => ['required', Rule::in([
+            Status::VALID,
+            Status::TIDAK_VALID,
+            Status::DITOLAK,
+        ])],
+        'details.*.catatan'       => ['nullable','string','max:500'],
+        'details.*.skor'          => ['nullable','array'],
+        'details.*.skor.*'        => ['nullable','integer','min:1','max:5'],
+    ]);
+
+    foreach ($r->details as $det) {
+        /** @var LaporanFasilitas $lf */
+        $lf = LaporanFasilitas::findOrFail($det['id']);
+
+        // 1) Buat entri riwayat dengan status baru
+        RiwayatLaporanFasilitas::create([
+            'id_laporan_fasilitas' => $lf->id_laporan_fasilitas,
+            'id_status'            => $det['verif_status'],
+            'id_pengguna'          => auth()->id(),
+            'catatan'              => $det['catatan'] ?? '',
         ]);
+        // —–––––––
+        // _Observer_ akan otomatis membuat notifikasi di sini
 
-        $headerId = $r->id_laporan;
+        // 2) Update kolom status di LaporanFasilitas
+        $lf->update([ 'id_status' => $det['verif_status'] ]);
 
-        foreach ($r->details as $det) {
-            $lf = LaporanFasilitas::findOrFail($det['id']);
-
-            // 1) Buat riwayat
-            RiwayatLaporanFasilitas::create([
-                'id_laporan_fasilitas' => $lf->id_laporan_fasilitas,
-                'id_status'            => $det['verif_status'],
-                'id_pengguna'          => auth()->id(),
-                'catatan'              => $det['catatan'] ?? '',
+        // 3) Jika status VALID, buat penilaian + skor
+        if ($det['verif_status'] == Status::VALID) {
+            $pen = Penilaian::create([
+                'id_laporan_fasilitas'=> $lf->id_laporan_fasilitas,
+                'id_pengguna'         => auth()->id(),
+                'dinilai_pada'        => now(),
             ]);
-
-            $lf->id_status = $det['verif_status'];
-            $lf->save();
-
-            if ($det['verif_status'] == Status::VALID) {
-                $pen = Penilaian::create([
-                    'id_laporan_fasilitas'=> $lf->id_laporan_fasilitas,
-                    'id_pengguna'         => auth()->id(),
-                    'dinilai_pada'        => now(),
-                ]);
-
-                foreach ($det['skor'] ?? [] as $kode => $val) {
-                    if ($val !== null &&
-                        $k = Kriteria::where('kode_kriteria', $kode)->first()
-                    ) {
-                        SkorKriteriaLaporan::create([
-                            'id_penilaian' => $pen->id_penilaian,
-                            'id_kriteria'  => $k->id_kriteria,
-                            'nilai_mentah' => $val,
-                        ]);
-                    }
+            foreach ($det['skor'] ?? [] as $kode => $val) {
+                if ($val !== null && $k = Kriteria::where('kode_kriteria', $kode)->first()) {
+                    SkorKriteriaLaporan::create([
+                        'id_penilaian' => $pen->id_penilaian,
+                        'id_kriteria'  => $k->id_kriteria,
+                        'nilai_mentah' => $val,
+                    ]);
                 }
             }
         }
-
-        return response()->json([
-            'status'  => true,
-            'message' => 'Semua detail laporan berhasil diverifikasi.',
-        ]);
     }
+
+    return response()->json([
+        'status'  => true,
+        'message' => 'Semua detail laporan berhasil diverifikasi.',
+    ]);
+}
+
 
     public function indexPelapor()
     {

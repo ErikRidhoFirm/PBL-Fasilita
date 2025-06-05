@@ -48,7 +48,7 @@
                 @if($totalUnread > 0)
                     <form action="{{ route('notifikasi.markAllAsRead') }}" method="POST" class="d-inline">
                         @csrf
-                        <button type="submit" class="btn btn-success btn-sm">
+                        <button type="submit" class="btn btn-outline-success btn-sm">
                             <i class="ti-check mr-1"></i>
                             Tandai Semua Dibaca
                         </button>
@@ -85,9 +85,8 @@
 
                                 {{-- Pesan --}}
                                 <p class="card-text text-muted mb-2">
-                                    {{ $item->pesan }}
+                                    {{ Str::limit($item->pesan, 100) }}
                                 </p>
-
                                 {{-- Timestamp --}}
                                 <div class="d-flex align-items-center text-muted">
                                     <i class="ti-time mr-1"></i>
@@ -99,11 +98,20 @@
                         </div>
 
                         {{-- Tombol Aksi: Tandai Dibaca atau Hapus --}}
-                        <div class="ml-3 d-flex flex-column align-items-end">
+                        <div class="ml-3 d-flex align-items-center">
+                            {{-- Tombol Detail --}}
+                            <button type="button"
+                                    class="btn btn-outline-info btn-sm mr-2 btn-detail"
+                                    data-id="{{ $item->id_notifikasi }}">
+                                <i class="ti-eye"></i>
+                                <span class="d-none d-sm-inline ml-1">Detail</span>
+                            </button>
+
+                            {{-- Tandai Dibaca jika belum dibaca --}}
                             @if(!$item->is_read)
                                 <form action="{{ route('notifikasi.markAsRead', $item->id_notifikasi) }}"
                                       method="POST"
-                                      class="d-inline mb-1">
+                                      class="d-inline mr-2">
                                     @csrf
                                     <button type="submit"
                                             class="btn btn-outline-primary btn-sm"
@@ -114,7 +122,7 @@
                                 </form>
                             @endif
 
-                            {{-- Tombol Hapus (Delete) --}}
+                            {{-- Hapus --}}
                             <form action="{{ route('notifikasi.destroy', $item->id_notifikasi) }}"
                                   method="POST"
                                   onsubmit="return confirm('Anda yakin ingin menghapus notifikasi ini?');"
@@ -122,7 +130,7 @@
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit"
-                                        class="btn btn-danger btn-sm"
+                                        class="btn btn-outline-danger btn-sm"
                                         title="Hapus Notifikasi">
                                     <i class="ti-trash"></i>
                                     <span class="d-none d-sm-inline ml-1">Hapus</span>
@@ -151,6 +159,8 @@
     @endforelse
 </div>
 
+<div id="modalContainer"></div>
+
 <!-- Pagination (pastikan menyertakan query string filter) -->
 @if($notifikasi->hasPages())
     <div class="row">
@@ -158,7 +168,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="d-flex justify-content-center">
-                        {{ $notifikasi->withQueryString()->links() }}
+                        {{ $notifikasi->withQueryString()->links('pagination::bootstrap-4') }}
                     </div>
                 </div>
             </div>
@@ -206,6 +216,20 @@ $(document).ready(function() {
             position: 'top-end'
         });
     @endif
+
+    $('.btn-detail').on('click', function() {
+        let id = $(this).data('id');
+        let url = "{{ url('notifikasi') }}/" + id; // URL: /notifikasi/{id}
+
+        // GET HTML modal dari server
+        $.get(url, function(html) {
+            // Tambahkan (atau replace) isi modalContainer dengan respons HTML
+            $('#modalContainer').html(html);
+
+            // Setelah HTML dimasukkan, tampilkan modal dengan ID yang tepat
+            $('#modalDetail' + id).modal('show');
+        });
+    });
 });
 </script>
 

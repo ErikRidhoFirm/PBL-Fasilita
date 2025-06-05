@@ -447,6 +447,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/', [NotifikasiController::class, 'index'])->name('notifikasi.index');
             Route::post('/{id}/read', [NotifikasiController::class, 'markAsRead'])->name('notifikasi.markAsRead');
             Route::post('/read-all', [NotifikasiController::class, 'markAllAsRead'])->name('notifikasi.markAllAsRead');
+            Route::get('/{id}', [NotifikasiController::class, 'show'])->name('notifikasi.show');
             Route::delete('/{id}', [NotifikasiController::class, 'destroy'])->name('notifikasi.destroy');
 
             // API untuk mendapatkan jumlah notifikasi belum dibaca (untuk badge)

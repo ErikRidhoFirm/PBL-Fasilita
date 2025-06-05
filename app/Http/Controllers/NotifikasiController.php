@@ -37,7 +37,7 @@ class NotifikasiController extends Controller
         // Jika 'all', tidak perlu where tambahan
 
         // Paginate (10 per halaman), dan sertakan query string pada link
-        $notifikasi = $query->paginate(10)->withQueryString();
+        $notifikasi = $query->paginate(5)->withQueryString();
 
         return view('notifikasi.index', compact(
             'notifikasi',
@@ -89,6 +89,17 @@ class NotifikasiController extends Controller
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Terjadi kesalahan saat memperbarui notifikasi.');
         }
+    }
+
+    public function show($id_notifikasi)
+    {
+        // Pastikan hanya pemilik notifikasi yang bisa melihat detail
+        $item = Notifikasi::where('id_notifikasi', $id_notifikasi)
+                          ->where('id_pengguna', Auth::id())
+                          ->with(['laporanFasilitas.fasilitas', 'laporanFasilitas.status'])
+                          ->firstOrFail();
+
+        return view('notifikasi.show', compact('item'));
     }
 
     /**

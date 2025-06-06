@@ -32,6 +32,9 @@ use App\Http\Controllers\PelaporLaporanFasilitasController;
 use App\Http\Controllers\RiwayatLaporanFasilitasController;
 use App\Http\Controllers\RiwayatPerbaikanTeknisiController;
 
+// use App\Models\PenilaianPengguna;
+// use App\Models\Penugasan;
+use App\Models\RiwayatLaporanFasilitas;
 
 /*
 |--------------------------------------------------------------------------
@@ -355,6 +358,8 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/{id}/riwayat', [RiwayatLaporanFasilitasController::class, 'show'])->name('riwayat.show');
             Route::get('/detail-modal/{id}', [RiwayatLaporanFasilitasController::class,'detailModal'])->name('riwayat.detailModal');
             Route::delete('/{id}', [RiwayatLaporanFasilitasController::class, 'destroy'])->name('riwayat.destroy');
+            Route::get('/exportRekap', [RiwayatLaporanFasilitasController::class, 'exportRekap'])->name('riwayat.exportRekap');
+            Route::get('/chartTren', [RiwayatLaporanFasilitasController::class, 'chartTren'])->name('chart.mingguan');
         });
 
 
@@ -421,6 +426,9 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/show/{id}', [LaporanController::class, 'show'])->name('laporanPelapor.show');
             Route::get('/create', [LaporanController::class, 'create'])->name('laporanPelapor.create');
             Route::post('/store', [LaporanController::class, 'store'])->name('laporanPelapor.store');
+            Route::get('/get-lantai/{idGedung}', [LaporanController::class, 'getLantai']);
+            Route::get('/get-ruangan/{idLantai}', [LaporanController::class, 'getRuangan']);
+            Route::get('/get-fasilitas/{idRuangan}', [LaporanController::class, 'getFasilitas']);
         });
 
         Route::prefix('vote')->group(function(){
@@ -475,4 +483,7 @@ Route::get('/icons', function () {
 
 Route::get('/forms', function () {
     return view('pages.forms.index');
+});
+Route::get('/charts', function () {
+    return view('pages.chart.index');
 });

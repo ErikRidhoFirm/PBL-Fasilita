@@ -26,7 +26,7 @@
     <link rel="stylesheet" href="{{ asset('assets/vendors/mdi/css/materialdesignicons.min.css') }}">
 
     <!-- endinject -->
-    <link rel="shortcut icon" href="{{ asset('assets/images/favicon.png') }}" />
+    <link rel="shortcut icon" href="{{ asset('assets/images/fasilita-icon.png') }}" />
     {{-- <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"> --}}
 </head>
 
@@ -53,14 +53,20 @@
                         </div>
                         <div class="form-group">
                             <label for="password">Password</label>
-                            <input type="password" class="form-control @error('password') is-invalid @enderror"
-                                name="password" id="password" placeholder="Password">
+                            <div class="input-group">
+                                <input type="password" class="form-control @error('password') is-invalid @enderror"
+                                    name="password" id="password" placeholder="Masukkan Password">
+                                <div class="input-group-append">
+                                    <button class="btn btn-sm btn-primary rounded-right" type="button">
+                                        <i class="mdi mdi-eye" id="togglePassword"></i>
+                                    </button>
+                                </div>
+                            </div>
                             @error('password')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
                         <button type="submit" class="btn btn-primary w-100">Login</button>
-                        {{-- <button class="btn btn-light">Cancel</button> --}}
                         <p class="mt-3">Belum punya akun? <a href="{{ url('/register') }}">register</a></p>
                     </div>
                 </form>
@@ -146,6 +152,15 @@
 
 
     <script>
+        $('#togglePassword').click(function() {
+            $(this).toggleClass("mdi-eye mdi-eye-off");
+            var input = $('#password');
+            if (input.attr("type") == "password") {
+                input.attr("type", "text");
+            } else {
+                input.attr("type", "password");
+            }
+        });
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

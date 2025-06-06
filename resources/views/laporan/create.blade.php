@@ -7,10 +7,11 @@
                 <div class="d-flex justify-content-between align-items-center">
                     <h3 class="card-title my-2 w-25"></h3>
                 </div>
-                @if($authUser->peran->kode_peran === 'ADM')
+                @if ($authUser->peran->kode_peran === 'ADM')
                     <a href="{{ route('laporan.index') }}" class="btn"><i class="mdi mdi-arrow-left"> Kembali</i></a>
                 @else
-                    <a href="{{ route('laporanPelapor.index') }}" class="btn"><i class="mdi mdi-arrow-left"> Kembali</i></a>
+                    <a href="{{ route('laporanPelapor.index') }}" class="btn"><i class="mdi mdi-arrow-left">
+                            Kembali</i></a>
                 @endif
                 <h3 class="my-2 mx-4">Silakan lengkapi form di bawah ini dengan jelas dan detail.</h3>
                 <p class="my-3 mx-4">Data yang Anda isi akan membantu tim sarana dan prasarana kampus dalam menindaklanjuti
@@ -152,6 +153,13 @@
 
             // const baseURL = window.location.origin + '/PBL-Fasilita/public';
             const baseURL = $('meta[name="base-url"]').attr('content');
+            // Deteksi prefix route dari URL saat ini
+            let routePrefix = '';
+            if (window.location.pathname.includes('/laporanPelapor')) {
+                routePrefix = 'laporanPelapor';
+            } else {
+                routePrefix = 'laporan';
+            }
             // Gedung
             $('#inputGedung').on('change', function() {
                 const idGedung = $(this).val();
@@ -164,9 +172,11 @@
                     true);
 
                 if (idGedung) {
-                    $.get(`${baseURL}/laporan/get-lantai/${idGedung}`, function(data) {
-                        console.log(`${baseURL}/laporan/get-lantai/${idGedung}`);
-                        
+                    const url = `${baseURL}/${routePrefix}/get-lantai/${idGedung}`;
+                    // console.log(url);
+                    $.get(url, function(data) {
+                        // console.log(`${baseURL}/laporan/get-lantai/${idGedung}`);
+
                         if (Array.isArray(data) && data.length > 0) {
                             $inputLantai.prop('disabled', false);
                             $inputLantai.addClass('border-primary');
@@ -192,7 +202,8 @@
                     true);
 
                 if (idLantai) {
-                    $.get(`${baseURL}/laporan/get-ruangan/${idLantai}`, function(data) {
+                    const url = `${baseURL}/${routePrefix}/get-ruangan/${idLantai}`;
+                    $.get(url, function(data) {
                         if (Array.isArray(data) && data.length > 0) {
                             $inputRuangan.prop('disabled', false);
                             $inputRuangan.addClass('border-primary');
@@ -219,7 +230,8 @@
                 $jumlahKerusakan.val('').removeAttr('max'); // Reset max saat ruangan diganti
 
                 if (idRuangan) {
-                    $.get(`${baseURL}/laporan/get-fasilitas/${idRuangan}`, function(data) {
+                    const url = `${baseURL}/${routePrefix}/get-fasilitas/${idRuangan}`;
+                    $.get(url, function(data) {
                         if (Array.isArray(data) && data.length > 0) {
                             $inputFasilitas.prop('disabled', false);
                             $inputFasilitas.addClass('border-primary');
@@ -401,80 +413,83 @@
         });
 
         // tambah laporan
-       $('#form-tambah').on('submit', function(e) {
-        e.preventDefault();
-
-        const isValid = $('#form-tambah').valid();
-        if (!isValid) return;
-
-        if ($('#laporan-fasilitas').children().length === 0) {
+        $('#form-tambah').on('submit', function(e) {
             e.preventDefault();
-            $('#container-fasilitas').removeClass('border-primary');
-            $('#container-fasilitas').addClass('border-danger');
-            $('#error-fasilitas-row').text('At least one report must be added.');
-            $('html, body').animate({
-                scrollTop: $('#error-fasilitas-row').offset().top - 100
-            }, 500);
-            return false;
-        } else {
-            $('#error-fasilitas-row').text('');
-            $('#container-fasilitas').removeClass('border-danger');
-            $('#container-fasilitas').addClass('border-primary');
-        }
 
-        const formData = new FormData(this);
+            const isValid = $('#form-tambah').valid();
+            if (!isValid) return;
 
-        $('#laporan-fasilitas section').each(function(index) {
-            formData.append('id_fasilitas[]', $(this).find('input[name="id_fasilitas[]"]').val());
-            formData.append('id_kategori_kerusakan[]', $(this).find(
-                'input[name="id_kategori_kerusakan[]"]').val());
-            formData.append('jumlah_rusak[]', $(this).find('input[name="jumlah_rusak[]"]').val());
-            formData.append('deskripsi[]', $(this).find('input[name="deskripsi[]"]').val());
-            formData.append('path_foto[]', fileArray[index]);
-        });
+            if ($('#laporan-fasilitas').children().length === 0) {
+                e.preventDefault();
+                $('#container-fasilitas').removeClass('border-primary');
+                $('#container-fasilitas').addClass('border-danger');
+                $('#error-fasilitas-row').text('At least one report must be added.');
+                $('html, body').animate({
+                    scrollTop: $('#error-fasilitas-row').offset().top - 100
+                }, 500);
+                return false;
+            } else {
+                $('#error-fasilitas-row').text('');
+                $('#container-fasilitas').removeClass('border-danger');
+                $('#container-fasilitas').addClass('border-primary');
+            }
 
-        // Tentukan URL berdasarkan role pengguna
-        const userRole = "{{ $authUser->peran->kode_peran ?? '' }}"; // Ambil role dari data yang dikirim controller
-        let submitUrl = '';
+            const formData = new FormData(this);
 
-        if (userRole === 'ADM') {
-            submitUrl = "{{ route('laporan.store') }}";
-        } else if (['MHS', 'DSN', 'TDK'].includes(userRole)) {
-            submitUrl = "{{ route('laporanPelapor.store') }}";
-        } else {
-            // Fallback untuk role tidak dikenali
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Role pengguna tidak valid'
+            $('#laporan-fasilitas section').each(function(index) {
+                formData.append('id_fasilitas[]', $(this).find('input[name="id_fasilitas[]"]').val());
+                formData.append('id_kategori_kerusakan[]', $(this).find(
+                    'input[name="id_kategori_kerusakan[]"]').val());
+                formData.append('jumlah_rusak[]', $(this).find('input[name="jumlah_rusak[]"]').val());
+                formData.append('deskripsi[]', $(this).find('input[name="deskripsi[]"]').val());
+                formData.append('path_foto[]', fileArray[index]);
             });
-            return;
-        }
 
-        $.ajax({
-            url: submitUrl,
-            method: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function(response) {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Berhasil',
-                    text: 'Laporan berhasil ditambahkan'
-                }).then(function() {
-                    window.location.href = "{{ route('laporan.index') }}";
-                })
-            },
-            error: function(err) {
-                console.error(err);
+            // Tentukan URL berdasarkan role pengguna
+            const userRole =
+                "{{ $authUser->peran->kode_peran ?? '' }}"; // Ambil role dari data yang dikirim controller
+            let submitUrl = '';
+
+            if (userRole === 'ADM') {
+                submitUrl = "{{ route('laporan.store') }}";
+            } else if (['MHS', 'DSN', 'TDK'].includes(userRole)) {
+                submitUrl = "{{ route('laporanPelapor.store') }}";
+            } else {
+                // Fallback untuk role tidak dikenali
                 Swal.fire({
                     icon: 'error',
-                    title: 'Terjadi Kesalahan',
-                    text: err.responseJSON?.message || 'Terjadi kesalahan saat menyimpan laporan'
+                    title: 'Error',
+                    text: 'Role pengguna tidak valid'
                 });
+                return;
             }
+
+            $.ajax({
+                url: submitUrl,
+                method: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil',
+                        text: 'Laporan berhasil ditambahkan'
+                    }).then(function() {
+                        window.location = response.redirect;
+
+                    })
+                },
+                error: function(err) {
+                    console.error(err);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Terjadi Kesalahan',
+                        text: err.responseJSON?.message ||
+                            'Terjadi kesalahan saat menyimpan laporan'
+                    });
+                }
+            });
         });
-    });
     </script>
 @endpush

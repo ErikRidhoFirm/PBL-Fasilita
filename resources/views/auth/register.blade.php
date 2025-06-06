@@ -6,12 +6,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     {{-- <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"> --}}
     <title>Register – FASILITA</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <!-- CSS Skydash -->
+    <!-- plugins:css -->
     <link rel="stylesheet" href="{{ asset('assets/vendors/feather/feather.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/vendors/ti-icons/css/themify-icons.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/vendors/css/vendor.bundle.base.css') }}">
+
+    <!-- endinject -->
+    <!-- Plugin css for this page -->
+    <link rel="stylesheet" href="{{ asset('assets/vendors/datatables.net-bs4/dataTables.bootstrap4.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/vendors/ti-icons/css/themify-icons.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/js/select.dataTables.min.css') }}">
+    <!-- End plugin css for this page -->
+
+    <!-- inject:css -->
     <link rel="stylesheet" href="{{ asset('assets/css/vertical-layout-light/style.css') }}">
-    <link rel="shortcut icon" href="{{ asset('assets/images/favicon.png') }}" />
+
+    <link rel="stylesheet" href="{{ asset('assets/vendors/mdi/css/materialdesignicons.min.css') }}">
+
+    <!-- endinject -->
+    <link rel="shortcut icon" href="{{ asset('assets/images/fasilita-icon.png') }}" />
     <style>
         .is-invalid {
             border-color: #dc3545 !important;
@@ -78,8 +94,17 @@
 
                     <div class="form-group">
                         <label for="password">Password</label>
-                        <input type="password" id="password" name="password"
-                            class="form-control @error('password') is-invalid @enderror" placeholder="Password">
+                        <div class="input-group">
+                            <input type="password" id="password" name="password"
+                                class="form-control @error('password') is-invalid @enderror"
+                                placeholder="Masukkan Password">
+                            <div class="input-group-append">
+                                <button class="btn btn-sm btn-primary rounded-right" type="button">
+                                    <i class="mdi mdi-eye toggle-password" id="togglePassword"
+                                        data-target="#password"></i>
+                                </button>
+                            </div>
+                        </div>
                         @error('password')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -87,9 +112,17 @@
 
                     <div class="form-group">
                         <label for="password_confirmation">Konfirmasi Password</label>
-                        <input type="password" id="password_confirmation" name="password_confirmation"
-                            class="form-control @error('password_confirmation') is-invalid @enderror"
-                            placeholder="Konfirmasi Password">
+                        <div class="input-group">
+                            <input type="password" id="password_confirmation" name="password_confirmation"
+                                class="form-control @error('password_confirmation') is-invalid @enderror"
+                                placeholder="Konfirmasi Password">
+                            <div class="input-group-append">
+                                <button class="btn btn-sm btn-primary rounded-right" type="button">
+                                    <i class="mdi mdi-eye toggle-password" id="toggleConfirmPassword"
+                                        data-target="#password_confirmation"></i>
+                                </button>
+                            </div>
+                        </div>
                         @error('password_confirmation')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -122,18 +155,20 @@
                         </div>
                         <div class="bg-white w-50 pl-3 " style="border-radius: 0 0 0 30px; margin-top: -1px; ">
                             <div class="stretch-card transparent h-100 pb-3">
-                            <div class="card card-dark-blue d-flex" style="border-radius: 0 30px 0 30px; height: 100%;">
-                            <div class="card-body d-flex justify-content-center align-items-center text-center w-100" style="height: 100%;">
-                                <h5 class="m-0" style="line-height: 1.6;">
-                                    Laporan Ditindaklanjuti Dengan<br>
-                                    Cepat & Tepat
-                                </h5>
+                                <div class="card card-dark-blue d-flex"
+                                    style="border-radius: 0 30px 0 30px; height: 100%;">
+                                    <div class="card-body d-flex justify-content-center align-items-center text-center w-100"
+                                        style="height: 100%;">
+                                        <h5 class="m-0" style="line-height: 1.6;">
+                                            Laporan Ditindaklanjuti Dengan<br>
+                                            Cepat & Tepat
+                                        </h5>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
     </main>
 
     {{-- Sweetalert --}}
@@ -146,6 +181,20 @@
     <script src="{{ asset('assets/js/additional-methods.min.js') }}"></script>
 
     <script>
+        $('.toggle-password').click(function() {
+            $(this).toggleClass("mdi-eye mdi-eye-off");
+
+            const target = $($(this).data("target"));
+            const type = target.attr("type") === "password" ? "text" : "password";
+            target.attr("type", type);
+        });
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
         $(document).ready(function() {
             // Inisialisasi validasi
             $('#form-register').validate({
@@ -160,7 +209,7 @@
                     },
                     password: {
                         required: true,
-                        minlength: 5
+                        // minlength: 5
                     },
                     password_confirmation: {
                         required: true,
@@ -214,22 +263,24 @@
                                     title: 'Berhasil',
                                     text: response.message,
                                 }).then(function() {
-                                    window.location = '/';
+                                    window.location = response.redirect;
                                 });
                             } else { // jika error
                                 $('.error-text').text('');
-                                $.each(response.msgField, function(prefix, val) {
+                                $.each(response.errors, function(prefix, val) {
                                     $('#error-' + prefix).text(val[0]);
                                 });
+                                console.log(response.errors);
+                                let firstError = Object.values(response.errors)[0][0];
                                 Swal.fire({
                                     icon: 'error',
                                     title: 'Terjadi Kesalahan',
-                                    text: response.message
+                                    text: firstError
                                 });
                             }
                         }
                     });
-                  return false;
+                    return false;
                 }
             });
         });

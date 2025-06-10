@@ -187,7 +187,7 @@ class LaporanController extends Controller
             return response()->json([
                 'status' => true,
                 'message' => 'Data laporan berhasil disimpan',
-                'redirect' => url('/laporan')
+                'redirect' => url('/')
             ]);
         } catch (\Exception $e) {
             return response()->json([

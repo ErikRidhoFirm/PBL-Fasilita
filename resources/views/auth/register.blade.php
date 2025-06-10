@@ -12,7 +12,6 @@
     <link rel="stylesheet" href="{{ asset('assets/vendors/sweetalert2/sweetalert2.min.css') }}">
     <link rel="shortcut icon" href="{{ asset('assets/images/fasilita-icon.png') }}" />
 
-
     <style>
         /* ================ Reset & Box-sizing ================ */
         * {
@@ -510,6 +509,7 @@
                                 <div class="invalid-feedback"></div>
                             </div>
 
+
                             <div class="form-group">
                                 <label for="nama">Nama Lengkap</label>
                                 <input type="text" id="nama" name="nama" class="form-control" placeholder="Contoh: John Doe">
@@ -587,6 +587,20 @@
     <script src="{{ asset('assets/js/additional-methods.min.js') }}"></script>
 
     <script>
+        $('.toggle-password').click(function() {
+            $(this).toggleClass("mdi-eye mdi-eye-off");
+
+            const target = $($(this).data("target"));
+            const type = target.attr("type") === "password" ? "text" : "password";
+            target.attr("type", type);
+        });
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
         $(document).ready(function() {
             $('.form-control').on('focus', function() {
                 $(this).css({
@@ -632,7 +646,7 @@
                     },
                     password: {
                         required: true,
-                        minlength: 5
+                        // minlength: 5
                     },
                     password_confirmation: {
                         required: true,

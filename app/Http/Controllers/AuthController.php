@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Services\NoIndukVerifierService;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
@@ -67,25 +68,51 @@ class AuthController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'status' => false,
-                'message' => $e->getMessage()
-            ], 422);
+                'errors' => $validator->errors(),
+                
+            ]);
         }
+        $data = $validator->validated();
+
+        $roleId = Peran::where('kode_peran', 'MHS')->value('id_peran');
+
+        Pengguna::create([
+            'id_peran' => $roleId,
+            'nama' => $data['nama'],
+            'username' => $data['username'],
+            'password' => $data['password'],
+            'foto_profile' => 'default.jpg', // ← default foto profil
+        ]);
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Registrasi berhasil',
+            'redirect' => url('/login')
+        ]);
     }
 
     public function showLogin()
     {
-            return view('auth.login');
+        return view('auth.login');
     }
 
     public function login(Request $request)
-{
-    $c = $request->validate([
-        'username' => 'required|string',
-        'password' => 'required|string',
-    ]);
+    {
+        $c = $request->validate([
+            'username' => 'required|string',
+            'password' => 'required|string',
+        ]);
 
-    if (Auth::guard('web')->attempt($c, $request->boolean('remember'))) {
-        $request->session()->regenerate();
+        if (Auth::guard('web')->attempt($c, $request->boolean('remember'))) {
+            $request->session()->regenerate();
+
+            return response()->json([
+                'status'   => true,
+                'message'  => 'Login Berhasil',
+                // Arahkan ke route('dashboard') bukan url('/')
+                'redirect' => route('dashboard'),
+            ]);
+        }
 
         return response()->json([
             'status'   => true,

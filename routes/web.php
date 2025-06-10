@@ -32,6 +32,9 @@ use App\Http\Controllers\PelaporLaporanFasilitasController;
 use App\Http\Controllers\RiwayatLaporanFasilitasController;
 use App\Http\Controllers\RiwayatPerbaikanTeknisiController;
 
+// use App\Models\PenilaianPengguna;
+// use App\Models\Penugasan;
+use App\Models\RiwayatLaporanFasilitas;
 
 /*
 |--------------------------------------------------------------------------
@@ -357,6 +360,8 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/{id}/riwayat', [RiwayatLaporanFasilitasController::class, 'show'])->name('riwayat.show');
             Route::get('/detail-modal/{id}', [RiwayatLaporanFasilitasController::class,'detailModal'])->name('riwayat.detailModal');
             Route::delete('/{id}', [RiwayatLaporanFasilitasController::class, 'destroy'])->name('riwayat.destroy');
+            Route::get('/exportRekap', [RiwayatLaporanFasilitasController::class, 'exportRekap'])->name('riwayat.exportRekap');
+            Route::get('/chartTren', [RiwayatLaporanFasilitasController::class, 'chartTren'])->name('chart.mingguan');
         });
 
 
@@ -488,4 +493,7 @@ Route::get('/icons', function () {
 
 Route::get('/forms', function () {
     return view('pages.forms.index');
+});
+Route::get('/charts', function () {
+    return view('pages.chart.index');
 });

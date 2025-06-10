@@ -190,29 +190,36 @@
   </div>
 
       {{-- Feedback Pelapor (jika ada) --}}
-    @if($lapfas->penilaianPengguna)
-    <div class="card shadow-sm my-4">
-      <div class="card-header bg-light">
-        <h6 class="mb-0"><i class="mdi mdi-comment-check-outline me-2"></i>Feedback Pelapor</h6>
-      </div>
-      <div class="card-body">
-        <div class="mb-2">
-          {{-- Stars --}}
-          @for($i = 1; $i <= 5; $i++)
-            @if($i <= $lapfas->penilaianPengguna->nilai)
-              <i class="mdi mdi-star fs-4 text-warning me-1"></i>
-            @else
-              <i class="mdi mdi-star-outline fs-4 text-muted me-1"></i>
-            @endif
-          @endfor
-        </div>
-        <p class="text-muted">
-          {{ $lapfas->penilaianPengguna->komentar ?: '- Tidak ada komentar -' }}
-        </p>
-      </div>
-    </div>
-    @endif
+    @php
+        // Normalize penilaianPengguna: jika collection ambil first()
+        $feedback = $lapfas->penilaianPengguna;
+        if ($feedback instanceof \Illuminate\Support\Collection) {
+            $feedback = $feedback->first();
+        }
+    @endphp
 
+    @if($feedback)
+        <div class="card shadow-sm my-4">
+            <div class="card-header bg-light">
+            <h6 class="mb-0"><i class="mdi mdi-comment-check-outline me-2"></i>Feedback Pelapor</h6>
+            </div>
+            <div class="card-body">
+            <div class="mb-2">
+                {{-- Stars --}}
+                @for($i = 1; $i <= 5; $i++)
+                @if($i <= ($feedback->nilai ?? 0))
+                    <i class="mdi mdi-star fs-4 text-warning me-1"></i>
+                @else
+                    <i class="mdi mdi-star-outline fs-4 text-muted me-1"></i>
+                @endif
+                @endfor
+            </div>
+            <p class="text-muted">
+                {{ $feedback->komentar ?: '- Tidak ada komentar -' }}
+            </p>
+            </div>
+        </div>
+    @endif
 
    <div class="text-center mt-4 pt-2">
    <a href="{{ route('riwayat.index') }}" class="btn btn-outline-secondary">

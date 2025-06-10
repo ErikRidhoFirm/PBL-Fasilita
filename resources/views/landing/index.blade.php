@@ -5,14 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="FASILITA - Sistem Pelaporan Fasilitas untuk kampus">
     <title>FASILITA - Sistem Pelaporan Fasilitas</title>
-    
+
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
+    <link rel="shortcut icon" href="{{ asset('assets/images/fasilita-icon.png') }}" />
+
     <style>
         /**
          * FASILITA Landing Page Styles with Enhanced Animations
@@ -29,12 +30,12 @@
             --bg-gray: #f9fafb;
             --bg-dark: #111827;
             --black: #000000;
-            
+
             /* Animation Variables */
             --animation-duration: 0.8s;
             --animation-delay: 0.2s;
             --animation-easing: cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            
+
             /* Spacing Variables */
             --section-spacing-y: 120px;
             --section-spacing-y-mobile: 80px;
@@ -61,7 +62,7 @@
         /* ========================================
            ANIMATION CLASSES - FADE IN/OUT EFFECTS
            ======================================== */
-        
+
         /* Base Fade Animation Classes */
         .fade-in {
             opacity: 0;
@@ -483,11 +484,11 @@
                 width: 100%;
                 margin: 1rem 0;
             }
-            
+
             .navbar-collapse {
                 text-align: center;
             }
-            
+
             .auth-buttons {
                 justify-content: center !important;
                 margin-top: 1rem;
@@ -921,6 +922,33 @@
             transition: all 0.3s ease;
         }
 
+        .tool-icon-skydash {
+            width: 64px;
+            height: 64px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        /* Buat gambar mengisi penuh dan menjaga aspek ratio */
+        .tool-icon img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .tool-icon-skydash img {
+            max-width: 500%;
+            max-height: 50%;
+            object-fit: contain;
+        }
+
         .tool-icon:hover {
             transform: scale(1.1) rotate(5deg);
         }
@@ -1220,7 +1248,7 @@
             .hero-title {
                 font-size: 3.5rem;
             }
-            
+
             .dashboard-preview {
                 margin-top: 2rem;
             }
@@ -1232,15 +1260,15 @@
                 --content-spacing: 2rem;
                 --card-spacing: 1.5rem;
             }
-            
+
             .row.g-5 {
                 --bs-gutter-y: 2.5rem;
             }
-            
+
             .hero-title {
                 font-size: 3rem;
             }
-            
+
             .hero-subtitle {
                 font-size: 1.1rem;
             }
@@ -1265,11 +1293,11 @@
                 padding: 2.5rem 1.5rem;
                 margin-bottom: 2rem;
             }
-            
+
             .official-logo {
                 max-height: 80px;
             }
-            
+
             .logo-wrapper {
                 min-height: 100px;
             }
@@ -1278,7 +1306,7 @@
                 padding: 2rem;
                 margin-bottom: 1rem;
             }
-            
+
             .role-icon {
                 width: 70px;
                 height: 70px;
@@ -1293,19 +1321,19 @@
                 --card-spacing: 1.25rem;
                 --text-spacing: 1rem;
             }
-            
+
             .row.g-4 {
                 --bs-gutter-y: 1.5rem;
             }
-            
+
             .row.g-5 {
                 --bs-gutter-y: 2rem;
             }
-            
+
             .hero-title {
                 font-size: 2.5rem;
             }
-            
+
             .hero-subtitle {
                 font-size: 1rem;
             }
@@ -1343,15 +1371,15 @@
             .logo-container-enhanced {
                 padding: 2rem 1rem;
             }
-            
+
             .official-logo {
                 max-height: 70px;
             }
-            
+
             .logo-wrapper {
                 min-height: 90px;
             }
-            
+
             .benefit-card {
                 padding: 1.5rem 1rem;
                 margin-bottom: 1rem;
@@ -1360,7 +1388,7 @@
             .role-card {
                 padding: 1.5rem;
             }
-            
+
             .role-icon {
                 width: 60px;
                 height: 60px;
@@ -1410,15 +1438,15 @@
             .logo-container-enhanced {
                 padding: 1.5rem 1rem;
             }
-            
+
             .official-logo {
                 max-height: 60px;
             }
-            
+
             .logo-wrapper {
                 min-height: 80px;
             }
-            
+
             .benefit-card {
                 padding: 1.5rem 1rem;
                 margin-bottom: 1rem;
@@ -1472,7 +1500,7 @@
             .row.g-4 {
                 --bs-gutter-y: 1.5rem;
             }
-            
+
             .row.g-5 {
                 --bs-gutter-y: 2rem;
             }
@@ -1485,8 +1513,8 @@
         <div class="container position-relative">
             <!-- Logo -->
             <a class="navbar-brand d-flex align-items-center fade-in-left stagger-1" href="{{ url('/') }}">
-                <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LOGO%20%28Revisi%20Warna%29-eWjC9ZoeAArOze6ELrzncIwo0ebVJI.png" 
-                     alt="FASILITA Logo" 
+                <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LOGO%20%28Revisi%20Warna%29-eWjC9ZoeAArOze6ELrzncIwo0ebVJI.png"
+                     alt="FASILITA Logo"
                      class="logo-image responsive-image hover-scale"
                      loading="lazy"
                      onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
@@ -1527,7 +1555,7 @@
         <div class="container">
             <!-- Badge -->
             <div class="badge-custom fade-in-up stagger-1 pulse-animation">
-                <i class="fas fa-calendar-alt me-2"></i>Aug 4th Cepat, transparan, dan efisien
+                <i class="fas fa-calendar-alt me-2"></i>Cepat, transparan, dan efisien
             </div>
 
             <!-- Hero Title -->
@@ -1538,24 +1566,24 @@
 
             <!-- Hero Subtitle -->
             <p class="hero-subtitle fade-in-up stagger-3">
-                Bantu kami menjaga fasilitas kampus tetap optimal dengan sistem pelaporan 
+                Bantu kami menjaga fasilitas kampus tetap optimal dengan sistem pelaporan
                 kerusakan yang mudah digunakan dan terintegrasi.
             </p>
 
             <!-- CTA Button -->
-            <a href="{{ url('/get-started') }}" class="btn btn-primary-custom btn-lg mb-5 fade-in-up stagger-4 hover-lift shimmer-effect">
+            <a href="{{ route('register') }}" class="btn btn-primary-custom btn-lg mb-5 fade-in-up stagger-4 hover-lift shimmer-effect">
                 <i class="fas fa-rocket me-2"></i>Get Started
             </a>
 
             <!-- Dashboard Preview -->
             <div class="dashboard-preview mx-auto aspect-ratio-20-9 fade-in-up stagger-5 float-animation" style="max-width: 1000px;">
                 <div class="media-container hover-lift">
-                    <img src="{{ asset('assets/images/dashboard-preview.jpg') }}" 
-                         alt="FASILITA Dashboard Preview - Sistem Pelaporan Fasilitas Kampus" 
+                    <img src="{{ asset('assets/images/dashboard-preview.jpg') }}"
+                         alt="FASILITA Dashboard Preview - Sistem Pelaporan Fasilitas Kampus"
                          class="responsive-image"
                          loading="lazy"
                          onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                    
+
                     <!-- Fallback for dashboard preview -->
                     <div class="image-error d-none">
                         <i class="fas fa-desktop"></i>
@@ -1569,145 +1597,166 @@
 
     <!-- SISTEM PELAPORAN SECTION -->
     <section class="section-light" style="padding: 100px 0;">
-        <div class="container">
-            <!-- Section Header -->
-            <div class="text-center mb-5 section-header">
-                <h2 class="fw-bold text-primary mb-4 fade-in-up stagger-2" style="font-size: 3rem; line-height: 1.2;">
-                    Sistem Pelaporan<br>
-                    untuk Semua Pengguna
-                </h2>
-                <p class="text-muted fs-5 mx-auto fade-in-up stagger-3" style="max-width: 700px;">
-                    FASILITA dirancang untuk melayani berbagai peran dalam ekosistem kampus, 
-                    dari mahasiswa hingga teknisi, dengan antarmuka yang disesuaikan untuk setiap kebutuhan.
-                </p>
-            </div>
+    <div class="container">
+        <div class="text-center mb-5 section-header">
+            <h2 class="fw-bold text-primary mb-4 fade-in-up stagger-2" style="font-size: 3rem; line-height: 1.2;">
+                Sistem Pelaporan<br>
+                untuk Semua Pengguna
+            </h2>
+            <p class="text-muted fs-5 mx-auto fade-in-up stagger-3" style="max-width: 700px;">
+                FASILITA dirancang untuk melayani berbagai peran dalam ekosistem kampus,
+                dari mahasiswa hingga teknisi, dengan antarmuka yang disesuaikan untuk setiap kebutuhan.
+            </p>
+        </div>
 
-            <!-- Role Cards Grid -->
-            <div class="row g-4 mb-5">
-                <!-- Mahasiswa, Dosen, Tendik Card -->
-                <div class="col-lg-4">
-                    <div class="role-card h-100 fade-in-left stagger-1 hover-lift">
-                        <div class="role-card-header">
-                            <div class="role-icon students scale-in-bounce stagger-2">
-                                <i class="fas fa-graduation-cap"></i>
-                            </div>
-                            <h4 class="fw-bold text-primary mb-3 fade-in-up stagger-3">Mahasiswa, Dosen, Tendik</h4>
+        <div class="row g-4 mb-5">
+            <div class="col-lg-3 col-md-6">
+                <div class="role-card h-100 fade-in-left stagger-1 hover-lift">
+                    <div class="role-card-header">
+                        <div class="role-icon students scale-in-bounce stagger-2">
+                            <i class="fas fa-graduation-cap"></i>
                         </div>
-                        <div class="role-card-content">
-                            <p class="text-muted mb-4 fade-in-up stagger-4">
-                                Mahasiswa dapat dengan mudah melaporkan kerusakan fasilitas kampus melalui sistem ini. 
-                                Mereka juga bisa memantau status laporan dan memberikan voting pada laporan lain 
-                                untuk mendukung percepatan penanganan.
-                            </p>
-                            <div class="role-features">
-                                <div class="feature-item fade-in-up stagger-5">
-                                    <i class="fas fa-plus-circle text-primary me-2"></i>
-                                    <span>Buat laporan kerusakan</span>
-                                </div>
-                                <div class="feature-item fade-in-up stagger-6">
-                                    <i class="fas fa-eye text-primary me-2"></i>
-                                    <span>Pantau status laporan</span>
-                                </div>
-                                <div class="feature-item fade-in-up stagger-7">
-                                    <i class="fas fa-thumbs-up text-primary me-2"></i>
-                                    <span>Vote laporan prioritas</span>
-                                </div>
-                            </div>
-                        </div>
+                        <h4 class="fw-bold text-primary mb-3 fade-in-up stagger-3">Mahasiswa, Dosen, Tendik</h4>
                     </div>
-                </div>
-
-                <!-- Teknisi Card -->
-                <div class="col-lg-4">
-                    <div class="role-card h-100 fade-in stagger-2 hover-lift">
-                        <div class="role-card-header">
-                            <div class="role-icon technician scale-in-bounce stagger-3">
-                                <i class="fas fa-tools"></i>
+                    <div class="role-card-content">
+                        <p class="text-muted mb-4 fade-in-up stagger-4">
+                            Pengguna dapat dengan mudah melaporkan kerusakan fasilitas, memantau status, dan memberikan voting untuk mendukung percepatan penanganan.
+                        </p>
+                        <div class="role-features">
+                            <div class="feature-item fade-in-up stagger-5">
+                                <i class="fas fa-plus-circle text-primary me-2"></i>
+                                <span>Buat laporan kerusakan</span>
                             </div>
-                            <h4 class="fw-bold text-primary mb-3 fade-in-up stagger-4">Teknisi</h4>
-                        </div>
-                        <div class="role-card-content">
-                            <p class="text-muted mb-4 fade-in-up stagger-5">
-                                Teknisi bertugas menangani laporan yang masuk, melakukan pengecekan, 
-                                dan memperbarui status laporan sesuai progres perbaikan yang dilakukan.
-                            </p>
-                            <div class="role-features">
-                                <div class="feature-item fade-in-up stagger-6">
-                                    <i class="fas fa-clipboard-check text-primary me-2"></i>
-                                    <span>Terima & verifikasi laporan</span>
-                                </div>
-                                <div class="feature-item fade-in-up stagger-7">
-                                    <i class="fas fa-wrench text-primary me-2"></i>
-                                    <span>Lakukan perbaikan</span>
-                                </div>
-                                <div class="feature-item fade-in-up stagger-8">
-                                    <i class="fas fa-sync-alt text-primary me-2"></i>
-                                    <span>Update status progres</span>
-                                </div>
+                            <div class="feature-item fade-in-up stagger-6">
+                                <i class="fas fa-eye text-primary me-2"></i>
+                                <span>Pantau status laporan</span>
                             </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Admin Card -->
-                <div class="col-lg-4">
-                    <div class="role-card h-100 fade-in-right stagger-3 hover-lift">
-                        <div class="role-card-header">
-                            <div class="role-icon admin scale-in-bounce stagger-4">
-                                <i class="fas fa-user-shield"></i>
-                            </div>
-                            <h4 class="fw-bold text-primary mb-3 fade-in-up stagger-5">Admin</h4>
-                        </div>
-                        <div class="role-card-content">
-                            <p class="text-muted mb-4 fade-in-up stagger-6">
-                                Admin memiliki peran penting dalam verifikasi laporan, pengaturan akun pengguna, 
-                                dan memastikan seluruh proses pelaporan berjalan lancar dan transparan.
-                            </p>
-                            <div class="role-features">
-                                <div class="feature-item fade-in-up stagger-7">
-                                    <i class="fas fa-check-double text-primary me-2"></i>
-                                    <span>Verifikasi laporan</span>
-                                </div>
-                                <div class="feature-item fade-in-up stagger-8">
-                                    <i class="fas fa-users-cog text-primary me-2"></i>
-                                    <span>Kelola akun pengguna</span>
-                                </div>
-                                <div class="feature-item fade-in-up stagger-8">
-                                    <i class="fas fa-chart-line text-primary me-2"></i>
-                                    <span>Monitor sistem</span>
-                                </div>
+                            <div class="feature-item fade-in-up stagger-7">
+                                <i class="fas fa-thumbs-up text-primary me-2"></i>
+                                <span>Vote laporan prioritas</span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Additional Info Section -->
-            <div class="row align-items-center fade-in-up stagger-4">
-                <div class="col-lg-8">
-                    <div class="bg-light p-4 rounded-3 hover-lift">
-                        <div class="d-flex align-items-center">
-                            <div class="bg-primary text-white rounded d-flex align-items-center justify-content-center me-3 pulse-animation" style="width: 48px; height: 48px;">
-                                <i class="fas fa-info"></i>
+            <div class="col-lg-3 col-md-6">
+                <div class="role-card h-100 fade-in stagger-2 hover-lift">
+                    <div class="role-card-header">
+                        <div class="role-icon technician scale-in-bounce stagger-3">
+                            <i class="fas fa-tools"></i>
+                        </div>
+                        <h4 class="fw-bold text-primary mb-3 fade-in-up stagger-4">Teknisi</h4>
+                    </div>
+                    <div class="role-card-content">
+                        <p class="text-muted mb-4 fade-in-up stagger-5">
+                            Teknisi bertugas menangani laporan, melakukan pengecekan, dan memperbarui status progres perbaikan yang dilakukan.
+                        </p>
+                        <div class="role-features">
+                            <div class="feature-item fade-in-up stagger-6">
+                                <i class="fas fa-clipboard-check text-primary me-2"></i>
+                                <span>Terima & verifikasi laporan</span>
                             </div>
-                            <div>
-                                <h5 class="fw-bold mb-1">Akses Sesuai Peran</h5>
-                                <p class="text-muted mb-0">
-                                    Setiap pengguna mendapatkan dashboard dan fitur yang disesuaikan dengan peran mereka 
-                                    untuk pengalaman yang optimal dan efisien.
-                                </p>
+                            <div class="feature-item fade-in-up stagger-7">
+                                <i class="fas fa-wrench text-primary me-2"></i>
+                                <span>Lakukan perbaikan</span>
+                            </div>
+                            <div class="feature-item fade-in-up stagger-8">
+                                <i class="fas fa-sync-alt text-primary me-2"></i>
+                                <span>Update status progres</span>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-4 text-center">
-                    <a href="{{ url('/register') }}" class="btn btn-primary-custom btn-lg bounce-in shimmer-effect">
-                        <i class="fas fa-user-plus me-2"></i>Daftar Sekarang
-                    </a>
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+                <div class="role-card h-100 fade-in-right stagger-3 hover-lift">
+                    <div class="role-card-header">
+                        <div class="role-icon sarpras scale-in-bounce stagger-4" style="background-color: #ffc107;">
+                            <i class="fas fa-building"></i>
+                        </div>
+                        <h4 class="fw-bold text-primary mb-3 fade-in-up stagger-5">Sarana Prasarana</h4>
+                    </div>
+                    <div class="role-card-content">
+                        <p class="text-muted mb-4 fade-in-up stagger-6">
+                            Bagian Sarpras mengelola alur laporan, menugaskan teknisi, dan memantau ketersediaan sumber daya untuk perbaikan.
+                        </p>
+                        <div class="role-features">
+                            <div class="feature-item fade-in-up stagger-7">
+                                <i class="fas fa-tasks text-primary me-2"></i>
+                                <span>Manajemen Laporan</span>
+                            </div>
+                            <div class="feature-item fade-in-up stagger-8">
+                                <i class="fas fa-user-check text-primary me-2"></i>
+                                <span>Tugaskan Teknisi</span>
+                            </div>
+                             <div class="feature-item fade-in-up stagger-8">
+                                <i class="fas fa-archive text-primary me-2"></i>
+                                <span>Kelola Inventaris</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+                <div class="role-card h-100 fade-in-right stagger-4 hover-lift">
+                    <div class="role-card-header">
+                        <div class="role-icon admin scale-in-bounce stagger-5">
+                            <i class="fas fa-user-shield"></i>
+                        </div>
+                        <h4 class="fw-bold text-primary mb-3 fade-in-up stagger-6">Admin</h4>
+                    </div>
+                    <div class="role-card-content">
+                        <p class="text-muted mb-4 fade-in-up stagger-7">
+                           Admin memastikan seluruh proses berjalan lancar dengan memverifikasi laporan dan mengelola semua akun pengguna dalam sistem.
+                        </p>
+                        <div class="role-features">
+                            <div class="feature-item fade-in-up stagger-8">
+                                <i class="fas fa-check-double text-primary me-2"></i>
+                                <span>Verifikasi laporan</span>
+                            </div>
+                            <div class="feature-item fade-in-up stagger-9">
+                                <i class="fas fa-users-cog text-primary me-2"></i>
+                                <span>Kelola akun pengguna</span>
+                            </div>
+                            <div class="feature-item fade-in-up stagger-10">
+                                <i class="fas fa-chart-line text-primary me-2"></i>
+                                <span>Monitor sistem</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row align-items-center fade-in-up stagger-4">
+            <div class="col-lg-8">
+                <div class="bg-light p-4 rounded-3 hover-lift">
+                    <div class="d-flex align-items-center">
+                        <div class="bg-primary text-white rounded d-flex align-items-center justify-content-center me-3 pulse-animation" style="width: 48px; height: 48px;">
+                            <i class="fas fa-info"></i>
+                        </div>
+                        <div>
+                            <h5 class="fw-bold mb-1">Akses Sesuai Peran</h5>
+                            <p class="text-muted mb-0">
+                                Setiap pengguna mendapatkan dashboard dan fitur yang disesuaikan dengan peran mereka
+                                untuk pengalaman yang optimal dan efisien.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 text-center">
+                <a href="{{ url('/register') }}" class="btn btn-primary-custom btn-lg bounce-in shimmer-effect">
+                    <i class="fas fa-user-plus me-2"></i>Daftar Sekarang
+                </a>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
     <!-- ENDORSEMENT SECTION -->
     <section class="endorsement-section">
@@ -1722,7 +1771,7 @@
                     Politeknik Negeri Malang
                 </h2>
                 <p class="text-muted fs-5 mx-auto fade-in-up stagger-3" style="max-width: 600px;">
-                    FASILITA dikembangkan dengan dukungan penuh dari institusi pendidikan terkemuka 
+                    FASILITA dikembangkan dengan dukungan penuh dari institusi pendidikan terkemuka
                     untuk memastikan kualitas dan keberlanjutan sistem.
                 </p>
             </div>
@@ -1733,12 +1782,12 @@
                 <div class="col-lg-5 col-md-6">
                     <div class="logo-container-enhanced fade-in-left stagger-1 hover-lift">
                         <div class="logo-wrapper">
-                            <img src="{{ asset('assets/images/logos/polinema-logo.png') }}" 
-                                 alt="Politeknik Negeri Malang - Official Partner" 
+                            <img src="{{ asset('assets/images/logos/polinema-logo.png') }}"
+                                 alt="Politeknik Negeri Malang - Official Partner"
                                  class="official-logo responsive-image hover-scale"
                                  loading="lazy"
                                  onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                        
+
                             <!-- Fallback for Polinema logo -->
                             <div class="logo-fallback d-none">
                                 <div class="fallback-icon">
@@ -1756,17 +1805,17 @@
                         </div>
                     </div>
                 </div>
-            
+
                 <!-- JTI Logo -->
                 <div class="col-lg-5 col-md-6">
                     <div class="logo-container-enhanced fade-in-right stagger-2 hover-lift">
                         <div class="logo-wrapper">
-                            <img src="{{ asset('assets/images/logos/jti-logo.png') }}" 
-                                 alt="Jurusan Teknologi Informasi - Department Partner" 
+                            <img src="{{ asset('assets/images/logos/jti-logo.png') }}"
+                                 alt="Jurusan Teknologi Informasi - Department Partner"
                                  class="official-logo responsive-image hover-scale"
                                  loading="lazy"
                                  onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                        
+
                             <!-- Fallback for JTI logo -->
                             <div class="logo-fallback d-none">
                                 <div class="fallback-icon">
@@ -1833,7 +1882,7 @@
                         Fasilitas
                     </h2>
                     <p class="text-muted fade-in-left stagger-3">
-                        Laporkan kerusakan, pantau progres, dan lihat riwayat penanganan 
+                        Laporkan kerusakan, pantau progres, dan lihat riwayat penanganan
                         langsung dari dashboard Anda.
                     </p>
                 </div>
@@ -1853,11 +1902,11 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Feature Card 2 -->
                 <div class="col-md-3">
                     <div class="feature-card fade-in-up stagger-2 hover-lift">
-                        <div class="feature-icon inactive">
+                        <div class="feature-icon">
                             <i class="fas fa-plus"></i>
                         </div>
                         <div class="flex-grow-1">
@@ -1866,11 +1915,11 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Feature Card 3 -->
                 <div class="col-md-3">
                     <div class="feature-card fade-in-up stagger-3 hover-lift">
-                        <div class="feature-icon inactive">
+                        <div class="feature-icon">
                             <i class="fas fa-chart-line"></i>
                         </div>
                         <div class="flex-grow-1">
@@ -1879,11 +1928,11 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Feature Card 4 -->
                 <div class="col-md-3">
                     <div class="feature-card fade-in-up stagger-4 hover-lift">
-                        <div class="feature-icon inactive">
+                        <div class="feature-icon">
                             <i class="fas fa-database"></i>
                         </div>
                         <div class="flex-grow-1">
@@ -1897,12 +1946,12 @@
             <!-- Dashboard Interface Image -->
             <div class="mb-5 fade-in-up stagger-5" style="margin-bottom: 4rem !important;">
                 <div class="media-container aspect-ratio-19-9 hover-lift">
-                    <img src="{{ asset('assets/images/dashboard-interface.jpg') }}" 
-                         alt="FASILITA Dashboard Interface - Antarmuka Sistem Pelaporan" 
+                    <img src="{{ asset('assets/images/dashboard-interface.jpg') }}"
+                         alt="FASILITA Dashboard Interface - Antarmuka Sistem Pelaporan"
                          class="responsive-image"
                          loading="lazy"
                          onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                    
+
                     <!-- Fallback for dashboard interface -->
                     <div class="image-error d-none">
                         <i class="fas fa-chart-line"></i>
@@ -1927,11 +1976,11 @@
 
                 <div class="d-flex align-items-center">
                     <div class="avatar-container me-2">
-                        <img src="{{ asset('assets/images/avatars/gabriel-avatar.jpg') }}" 
-                             alt="Gabriel Batavia - Mahasiswa Teknik Informatika" 
+                        <img src="{{ asset('assets/images/avatars/gabriel-avatar.jpg') }}"
+                             alt="Gabriel Batavia - Mahasiswa Teknik Informatika"
                              loading="lazy"
                              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                        
+
                         <!-- Fallback for avatar -->
                         <div class="d-none w-100 h-100 d-flex align-items-center justify-content-center">
                             <i class="fas fa-user text-muted"></i>
@@ -1967,8 +2016,8 @@
                     </p>
 
                     <p class="text-light fade-in-left stagger-3">
-                        Akses langsung ke seluruh riwayat laporan. Pantau setiap laporan kerusakan secara 
-                        langsung. Semua data pengguna, lokasi, status laporan, dan progres dapat diakses 
+                        Akses langsung ke seluruh riwayat laporan. Pantau setiap laporan kerusakan secara
+                        langsung. Semua data pengguna, lokasi, status laporan, dan progres dapat diakses
                         secara real-time.
                     </p>
                 </div>
@@ -1976,12 +2025,12 @@
                 <div class="col-lg-6">
                     <!-- Real-time Dashboard Image -->
                     <div class="media-container aspect-ratio-4-3 fade-in-right stagger-2 hover-lift">
-                        <img src="{{ asset('assets/images/realtime-dashboard.jpg') }}" 
-                             alt="Real-time Dashboard FASILITA - Monitoring Laporan Langsung" 
+                        <img src="{{ asset('assets/images/realtime-dashboard.jpg') }}"
+                             alt="Real-time Dashboard FASILITA - Monitoring Laporan Langsung"
                              class="responsive-image"
                              loading="lazy"
                              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                        
+
                         <!-- Fallback for real-time dashboard -->
                         <div class="image-error d-none">
                             <i class="fas fa-tachometer-alt"></i>
@@ -2001,19 +2050,19 @@
                             <div class="tool-card-text">
                                 <h4 class="fw-bold text-white mb-3">Pemantauan Pelaporan yang Kuat</h4>
                                 <p class="text-white mb-0" style="color: #d1d5db !important;">
-                                    Lacak setiap interaksi pengguna dengan fasilitas kampus. Catat status, riwayat tindakan, 
+                                    Lacak setiap interaksi pengguna dengan fasilitas kampus. Catat status, riwayat tindakan,
                                     komunikasi antar admin, dan feedback pelapor dalam satu tampilan yang mudah dimengerti.
                                 </p>
                             </div>
                             <!-- Monitoring Interface Image -->
                             <div class="tool-card-image-container">
                                 <div class="media-container">
-                                    <img src="{{ asset('assets/images/monitoring-interface.jpg') }}" 
-                                         alt="Monitoring Interface - Antarmuka Pemantauan Laporan" 
+                                    <img src="{{ asset('assets/images/monitoring-interface.jpg') }}"
+                                         alt="Monitoring Interface - Antarmuka Pemantauan Laporan"
                                          class="responsive-image"
                                          loading="lazy"
                                          onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                                    
+
                                     <!-- Fallback for monitoring interface -->
                                     <div class="image-error d-none">
                                         <i class="fas fa-chart-bar"></i>
@@ -2032,19 +2081,19 @@
                             <div class="tool-card-text">
                                 <h4 class="fw-bold text-white mb-3">Rekap Laporan Otomatis ke PDF</h4>
                                 <p class="text-white mb-0" style="color: #d1d5db !important;">
-                                    Laporan otomatis disimpan dalam format PDF untuk keperluan cetak, 
+                                    Laporan otomatis disimpan dalam format PDF untuk keperluan cetak,
                                     evaluasi, dan dokumentasi rutin.
                                 </p>
                             </div>
                             <!-- Google Sheets Integration Image -->
                             <div class="tool-card-image-container">
                                 <div class="media-container">
-                                    <img src="{{ asset('assets/images/PDF-integration.jpg') }}" 
-                                         alt="PDF Integration - Integrasi Laporan Otomatis" 
+                                    <img src="{{ asset('assets/images/PDF-integration.jpg') }}"
+                                         alt="PDF Integration - Integrasi Laporan Otomatis"
                                          class="responsive-image"
                                          loading="lazy"
                                          onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                                    
+
                                     <!-- Fallback for PDF integration -->
                                     <div class="image-error d-none">
                                         <i class="fas fa-table"></i>
@@ -2073,7 +2122,7 @@
                         Fasilitas dengan Mudah
                     </h2>
                     <p class="text-muted fade-in-left stagger-3">
-                        Ikuti langkah-langkah berikut untuk mengirim laporan, memantau status, dan melihat 
+                        Ikuti langkah-langkah berikut untuk mengirim laporan, memantau status, dan melihat
                         tindak lanjut secara real-time langsung dari dashboard Anda.
                     </p>
                 </div>
@@ -2091,7 +2140,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Feature Point 2 -->
                 <div class="col-md-4">
                     <div class="d-flex fade-in-up stagger-2">
@@ -2102,7 +2151,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Feature Point 3 -->
                 <div class="col-md-4">
                     <div class="d-flex fade-in-up stagger-3">
@@ -2118,7 +2167,7 @@
             <!-- Video Container -->
             <div class="video-container aspect-ratio-16-9 fade-in-up stagger-4 hover-lift">
                 <!-- Video Player -->
-                <video class="video-player" 
+                <video class="video-player"
                        poster="{{ asset('assets/images/video-poster.jpg') }}"
                        preload="metadata"
                        controls
@@ -2129,22 +2178,22 @@
                     <source src="{{ asset('assets/videos/fasilita-demo.webm') }}" type="video/webm">
                     Your browser does not support the video tag.
                 </video>
-                
+
                 <!-- Video Overlay with Play Button -->
                 <div class="video-overlay" id="videoOverlay" onclick="playVideo()">
                     <div class="play-button pulse-animation">
                         <i class="fas fa-play"></i>
                     </div>
                 </div>
-                
+
                 <!-- Video Poster/Thumbnail -->
-                <img src="{{ asset('assets/images/video-poster.jpg') }}" 
-                     alt="FASILITA Demo Video - Tutorial Penggunaan Sistem" 
+                <img src="{{ asset('assets/images/video-poster.jpg') }}"
+                     alt="FASILITA Demo Video - Tutorial Penggunaan Sistem"
                      class="responsive-image"
                      style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1;"
                      loading="lazy"
                      onerror="this.style.display='none'; document.getElementById('videoFallback').style.display='flex';">
-                
+
                 <!-- Fallback for video -->
                 <div class="image-error d-none" id="videoFallback">
                     <div class="play-button mb-3">
@@ -2162,78 +2211,88 @@
         <div class="container">
             <h2 class="fw-bold mb-3 text-white fade-in-up stagger-1" style="font-size: 3rem;">Supported Tools</h2>
             <p class="fs-5 text-light mb-5 fade-in-up stagger-2" style="max-width: 800px;">
-                Mengandalkan kombinasi tools terbaik seperti Laravel, MySQL, dan Bootstrap, sistem ini 
-                dibangun untuk memberikan pengalaman pelaporan yang cepat, aman, dan efisien.
+            Mengandalkan kombinasi tools terbaik seperti Laravel, MySQL, dan Bootstrap, sistem ini
+            dibangun untuk memberikan pengalaman pelaporan yang cepat, aman, dan efisien.
             </p>
 
             <div class="row g-4">
-                <!-- Laravel -->
-                <div class="col-md-4">
-                    <div class="tool-card fade-in-up stagger-1 hover-lift">
-                        <div class="tool-card-header">
-                            <div class="tool-icon laravel">L</div>
-                            <h4 class="fw-bold text-white mb-3">Laravel</h4>
-                            <p class="text-white">Framework backend utama untuk pengelolaan logika dan data.</p>
-                        </div>
+            <!-- Laravel -->
+            <div class="col-md-4">
+                <div class="tool-card fade-in-up stagger-1 hover-lift">
+                <div class="tool-card-header">
+                    <div class="tool-icon">
+                    <img src="{{ asset('assets/images/logos/laravel.png') }}" alt="Laravel Logo">
                     </div>
+                    <h4 class="fw-bold text-white mb-3">Laravel</h4>
+                    <p class="text-white">Framework backend utama untuk pengelolaan logika dan data.</p>
                 </div>
+                </div>
+            </div>
 
-                <!-- Bootstrap -->
-                <div class="col-md-4">
-                    <div class="tool-card fade-in-up stagger-2 hover-lift">
-                        <div class="tool-card-header">
-                            <div class="tool-icon bootstrap">B</div>
-                            <h4 class="fw-bold text-white mb-3">Bootstrap 4</h4>
-                            <p class="text-white">Membantu desain UI agar responsif dan rapi.</p>
-                        </div>
+            <!-- Bootstrap -->
+            <div class="col-md-4">
+                <div class="tool-card fade-in-up stagger-2 hover-lift">
+                <div class="tool-card-header">
+                    <div class="tool-icon">
+                    <img src="{{ asset('assets/images/logos/bootstrap.png') }}" alt="Bootstrap Logo">
                     </div>
+                    <h4 class="fw-bold text-white mb-3">Bootstrap 4</h4>
+                    <p class="text-white">Membantu desain UI agar responsif dan rapi.</p>
                 </div>
+                </div>
+            </div>
 
-                <!-- Skydash -->
-                <div class="col-md-4">
-                    <div class="tool-card fade-in-up stagger-3 hover-lift">
-                        <div class="tool-card-header">
-                            <div class="tool-icon skydash">S</div>
-                            <h4 class="fw-bold text-white mb-3">Skydash</h4>
-                            <p class="text-white">Template admin siap pakai untuk dashboard.</p>
-                        </div>
+            <!-- Skydash -->
+            <div class="col-md-4">
+                <div class="tool-card fade-in-up stagger-3 hover-lift">
+                <div class="tool-card-header">
+                    <div class="tool-icon-skydash">
+                    <img src="{{ asset('assets/images/logos/skydash.png') }}" alt="Skydash Logo">
                     </div>
+                    <h4 class="fw-bold text-white mb-3">Skydash</h4>
+                    <p class="text-white">Template admin siap pakai untuk dashboard.</p>
                 </div>
+                </div>
+            </div>
 
-                <!-- jQuery -->
-                <div class="col-md-4">
-                    <div class="tool-card fade-in-up stagger-4 hover-lift">
-                        <div class="tool-card-header">
-                            <div class="tool-icon jquery">jQ</div>
-                            <h4 class="fw-bold text-white mb-3">J Query</h4>
-                            <p class="text-white">Mempermudah interaksi dinamis di halaman web.</p>
-                        </div>
+            <!-- jQuery -->
+            <div class="col-md-4">
+                <div class="tool-card fade-in-up stagger-4 hover-lift">
+                <div class="tool-card-header">
+                    <div class="tool-icon">
+                    <img src="{{ asset('assets/images/logos/jquery.png') }}" alt="jQuery Logo">
                     </div>
+                    <h4 class="fw-bold text-white mb-3">jQuery</h4>
+                    <p class="text-white">Mempermudah interaksi dinamis di halaman web.</p>
                 </div>
+                </div>
+            </div>
 
-                <!-- Figma -->
-                <div class="col-md-4">
-                    <div class="tool-card fade-in-up stagger-5 hover-lift">
-                        <div class="tool-card-header">
-                            <div class="tool-icon figma">F</div>
-                            <h4 class="fw-bold text-white mb-3">Figma</h4>
-                            <p class="text-white">Digunakan untuk desain UI sebelum diimplementasi.</p>
-                        </div>
+            <!-- Figma -->
+            <div class="col-md-4">
+                <div class="tool-card fade-in-up stagger-5 hover-lift">
+                <div class="tool-card-header">
+                    <div class="tool-icon">
+                    <img src="{{ asset('assets/images/logos/figma.png') }}" alt="Figma Logo">
                     </div>
+                    <h4 class="fw-bold text-white mb-3">Figma</h4>
+                    <p class="text-white">Digunakan untuk desain UI sebelum diimplementasi.</p>
                 </div>
+                </div>
+            </div>
 
-                <!-- MySQL -->
-                <div class="col-md-4">
-                    <div class="tool-card fade-in-up stagger-6 hover-lift">
-                        <div class="tool-card-header">
-                            <div class="tool-icon mysql">
-                                <i class="fas fa-database"></i>
-                            </div>
-                            <h4 class="fw-bold text-white mb-3">MySQL</h4>
-                            <p class="text-white">Menyimpan data laporan dan pengguna secara aman.</p>
-                        </div>
+            <!-- MySQL -->
+            <div class="col-md-4">
+                <div class="tool-card fade-in-up stagger-6 hover-lift">
+                <div class="tool-card-header">
+                    <div class="tool-icon">
+                    <img src="{{ asset('assets/images/logos/mysql.png') }}" alt="MySQL Logo">
                     </div>
+                    <h4 class="fw-bold text-white mb-3">MySQL</h4>
+                    <p class="text-white">Menyimpan data laporan dan pengguna secara aman.</p>
                 </div>
+                </div>
+            </div>
             </div>
         </div>
     </section>
@@ -2249,7 +2308,7 @@
             <div class="row align-items-center g-5 mb-5">
                 <div class="col-lg-6">
                     <h2 class="fw-bold team-section-heading fade-in-left stagger-1" style="font-size: 2.5rem; line-height: 1.2;">
-                        Kami membangun sistem pelaporan yang tidak hanya fungsional, tapi juga mudah 
+                        Kami membangun sistem pelaporan yang tidak hanya fungsional, tapi juga mudah
                         diakses dan digunakan siapa saja
                     </h2>
                 </div>
@@ -2258,20 +2317,20 @@
                     <div class="team-card fade-in-right stagger-2 hover-lift" style="max-width: 300px;">
                         <div class="team-image">
                             <!-- Main Team Member Photo -->
-                            <img src="{{ asset('assets/images/team/jocelyn-main.jpg') }}" 
-                                 alt="Jocelyn Schleifer - Project Manager FASILITA" 
+                            <img src="{{ asset('assets/images/team/Erik.jpeg') }}"
+                                 alt="Jocelyn Schleifer - Project Manager FASILITA"
                                  loading="lazy"
                                  onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                            
+
                             <!-- Fallback for main team member -->
                             <div class="image-error d-none">
                                 <i class="fas fa-user-tie"></i>
-                                <p class="mb-0">Jocelyn Schleifer</p>
+                                <p class="mb-0">Erik Ridho</p>
                                 <small>Project Manager</small>
                             </div>
                         </div>
                         <div class="team-info">
-                            <h5 class="fw-bold text-white">Jocelyn Schleifer</h5>
+                            <h5 class="fw-bold text-white">Erik Ridho</h5>
                             <p class="text-white mb-0" style="color: #d1d5db !important;">Projek Manajer</p>
                         </div>
                     </div>
@@ -2284,11 +2343,11 @@
                 <div class="col-md-3">
                     <div class="team-card fade-in-up stagger-1 hover-lift">
                         <div class="team-image">
-                            <img src="{{ asset('assets/images/team/petrus.jpg') }}" 
-                                 alt="Petrus Tyang A.R - UI/UX & Full Stack Developer" 
+                            <img src="{{ asset('assets/images/team/petrus.jpg') }}"
+                                 alt="Petrus Tyang A.R - UI/UX & Full Stack Developer"
                                  loading="lazy"
                                  onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                            
+
                             <!-- Fallback for team member 1 -->
                             <div class="image-error d-none">
                                 <i class="fas fa-user-cog"></i>
@@ -2307,11 +2366,11 @@
                 <div class="col-md-3">
                     <div class="team-card fade-in-up stagger-2 hover-lift">
                         <div class="team-image">
-                            <img src="{{ asset('assets/images/team/reika.jpg') }}" 
-                                 alt="Reika Amalia Syahputri - Full Stack Developer" 
+                            <img src="{{ asset('assets/images/team/reika.jpg') }}"
+                                 alt="Reika Amalia Syahputri - Full Stack Developer"
                                  loading="lazy"
                                  onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                            
+
                             <!-- Fallback for team member 2 -->
                             <div class="image-error d-none">
                                 <i class="fas fa-user-code"></i>
@@ -2330,11 +2389,11 @@
                 <div class="col-md-3">
                     <div class="team-card fade-in-up stagger-3 hover-lift">
                         <div class="team-image">
-                            <img src="{{ asset('assets/images/team/Muhammad Rifda Musyaffa.jpg') }}" 
-                                 alt="Muhammad Rifda Musyaffa - Full Stack Developer" 
+                            <img src="{{ asset('assets/images/team/Muhammad Rifda Musyaffa.jpg') }}"
+                                 alt="Muhammad Rifda Musyaffa - Full Stack Developer"
                                  loading="lazy"
                                  onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                            
+
                             <!-- Fallback for team member 3 -->
                             <div class="image-error d-none">
                                 <i class="fas fa-user-graduate"></i>
@@ -2353,11 +2412,11 @@
                 <div class="col-md-3">
                     <div class="team-card fade-in-up stagger-4 hover-lift">
                         <div class="team-image">
-                            <img src="{{ asset('assets/images/team/Muhammad Afif Al Ghifari.jpg') }}" 
-                                 alt="Muhammad Afif Al Ghifari - Full Stack Developer" 
+                            <img src="{{ asset('assets/images/team/Afif.jpeg') }}"
+                                 alt="Muhammad Afif Al Ghifari - Full Stack Developer"
                                  loading="lazy"
                                  onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                            
+
                             <!-- Fallback for team member 4 -->
                             <div class="image-error d-none">
                                 <i class="fas fa-user-friends"></i>
@@ -2382,8 +2441,8 @@
                 <!-- Logo -->
                 <div class="col-md-3 fade-in-left stagger-1">
                     <div class="d-flex align-items-center mb-4">
-                        <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LOGO%20%28Revisi%20Warna%29-eWjC9ZoeAArOze6ELrzncIwo0ebVJI.png" 
-                             alt="FASILITA Logo" 
+                        <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LOGO%20%28Revisi%20Warna%29-eWjC9ZoeAArOze6ELrzncIwo0ebVJI.png"
+                             alt="FASILITA Logo"
                              class="logo-image me-2 responsive-image hover-scale"
                              loading="lazy"
                              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
@@ -2444,20 +2503,20 @@
     <script>
         /**
          * FASILITA Landing Page Scripts with Enhanced Animations
-         * 
+         *
          * Comprehensive animation system using jQuery and vanilla JavaScript
          * with fade in/out effects, scroll animations, and interactive elements.
          */
 
         $(document).ready(function() {
-            
+
             // Initialize all animations
             initializeAnimations();
             initializeScrollAnimations();
             initializeNavbarEffects();
             initializeInteractiveElements();
             initializeVideoPlayer();
-            
+
             /**
              * Initialize base animations on page load
              */
@@ -2466,11 +2525,11 @@
                 setTimeout(function() {
                     $('.fade-in, .fade-in-up, .fade-in-down, .fade-in-left, .fade-in-right, .scale-in, .scale-in-bounce, .rotate-in').each(function(index) {
                         const $element = $(this);
-                        
+
                         // Check if element is in initial viewport
                         if (isElementInViewport(this)) {
                             const delay = getStaggerDelay($element, index);
-                            
+
                             setTimeout(function() {
                                 $element.addClass('animate');
                             }, delay);
@@ -2521,18 +2580,18 @@
                     entries.forEach(function(entry) {
                         if (entry.isIntersecting) {
                             const $element = $(entry.target);
-                            
+
                             // Add animation class with staggered delay
                             const delay = $element.data('delay') || 0;
                             setTimeout(function() {
                                 $element.addClass('animate');
-                                
+
                                 // Add special effects for certain elements
                                 if ($element.hasClass('typing-animation')) {
                                     startTypingAnimation($element);
                                 }
                             }, delay);
-                            
+
                             // Unobserve after animation
                             observer.unobserve(entry.target);
                         }
@@ -2542,7 +2601,7 @@
                 // Observe all animation elements that are not initially visible
                 $('.fade-in, .fade-in-up, .fade-in-down, .fade-in-left, .fade-in-right, .scale-in, .scale-in-bounce, .rotate-in').each(function(index) {
                     const $element = $(this);
-                    
+
                     // Only observe elements that are not in the initial viewport
                     if (!isElementInViewport(this)) {
                         $element.data('delay', getStaggerDelay($element, index));
@@ -2556,7 +2615,7 @@
              */
             function initializeNavbarEffects() {
                 const $navbar = $('.navbar');
-                
+
                 $(window).scroll(function() {
                     if ($(window).scrollTop() > 50) {
                         $navbar.addClass('scrolled');
@@ -2623,7 +2682,7 @@
                     const scrolled = $(window).scrollTop();
                     const parallax = $('.hero-section');
                     const speed = scrolled * 0.2;
-                    
+
                     parallax.css('transform', 'translateY(' + speed + 'px)');
                 });
 
@@ -2644,10 +2703,10 @@
                     const $videoContainer = $('.video-container');
                     const $videoOverlay = $('#videoOverlay');
                     const $videoPlayer = $('.video-player');
-                    
+
                     // Add loading animation
                     $videoOverlay.html('<div class="loading-spinner"></div>');
-                    
+
                     // Fade out overlay and show video
                     $videoOverlay.fadeOut(500, function() {
                         $videoPlayer.fadeIn(300);
@@ -2662,7 +2721,7 @@
             function startTypingAnimation($element) {
                 const text = $element.text();
                 $element.text('');
-                
+
                 let i = 0;
                 const typeWriter = function() {
                     if (i < text.length) {
@@ -2673,7 +2732,7 @@
                         $element.removeClass('typing-animation');
                     }
                 };
-                
+
                 setTimeout(typeWriter, 500);
             }
 
@@ -2687,7 +2746,7 @@
                     const duration = 2000;
                     const increment = target / (duration / 16);
                     let current = 0;
-                    
+
                     const timer = setInterval(function() {
                         current += increment;
                         if (current >= target) {
@@ -2708,16 +2767,16 @@
                         if (entry.isIntersecting) {
                             const img = entry.target;
                             const $img = $(img);
-                            
+
                             if (img.dataset.src) {
                                 img.src = img.dataset.src;
                             }
                             $img.addClass('fade-in animate');
-                            
+
                             img.onload = function() {
                                 $img.removeClass('image-loading');
                             };
-                            
+
                             imageObserver.unobserve(img);
                         }
                     });
@@ -2735,7 +2794,7 @@
                 $('img').on('error', function() {
                     const $img = $(this);
                     const $fallback = $img.next('.image-error');
-                    
+
                     $img.fadeOut(300, function() {
                         if ($fallback.length) {
                             $fallback.fadeIn(300);
@@ -2746,7 +2805,7 @@
                 $('video').on('error', function() {
                     const $video = $(this);
                     const $fallback = $('#videoFallback');
-                    
+
                     $video.fadeOut(300, function() {
                         if ($fallback.length) {
                             $fallback.fadeIn(300);
@@ -2761,14 +2820,14 @@
             function initializePageTransitions() {
                 // Fade in page content on load
                 $('body').addClass('fade-in animate');
-                
+
                 // Smooth transitions for internal links
                 $('a:not([href^="http"]):not([href^="#"]):not([target="_blank"])').click(function(e) {
                     const href = $(this).attr('href');
-                    
+
                     if (href && href !== '#') {
                         e.preventDefault();
-                        
+
                         $('body').fadeOut(300, function() {
                             window.location.href = href;
                         });
@@ -2840,7 +2899,7 @@
                 if (window.innerWidth <= 768) {
                     // Reduce animation complexity on mobile
                     $('.float-animation, .pulse-animation').removeClass('float-animation pulse-animation');
-                    
+
                     // Optimize touch interactions
                     $('.hover-lift').on('touchstart', function() {
                         $(this).addClass('touch-active');
@@ -2878,22 +2937,22 @@
             fadeIn: function(element, duration = 500) {
                 $(element).fadeIn(duration);
             },
-            
+
             // Fade out element with custom duration
             fadeOut: function(element, duration = 500) {
                 $(element).fadeOut(duration);
             },
-            
+
             // Animate element with custom properties
             animate: function(element, properties, duration = 500) {
                 $(element).animate(properties, duration, 'easeInOutCubic');
             },
-            
+
             // Show loading state
             showLoading: function(element) {
                 $(element).html('<div class="loading-spinner"></div>');
             },
-            
+
             // Hide loading state
             hideLoading: function(element) {
                 $(element).find('.loading-spinner').remove();
@@ -2912,7 +2971,7 @@
             const videoContainer = document.querySelector('.video-container');
             const videoOverlay = document.getElementById('videoOverlay');
             const videoPlayer = document.querySelector('.video-player');
-            
+
             videoOverlay.classList.add('hidden');
             videoPlayer.style.display = 'block';
             videoPlayer.play();

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('lantai', function (Blueprint $table) {
             $table->id('id_lantai');
             $table->unsignedBigInteger('id_gedung')->index();
-            $table->string('nomor_lantai');
+            $table->string('nomor_lantai', 20);
             $table->timestamps();
 
             $table->foreign('id_gedung')->references('id_gedung')->on('gedung')->onDelete('cascade');

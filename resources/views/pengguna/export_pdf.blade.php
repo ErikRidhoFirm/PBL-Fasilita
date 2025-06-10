@@ -75,6 +75,7 @@ img.image{
     <thead>
         <tr>
             <th class="text-center">No</th>
+            <th class="text-center">Nomor Induk</th>
             <th>Username</th>
             <th>Nama Pengguna</th>
             <th>Peran Pengguna</th>
@@ -84,6 +85,7 @@ img.image{
         @foreach($users as $u)
             <tr>
             <td class="text-center">{{ $loop->iteration }}</td>
+            <td class="text-center">{{ $u->no_induk }}</td>
             <td>{{ $u->username }}</td>
             <td>{{ $u->nama }}</td>
             <td>{{ $u->peran->nama_peran ?? '-' }}</td>

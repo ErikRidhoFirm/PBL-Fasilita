@@ -7,9 +7,19 @@ use App\Models\Pengguna;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use App\Services\NoIndukVerifierService;
+use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
+
+    protected $noIndukVerifier;
+
+    public function __construct(NoIndukVerifierService $noIndukVerifier)
+    {
+        $this->noIndukVerifier = $noIndukVerifier;
+    }
+
     public function showRegister()
     {
         return view('auth.register');
@@ -18,31 +28,42 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         try {
-
             $data = $request->validate([
-                'nama' => 'required|string|max:255',
-                'username' => 'required|string|unique:pengguna,username',
+                'no_induk' => 'required|string|max:20|unique:pengguna,no_induk',
+                'nama' => 'required|string|max:40',
+                'username' => 'required|string|max:20|unique:pengguna,username',
                 'password' => 'required|string|confirmed|min:5',
-                'email' => 'required|string',
             ]);
 
-            $roleId = Peran::where('kode_peran', 'MHS')->value('id_peran');
+            // Verifikasi format nomor induk menggunakan service
+            $verificationResult = $this->noIndukVerifier->verify($data['no_induk']);
+
+            // Jika format tidak valid atau service error apa pun, lempar pesan umum
+            if (
+                $verificationResult['type'] === 'Tidak Valid' ||
+                $verificationResult['type'] === 'Tidak Diketahui' ||
+                !empty($verificationResult['errors'])
+            ) {
+                throw ValidationException::withMessages([
+                    'no_induk' => ['Nomor induk tidak valid']
+                ]);
+            }
+
+            $roleId = Peran::where('kode_peran', 'GST')->value('id_peran');
 
             Pengguna::create([
                 'id_peran' => $roleId,
+                'no_induk' => $data['no_induk'],
                 'nama' => $data['nama'],
                 'username' => $data['username'],
                 'password' => $data['password'],
-                'email' => $data['email'],
-                'foto_profile' => 'default.jpg', // ← default foto profil
             ]);
 
             return response()->json([
                 'status' => true,
                 'message' => 'Registrasi berhasil',
-                // 'redirect' => url('/login')
+                'redirect' => url('/login')
             ]);
-            return redirect('login');
         } catch (\Exception $e) {
             return response()->json([
                 'status' => false,
@@ -69,15 +90,18 @@ class AuthController extends Controller
         return response()->json([
             'status'   => true,
             'message'  => 'Login Berhasil',
-            // Arahkan ke route('dashboard') bukan url('/')
             'redirect' => route('dashboard'),
         ]);
     }
 
     return response()->json([
         'status' => false,
-        'errors' => ['username' => 'Username atau password salah']
-    ], 422);
+         'message'  => 'Username atau password salah',
+         'errors'   => [
+            'username' => ['Username atau password salah'],
+            'password' => ['Username atau password salah'],
+        ],
+    ], 200);
 }
 
     public function logout(Request $request)

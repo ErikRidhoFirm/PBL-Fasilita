@@ -19,7 +19,7 @@ return new class extends Migration
             $table->unsignedBigInteger('id_status')->index();
             $table->integer('jumlah_rusak');
             $table->string('path_foto')->nullable();
-            $table->text('deskripsi');
+            $table->text('deskripsi', 100);
             $table->boolean('is_active')->default(true);
             $table->timestamps();
 

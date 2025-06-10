@@ -30,23 +30,26 @@ class PeranController extends Controller
     return DataTables::of($data)
         ->addIndexColumn()
         ->addColumn('aksi', function($row) {
-            $editBtn = '<button onclick="modalAction(\'' . url('/peran/edit/' . $row->id_peran) . '\')" 
-                            type="button" 
-                            class="btn btn-warning btn-sm btn-edit d-inline-flex align-items-center justify-content-center" 
-                            style="margin-right: 8px;">
+            $editBtn = '<button onclick="modalAction(\'' . url('/peran/edit/' . $row->id_peran) . '\')"
+                            type="button"
+                            class="btn btn-sm btn-outline-warning"
+                                data-bs-toggle="tooltip" data-bs-placement="top" title="Edit"
+                                style="margin-right: 8px;">
                             <i class="mdi mdi-pencil m-0"></i>
                         </button>';
 
-            $showBtn = '<button onclick="modalAction(\'' . url('/peran/show/' . $row->id_peran) . '\')" 
-                            type="button" 
-                            class="btn btn-info btn-sm btn-show d-inline-flex align-items-center justify-content-center" 
-                            style="margin-right: 8px;">
+            $showBtn = '<button onclick="modalAction(\'' . url('/peran/show/' . $row->id_peran) . '\')"
+                            type="button"
+                            class="btn btn-sm btn-outline-primary"
+                                data-bs-toggle="tooltip" data-bs-placement="top" title="Lihat Detail"
+                                style="margin-right: 8px;">
                             <i class="mdi mdi-file-document-box m-0"></i>
                         </button>';
 
-            $deleteBtn = '<button onclick="modalAction(\'' . url('/peran/delete/' . $row->id_peran) . '\')" 
-                            type="button" 
-                            class="btn btn-danger btn-sm btn-delete d-inline-flex align-items-center justify-content-center" 
+            $deleteBtn = '<button onclick="modalAction(\'' . url('/peran/delete/' . $row->id_peran) . '\')"
+                            type="button"
+                            class="btn btn-sm btn-outline-danger"
+                            data-bs-toggle="tooltip" data-bs-placement="top" title="Hapus"
                             data-id="'.$row->id_peran.'">
                             <i class="mdi mdi-delete m-0"></i>
                         </button>';
@@ -81,12 +84,14 @@ class PeranController extends Controller
             ];
 
             // use Illuminate\Support\Facades\Validator;
-            $validator = Validator::make($request->all(), $rules);
+            $validator = Validator::make($request->all(), $rules, [
+                'kode_peran.unique' => 'Kode peran sudah digunakan',
+            ]);
 
             if ($validator->fails()) {
                 return response()->json([
                     'status' => false, // response status, false: error/gagal, true: berhasil
-                    'message' => 'Validasi Gagal',
+                    'message' => 'Terjadi kesalahan',
                     'msgField' => $validator->errors(), // pesan error validasi
                 ]);
             }
@@ -127,20 +132,22 @@ class PeranController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // cek apakah request dari ajax 
+        // cek apakah request dari ajax
         if ($request->ajax() || $request->wantsJson()) {
             $rules = [
                 'kode_peran' => 'required|string|min:3|unique:peran,kode_peran,'.$id.',id_peran',
                 'nama_peran' => 'required|string|max:100',
             ];
-            // use Illuminate\Support\Facades\Validator; 
-            $validator = Validator::make($request->all(), $rules);
+            // use Illuminate\Support\Facades\Validator;
+            $validator = Validator::make($request->all(), $rules,[
+                'kode_peran.unique' => 'Kode peran sudah digunakan',
+            ]);
 
             if ($validator->fails()) {
                 return response()->json([
-                    'status'   => false,    // respon json, true: berhasil, false: gagal 
+                    'status'   => false,    // respon json, true: berhasil, false: gagal
                     'message'  => 'Validasi gagal.',
-                    'msgField' => $validator->errors()  // menunjukkan field mana yang error 
+                    'msgField' => $validator->errors()  // menunjukkan field mana yang error
                 ]);
             }
 
@@ -253,7 +260,7 @@ class PeranController extends Controller
         return redirect()->route('peran.index');
     }
 
-    
+
     public function exportPdf()
     {
         $peran = Peran::orderBy('kode_peran')->get();

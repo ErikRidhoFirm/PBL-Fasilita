@@ -14,6 +14,7 @@ class PeranSeeder extends Seeder
     public function run(): void
     {
         DB::table('peran')->insert([
+            ['kode_peran' => 'GST', 'nama_peran' => 'Guest'],
             ['kode_peran' => 'ADM', 'nama_peran' => 'Admin'],
             ['kode_peran' => 'MHS', 'nama_peran' => 'Mahasiswa'],
             ['kode_peran' => 'DSN', 'nama_peran' => 'Dosen'],

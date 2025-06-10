@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id('id_fasilitas');
             $table->unsignedBigInteger('id_ruangan')->index();
             $table->unsignedBigInteger('id_kategori')->index();
-            $table->string('nama_fasilitas');
+            $table->string('nama_fasilitas', 35);
             $table->integer('jumlah_fasilitas');
             $table->timestamps();
 

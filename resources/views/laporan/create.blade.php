@@ -141,17 +141,20 @@
 @push('css')
 @endpush
 @push('js')
+
     <script>
         // Modal
         function modalAction() {
             $('#myModal').modal('show');
         }
+
+                    // Tentukan prefix path berdasarkan role:
+            const laporanPrefix = "{{ $authUser->peran->kode_peran === 'ADM' ? 'laporan' : 'laporanPelapor' }}";
+            // Base URL (pastikan meta[name=base-url] ada di <head>)
+            const baseURL = $('meta[name="base-url"]').attr('content');
         let fileArray = [];
         // form select change
         $(function() {
-
-            // const baseURL = window.location.origin + '/PBL-Fasilita/public';
-            const baseURL = $('meta[name="base-url"]').attr('content');
             // Gedung
             $('#inputGedung').on('change', function() {
                 const idGedung = $(this).val();
@@ -164,9 +167,9 @@
                     true);
 
                 if (idGedung) {
-                    $.get(`${baseURL}/laporan/get-lantai/${idGedung}`, function(data) {
-                        console.log(`${baseURL}/laporan/get-lantai/${idGedung}`);
-                        
+                    $.get(`${baseURL}/${laporanPrefix}/get-lantai/${idGedung}`, function(data) {
+                        console.log(`${baseURL}/${laporanPrefix}/get-lantai/${idGedung}`);
+
                         if (Array.isArray(data) && data.length > 0) {
                             $inputLantai.prop('disabled', false);
                             $inputLantai.addClass('border-primary');
@@ -192,7 +195,7 @@
                     true);
 
                 if (idLantai) {
-                    $.get(`${baseURL}/laporan/get-ruangan/${idLantai}`, function(data) {
+                    $.get(`${baseURL}/${laporanPrefix}/get-ruangan/${idLantai}`, function(data) {
                         if (Array.isArray(data) && data.length > 0) {
                             $inputRuangan.prop('disabled', false);
                             $inputRuangan.addClass('border-primary');
@@ -219,7 +222,7 @@
                 $jumlahKerusakan.val('').removeAttr('max'); // Reset max saat ruangan diganti
 
                 if (idRuangan) {
-                    $.get(`${baseURL}/laporan/get-fasilitas/${idRuangan}`, function(data) {
+                    $.get(`${baseURL}/${laporanPrefix}/get-fasilitas/${idRuangan}`, function(data) {
                         if (Array.isArray(data) && data.length > 0) {
                             $inputFasilitas.prop('disabled', false);
                             $inputFasilitas.addClass('border-primary');
@@ -433,23 +436,8 @@
             formData.append('path_foto[]', fileArray[index]);
         });
 
-        // Tentukan URL berdasarkan role pengguna
-        const userRole = "{{ $authUser->peran->kode_peran ?? '' }}"; // Ambil role dari data yang dikirim controller
-        let submitUrl = '';
-
-        if (userRole === 'ADM') {
-            submitUrl = "{{ route('laporan.store') }}";
-        } else if (['MHS', 'DSN', 'TDK'].includes(userRole)) {
-            submitUrl = "{{ route('laporanPelapor.store') }}";
-        } else {
-            // Fallback untuk role tidak dikenali
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Role pengguna tidak valid'
-            });
-            return;
-        }
+        submitUrl = `${baseURL}/${laporanPrefix}/store`;
+        const indexUrl = `${baseURL}/${laporanPrefix}`;
 
         $.ajax({
             url: submitUrl,
@@ -463,7 +451,7 @@
                     title: 'Berhasil',
                     text: 'Laporan berhasil ditambahkan'
                 }).then(function() {
-                    window.location.href = "{{ route('laporan.index') }}";
+                    window.location.href = indexUrl;
                 })
             },
             error: function(err) {

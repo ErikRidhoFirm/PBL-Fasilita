@@ -14,8 +14,9 @@ return new class extends Migration
         Schema::create('pengguna', function (Blueprint $table) {
             $table->id('id_pengguna');
             $table->unsignedBigInteger('id_peran')->index();
-            $table->string('username')->unique();
-            $table->string('nama');
+            $table->string('no_induk', 20)->unique();
+            $table->string('username', 20)->unique();
+            $table->string('nama', 40);
             $table->string('password');
             $table->string('foto_profile')->nullable();
             $table->timestamps();

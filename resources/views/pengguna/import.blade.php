@@ -1,6 +1,6 @@
 <form id="form-import" action="{{ route('pengguna.import_ajax') }}" method="POST" enctype="multipart/form-data">
     @csrf
-    <div class="modal-dialog modal-lg w-50" role="document">
+    <div class="modal-dialog modal-lg w-75" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">Import Data Pengguna</h5>

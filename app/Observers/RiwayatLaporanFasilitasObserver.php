@@ -76,7 +76,6 @@ class RiwayatLaporanFasilitasObserver
             'judul'                => $judul,
             'pesan'                => $pesan,
         ]);
-
     }
 
     /**

@@ -12,6 +12,7 @@ class SkorKriteriaLaporan extends Model
 
     protected $table = 'skor_kriteria_laporan';
     protected $primaryKey = 'id_skor_kriteria_laporan';
+    public $timestamps = true;
     protected $fillable = [
         'id_penilaian',
         'id_kriteria',

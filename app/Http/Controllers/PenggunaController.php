@@ -5,17 +5,26 @@ namespace App\Http\Controllers;
 use App\Models\Peran;
 use App\Models\Pengguna;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use App\Services\NoIndukVerifierService;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Auth;
-use PhpOffice\PhpSpreadsheet\IOFactory;
-use Illuminate\Support\Facades\Hash;
-use Barryvdh\DomPDF\Facade\Pdf;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use Illuminate\Validation\ValidationException;
+use App\Helpers\GuestCountManager;
 
 
 class PenggunaController extends Controller
 {
+    protected $noIndukVerifier;
+
+    public function __construct(NoIndukVerifierService $noIndukVerifier)
+    {
+        $this->noIndukVerifier = $noIndukVerifier;
+    }
     /**
      * Display a listing of the resource.
      */
@@ -32,44 +41,79 @@ class PenggunaController extends Controller
     }
 
     public function list(Request $request)
-{
-    $query = Pengguna::select('id_pengguna','username','nama','id_peran')
-             ->with('peran:id_peran,nama_peran');
+    {
+        $query = Pengguna::select('id_pengguna','username','nama','id_peran')
+                 ->with('peran:id_peran,nama_peran');
 
-    // filter by role_id jika dikirim
-    if ($request->filled('role_id')) {
-        $query->where('id_peran', $request->role_id);
+        // filter by role_id jika dikirim
+        if ($request->filled('role_id')) {
+            $query->where('id_peran', $request->role_id);
+        }
+
+        return DataTables::of($query)
+            ->addIndexColumn()
+            ->addColumn('aksi', function ($row) {
+                $editBtn = '<button type="button"
+                                class="btn btn-sm btn-outline-warning"
+                                data-bs-toggle="tooltip" data-bs-placement="top" title="Edit"
+                                style="margin-right: 8px;"
+                                onclick="modalAction(\'' . route('pengguna.edit', $row->id_pengguna) . '\')">
+                                <i class="mdi mdi-pencil"></i>
+                            </button>';
+
+                $showBtn = '<button type="button"
+                                class="btn btn-sm btn-outline-primary"
+                                data-bs-toggle="tooltip" data-bs-placement="top" title="Lihat Detail"
+                                style="margin-right: 8px;"
+                                onclick="modalAction(\'' . route('pengguna.show', $row->id_pengguna) . '\')">
+                                <i class="mdi mdi-file-document-box"></i>
+                            </button>';
+
+                $deleteBtn = '<button type="button"
+                                class="btn btn-sm btn-outline-danger"
+                                data-bs-toggle="tooltip" data-bs-placement="top" title="Hapus"
+                                onclick="modalAction(\'' . route('pengguna.delete', $row->id_pengguna) . '\')">
+                                <i class="mdi mdi-delete"></i>
+                            </button>';
+
+                return '<div class="d-flex">' . $editBtn . $showBtn . $deleteBtn . '</div>';
+            })
+            ->addColumn('peran_nama', function ($row) {
+                return $row->peran->nama_peran;
+            })
+            ->rawColumns(['aksi'])
+            ->make(true);
     }
 
-    return DataTables::of($query)
-        ->addIndexColumn()
-        ->addColumn('aksi', function ($row) {
-            $editBtn = '<button type="button"
-                            class="btn btn-warning btn-sm btn-edit d-inline-flex align-items-center justify-content-center"
-                            style="margin-right: 8px;"
-                            onclick="modalAction(\'' . route('pengguna.edit', $row->id_pengguna) . '\')">
-                            <i class="mdi mdi-pencil m-0"></i>
-                        </button>';
+    public function guestCountStream(Request $request)
+    {
+        // Supaya skrip tidak timeout
+        set_time_limit(0);
 
-            $showBtn = '<button type="button"
-                            class="btn btn-info btn-sm btn-show d-inline-flex align-items-center justify-content-center"
-                            style="margin-right: 8px;"
-                            onclick="modalAction(\'' . route('pengguna.show', $row->id_pengguna) . '\')">
-                            <i class="mdi mdi-file-document-box m-0"></i>
-                        </button>';
+        // Ambil nilai terakhir dari query param
+        $lastCount = intval($request->query('lastCount', 0));
+        $startTime = time();
 
-            $deleteBtn = '<button type="button"
-                            class="btn btn-danger btn-sm btn-delete d-inline-flex align-items-center justify-content-center"
-                            onclick="modalAction(\'' . route('pengguna.delete', $row->id_pengguna) . '\')">
-                            <i class="mdi mdi-delete m-0"></i>
-                        </button>';
+        do {
+            // Hitung ulang jumlah Guest
+            $count = Pengguna::whereHas('peran', function($q) {
+                $q->where('nama_peran', 'Guest');
+            })->count();
 
-            return '<div class="d-flex">' . $editBtn . $showBtn . $deleteBtn . '</div>';
-        })
-        ->rawColumns(['aksi'])
-        ->make(true);
-}
+            // Begitu berubah, langsung kirim response
+            if ($count !== $lastCount) {
+                return response()->json(['guestCount' => $count]);
+            }
 
+            // Delay sebelum cek lagi (2 detik)
+            sleep(2);
+
+        // Loop hingga 30 detik berlalu
+        } while (time() - $startTime < 30);
+
+        // Jika timeout, kembalikan nilai yang sama agar client rekursif tanpa update UI
+        return response()->json(['guestCount' => $lastCount]);
+    }
 
     /**
      * Show the form for creating a new resource.
@@ -89,6 +133,7 @@ class PenggunaController extends Controller
     {
          // aturan validasi
          $validator = Validator::make($request->all(), [
+            'no_induk' => 'required|string|max:20|unique:pengguna,no_induk',
             'username'   => 'required|string|min:4|max:50|unique:pengguna,username',
             'nama'       => 'required|string|min:3|max:255',
             'password'   => 'required|string|min:5',
@@ -106,8 +151,29 @@ class PenggunaController extends Controller
             ]);
         }
 
+        try {
+            $ver = $this->noIndukVerifier->verify($request->input('no_induk'));
+
+            if (
+                $ver['type'] === 'Tidak Valid' ||
+                $ver['type'] === 'Tidak Diketahui' ||
+                !empty($ver['errors'])
+            ) {
+                throw ValidationException::withMessages([
+                    'no_induk' => ['Nomor induk tidak valid']
+                ]);
+            }
+        } catch (ValidationException $e) {
+            return response()->json([
+                'status'   => false,
+                'message'  => 'Validasi gagal, cek input Anda',
+                'msgField' => $e->errors(),
+            ], 422);
+        }
+
         // simpan pengguna baru
         Pengguna::create([
+            'no_induk'   => $request->no_induk,
             'username'   => $request->username,
             'nama'       => $request->nama,
             'password'   => $request->password, // di-hash via cast di model
@@ -136,11 +202,12 @@ class PenggunaController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit($id)
+    public function edit($id, NoIndukVerifierService $verifier)
     {
         $pengguna = Pengguna::findOrFail($id);
         $peran    = Peran::select('id_peran','nama_peran')->get();
-        return view('pengguna.edit', compact('pengguna','peran'));
+        $verificationInfo = $verifier->verify($pengguna->no_induk);
+        return view('pengguna.edit', compact('pengguna','peran', 'verificationInfo'));
     }
 
     /**
@@ -150,6 +217,7 @@ class PenggunaController extends Controller
     {
         if ($request->ajax() || $request->wantsJson()) {
             $rules = [
+                'no_induk' => ['required', 'string', 'max:20', 'unique:pengguna,no_induk,' . $id . ',id_pengguna'],
                 'id_peran' => ['required', 'integer'],
                 'username' => ['required', 'max:20', 'unique:pengguna,username,' . $id . ',id_pengguna'],
                 'nama' => ['required', 'max:100'],
@@ -165,9 +233,30 @@ class PenggunaController extends Controller
                 ]);
             }
 
+            try {
+            $ver = $this->noIndukVerifier->verify($request->input('no_induk'));
+
+            if (
+                $ver['type'] === 'Tidak Valid' ||
+                $ver['type'] === 'Tidak Diketahui' ||
+                !empty($ver['errors'])
+            ) {
+                throw ValidationException::withMessages([
+                    'no_induk' => ['Nomor induk tidak valid']
+                ]);
+            }
+        } catch (ValidationException $e) {
+            // Kembalikan JSON agar JS dapat menampilkannya di form
+            return response()->json([
+                'status'   => false,
+                'message'  => 'Validasi gagal.',
+                'msgField' => $e->errors(),
+            ], 422);
+        }
+
             $check = Pengguna::find($id);
             if ($check) {
-                $data = $request->only(['username','nama','id_peran']);
+                $data = $request->only(['no_induk', 'username','nama','id_peran']);
 
                 if ($request->filled('password')) {
                     $data['password'] = $request->password;
@@ -256,9 +345,10 @@ class PenggunaController extends Controller
                 if (empty($row['A']) && empty($row['B'])) continue;
                 $insert[] = [
                     'id_peran'   => $row['A'],
-                    'username'   => $row['B'],
-                    'nama'       => $row['C'],
-                    'password'   => Hash::make($row['D']),
+                    'no_induk'   => $row['B'],
+                    'username'   => $row['C'],
+                    'nama'       => $row['D'],
+                    'password'   => Hash::make($row['E']),
                     'created_at' => now(),
                     'updated_at' => now(),
                 ];
@@ -290,7 +380,7 @@ class PenggunaController extends Controller
     {
         // ambil data
         $users = Pengguna::with('peran:id_peran,nama_peran')
-            ->select('id_pengguna','username','nama','id_peran')
+            ->select('id_pengguna', 'no_induk', 'username', 'nama', 'id_peran')
             ->orderBy('id_peran')
             ->orderBy('username')
             ->get();
@@ -301,24 +391,26 @@ class PenggunaController extends Controller
 
         // Header
         $sheet->setCellValue('A1', 'No');
-        $sheet->setCellValue('B1', 'Username');
-        $sheet->setCellValue('C1', 'Nama Pengguna');
-        $sheet->setCellValue('D1', 'Peran');
+        $sheet->setCellValue('B1', 'No Induk');
+        $sheet->setCellValue('C1', 'Username');
+        $sheet->setCellValue('D1', 'Nama Pengguna');
+        $sheet->setCellValue('E1', 'Peran');
 
-        $sheet->getStyle('A1:D1')->getFont()->setBold(true);
+        $sheet->getStyle('A1:E1')->getFont()->setBold(true);
 
         // Isi baris
         $rowNum = 2;
         foreach ($users as $idx => $u) {
             $sheet->setCellValue('A'.$rowNum, $idx + 1);
-            $sheet->setCellValue('B'.$rowNum, $u->username);
-            $sheet->setCellValue('C'.$rowNum, $u->nama);
-            $sheet->setCellValue('D'.$rowNum, $u->peran->nama_peran ?? '-');
+            $sheet->setCellValue('B'.$rowNum, $u->no_induk);
+            $sheet->setCellValue('C'.$rowNum, $u->username);
+            $sheet->setCellValue('D'.$rowNum, $u->nama);
+            $sheet->setCellValue('E'.$rowNum, $u->peran->nama_peran ?? '-');
             $rowNum++;
         }
 
         // Autosize kolom
-        foreach (range('A','D') as $col) {
+        foreach (range('A','E') as $col) {
             $sheet->getColumnDimension($col)->setAutoSize(true);
         }
 
@@ -339,7 +431,7 @@ class PenggunaController extends Controller
     public function exportPdf()
     {
         $users = Pengguna::with('peran:id_peran,nama_peran')
-            ->select('id_pengguna','username','nama','id_peran')
+            ->select('id_pengguna', 'no_induk','username','nama','id_peran')
             ->orderBy('id_peran')
             ->orderBy('username')
             ->get();

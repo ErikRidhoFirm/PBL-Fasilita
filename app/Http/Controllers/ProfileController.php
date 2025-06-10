@@ -64,60 +64,71 @@ class ProfileController extends Controller
         return redirect()->back()->with('success', 'Foto profil berhasil diperbarui.');
     }
 
+    public function delete_photo(Request $request)
+    {
+        $user = Pengguna::find(Auth::id());
+
+        if ($user->foto_profile) {
+            // Hapus file dari storage
+            Storage::delete('public/uploads/profiles/' . $user->foto_profile);
+
+            // Hapus nama file di DB
+            $user->foto_profile = null;
+            $user->save();
+
+            return redirect()->back()->with('success', 'Foto profil berhasil dihapus.');
+        }
+
+        return redirect()->back()->with('error', 'Tidak ada foto profil untuk dihapus.');
+    }
+
     public function update_info(Request $request)
     {
         $request->validate([
-            'username'      => 'required|string|max:255',
-            'nama'          => 'required|string|max:255',
-            'new_password'  => 'nullable|min:5',
-            'confirm_password'  => 'required|min:5|same:new_password',
+            'username'       => 'required|string|max:255',
+            'nama'           => 'required|string|max:255',
         ]);
 
         $user = Pengguna::find(Auth::id());
+        $changed = false;
 
-        $ubah = false;
-
+        // 1. Ubah username/nama
         if ($request->username !== $user->username) {
             $user->username = $request->username;
-            $ubah = true;
+            $changed = true;
         }
-
         if ($request->nama !== $user->nama) {
             $user->nama = $request->nama;
-            $ubah = true;
+            $changed = true;
         }
 
+        // 2. Ubah password, hanya kalau field new_password diisi
         if ($request->filled('new_password')) {
+        $request->validate([
+                'old_password' => 'required',
+                'new_password'     => 'required|min:5|confirmed',
+            ]);
+
+            $user = Pengguna::find(Auth::id());
+
+            if (!Hash::check($request->old_password, $user->password)) {
+                return back()->withErrors(['old_password' => 'Password lama tidak sesuai']);
+            }
+
             $user->password = bcrypt($request->new_password);
-            $ubah = true;
+            $user->save();
+
+            return redirect()->back()->with('success', 'Password berhasil diubah.');
         }
 
-        if (! $ubah) {
+        if (! $changed) {
+            // Tidak ada perubahan apa-apa
             return redirect()->back();
         }
 
         $user->save();
 
-        return redirect()->back()->with('success', 'Biodata berhasil diperbarui.');
-    }
-
-    public function update_password(Request $request)
-    {
-        $request->validate([
-            'current_password' => 'required',
-            'new_password'     => 'required|min:6|confirmed',
-        ]);
-
-        $user = Pengguna::find(Auth::id());
-
-        if (!Hash::check($request->current_password, $user->password)) {
-            return back()->withErrors(['current_password' => 'Password lama tidak sesuai']);
-        }
-
-        $user->password = bcrypt($request->new_password);
-        $user->save();
-
-        return redirect()->back()->with('success', 'Password berhasil diubah.');
+        return redirect()->back()->with('success', 'Profil berhasil diperbarui.');
     }
 
     public function edit()

@@ -64,14 +64,21 @@
         @csrf
 
         <div class="form-group mb-4">
-          <label for="teknisi_id" class="form-label fw-semibold">Pilih Teknisi</label>
-          <select name="teknisi_id" id="teknisi_id" class="form-control" required>
-            <option value="" selected>-- Pilih Teknisi --</option>
-            @foreach($teknisis as $t)
-              <option value="{{ $t->id_pengguna }}">{{ $t->nama }}</option>
-            @endforeach
-          </select>
-          <small id="error-teknisi_id" class="error-text form-text text-danger"></small>
+            <label for="teknisi_id" class="form-label fw-semibold">Pilih Teknisi</label>
+            <select name="teknisi_id" id="teknisi_id" class="form-control" required>
+                <option value="" selected>-- Pilih Teknisi --</option>
+                @foreach($teknisis as $t)
+                    <option value="{{ $t->id_pengguna }}">
+                    {{ $t->nama }}
+                    @if($t->pending_tasks_count)
+                        ({{ $t->pending_tasks_count }} tugas belum selesai)
+                    @else
+                        (Tidak ada tugas)
+                    @endif
+                    </option>
+                @endforeach
+            </select>
+            <small id="error-teknisi_id" class="error-text form-text text-danger"></small>
         </div>
 
         <div class="text-end">

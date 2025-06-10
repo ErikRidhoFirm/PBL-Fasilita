@@ -43,9 +43,22 @@ class LaporanController extends Controller
 
     public function list()
     {
-        $data = Laporan::select('id_laporan', 'id_pengguna', 'id_gedung', 'id_lantai', 'id_ruangan', 'created_at')
-            ->with(['pengguna','gedung','lantai','ruangan', 'laporanFasilitas'])
-             ->whereHas('laporanFasilitas', function($query) {
+        $data = Laporan::select(
+            'id_laporan',
+            'id_pengguna',
+            'id_gedung',
+            'id_lantai',
+            'id_ruangan',
+            'created_at',
+            DB::raw('
+                (SELECT COUNT(DISTINCT plf.id_pengguna)
+                FROM pelapor_laporan_fasilitas plf
+                JOIN laporan_fasilitas lf ON plf.id_laporan_fasilitas = lf.id_laporan_fasilitas
+                WHERE lf.id_laporan = laporan.id_laporan) as jumlah_vote'
+            )
+        )
+        ->with(['pengguna', 'gedung', 'lantai', 'ruangan', 'laporanFasilitas'])
+        ->whereHas('laporanFasilitas', function($query) {
             $query->where('id_status', '1');
         }, '=', DB::raw('(SELECT COUNT(*) FROM laporan_fasilitas WHERE laporan_fasilitas.id_laporan = laporan.id_laporan)'))
         ->whereDoesntHave('laporanFasilitas', function($query) {
@@ -54,36 +67,18 @@ class LaporanController extends Controller
 
         return DataTables::of($data)
             ->addIndexColumn()
-
-            // format tanggal
+            // Format tanggal
             ->editColumn('created_at', fn($row) => Carbon::parse($row->created_at)->format('d-m-Y'))
-
             ->addColumn('aksi', function($row) {
-
-            $btns = '<div class="btn-group">';
+                $btns = '<div class="btn-group">';
                 $btns .= '<button onclick="modalAction(\''
-                      . url("/laporan/{$row->id_laporan}/verifikasi")
-                      . '\')"
-                      class="btn btn-success btn-sm" title="Verifikasi">
+                    . url("/laporan/{$row->id_laporan}/verifikasi")
+                    . '\')"
+                    class="btn btn-success btn-sm" title="Verifikasi">
                         <i class="mdi mdi-checkbox-multiple-marked"></i>
-                      </button>';
-
-            // $btns .= '<button onclick="modalAction(\'' . url('/laporan/edit/' . $row->id_laporan) . '\')" type="button" class="btn btn-warning btn-sm btn-edit">
-            //             <i class="mdi mdi-pencil"></i>
-            //         </button>';
-
-            // // dll. tombol edit/hapus sesuai kebutuhan
-            // $btns .= '<button onclick="modalAction(\'' . url('/laporan/show/' . $row->id_laporan) . '\')" type="button" class="btn btn-info btn-sm btn-edit">
-            //             <i class="mdi mdi-file-document-box"></i>
-            //         </button>';
-
-            // $btns .= '<button onclick="modalAction(\'' . url('/laporan/delete/' . $row->id_laporan) . '\')" type="button" class="btn btn-danger btn-sm btn-delete" data-id="' . $row->id_laporan . '">
-            //             <i class="mdi mdi-delete"></i>
-            //         </button>';
-
-            return $btns;
+                    </button>';
+                return $btns;
             })
-
             ->rawColumns(['aksi'])
             ->make(true);
     }
@@ -95,7 +90,7 @@ class LaporanController extends Controller
     {
         $authUser = Auth::user();
 
-        $halamanLaporan = in_array($authUser->peran->kode_peran, ['ADM', 'DSN', 'TDK'])
+        $halamanLaporan = in_array($authUser->peran->kode_peran, ['ADM', 'SPR', 'TNS'])
                             ? 'laporan.index'
                             : 'laporanPelapor.index';
 

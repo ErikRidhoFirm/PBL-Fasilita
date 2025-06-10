@@ -1,4 +1,4 @@
-<div class="modal-dialog modal-lg w-50">
+<div class="modal-dialog modal-lg w-75">
     <div class="modal-content">
       <!-- Header Modal -->
       <div class="modal-header bg-primary text-white">
@@ -20,8 +20,6 @@
                    class="img-thumbnail rounded-circle border-primary"
                    style="width: 150px; height: 150px; object-fit: cover; border-width: 3px !important;"
                    alt="Foto Profil">
-              <span class="position-absolute bottom-0 end-0 bg-success rounded-circle border border-white"
-                    style="width: 20px; height: 20px;"></span>
             </div>
             <h4 class="mt-3 mb-1 text-break">{{ $pengguna->nama }}</h4>
             <span class="badge badge-pill badge-info py-2 px-3">{{ $pengguna->peran->nama_peran }}</span>
@@ -33,6 +31,21 @@
               <div class="card-body p-3">
                 <!-- List Detail -->
                 <div class="list-group list-group-flush">
+
+                    <!-- Nomor Induk -->
+                    <div class="list-group-item border-0 py-2 px-0">
+                      <div class="d-flex align-items-center">
+                        <div class="rounded-circle d-flex align-items-center justify-content-center mr-3" style="width: 40px; height: 40px;">
+                          <i class="fas fa-id-badge text-secondary"></i>
+                        </div>
+                        <div>
+                          <small class="text-muted d-block">Nomor Induk</small>
+                          <span class="font-weight-bold text-break">{{ $pengguna->no_induk }}</span>
+                        </div>
+                      </div>
+                    </div>
+
+
                   <!-- Username -->
                   <div class="list-group-item border-0 py-2 px-0">
                     <div class="d-flex align-items-center">

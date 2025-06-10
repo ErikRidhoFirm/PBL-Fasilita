@@ -115,6 +115,8 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/import_ajax', [PenggunaController::class, 'importAjax'])->name('pengguna.import_ajax');
             Route::get('/export_excel', [PenggunaController::class, 'exportExcel'])->name('pengguna.export_excel');
             Route::get('/export_pdf',   [PenggunaController::class, 'exportPdf'])->name('pengguna.export_pdf');
+            Route::get('/pengguna/guest-count-stream', [PenggunaController::class, 'guestCountStream'])->name('pengguna.guestCountStream');
+
         });
 
         // Master Data Fisik: Gedung, Lantai, Ruangan
@@ -367,6 +369,8 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/', [TopsisController::class,'index'])->name('spk.index');
             Route::get('/alternatif/list', [TopsisController::class,'listAlternatif'])->name('spk.alternatif.list');
             Route::post('/hitung', [TopsisController::class, 'hitung'])->name('spk.hitung');
+            Route::get('/status', [TopsisController::class, 'checkCalculationStatus'])->name('spk.status');
+            Route::get('/results', [TopsisController::class, 'getCalculationResults'])->name('spk.results');
             Route::get('/{id}/edit', [TopsisController::class, 'edit'])->name('spk.edit');
             Route::put('/{id}', [TopsisController::class, 'update'])->name('spk.update');
         });
@@ -421,9 +425,6 @@ Route::middleware(['auth'])->group(function () {
 
     Route::middleware(['role:MHS,DSN,TDK'])->group(function(){
         Route::prefix('laporanPelapor')->group(function(){
-            Route::get('/', [LaporanController::class, 'indexPelapor'])->name('laporanPelapor.index');
-            Route::get('/list', [LaporanController::class, 'listPelapor'])->name('laporanPelapor.list');
-            Route::get('/show/{id}', [LaporanController::class, 'show'])->name('laporanPelapor.show');
             Route::get('/create', [LaporanController::class, 'create'])->name('laporanPelapor.create');
             Route::post('/store', [LaporanController::class, 'store'])->name('laporanPelapor.store');
             Route::get('/get-lantai/{idGedung}', [LaporanController::class, 'getLantai']);
@@ -461,6 +462,14 @@ Route::middleware(['auth'])->group(function () {
             // API untuk mendapatkan jumlah notifikasi belum dibaca (untuk badge)
             Route::get('/api/unread-count', [NotifikasiController::class, 'getUnreadCount'])->name('notifikasi.unread-count');
         });
+    });
+
+    Route::middleware(['role:MHS,DSN,TDK,GST'])->group(function(){
+        Route::prefix('laporanPelapor')->group(function(){
+            Route::get('/', [LaporanController::class, 'indexPelapor'])->name('laporanPelapor.index');
+            Route::get('/list', [LaporanController::class, 'listPelapor'])->name('laporanPelapor.list');
+            Route::get('/show/{id}', [LaporanController::class, 'show'])->name('laporanPelapor.show');
+        });
 
         Route::get('/dashboard-pelapor', [PelaporDashboardController::class, 'index'])->name('dashboard-pelapor.index');
     });
@@ -472,6 +481,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/update-photo', [ProfileController::class, 'update_photo'])->name('profile.update_photo');
         Route::post('/update-info', [ProfileController::class, 'update_info'])->name('profile.update_info');
         Route::post('/update-password', [ProfileController::class, 'update_password'])->name('profile.update_password');
+        Route::delete('/photo', [ProfileController::class, 'delete_photo'])->name('profile.delete_photo');
     });
 
 });

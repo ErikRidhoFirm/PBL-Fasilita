@@ -142,24 +142,20 @@
 @push('css')
 @endpush
 @push('js')
+
     <script>
         // Modal
         function modalAction() {
             $('#myModal').modal('show');
         }
+
+                    // Tentukan prefix path berdasarkan role:
+            const laporanPrefix = "{{ $authUser->peran->kode_peran === 'ADM' ? 'laporan' : 'laporanPelapor' }}";
+            // Base URL (pastikan meta[name=base-url] ada di <head>)
+            const baseURL = $('meta[name="base-url"]').attr('content');
         let fileArray = [];
         // form select change
         $(function() {
-
-            // const baseURL = window.location.origin + '/PBL-Fasilita/public';
-            const baseURL = $('meta[name="base-url"]').attr('content');
-            // Deteksi prefix route dari URL saat ini
-            let routePrefix = '';
-            if (window.location.pathname.includes('/laporanPelapor')) {
-                routePrefix = 'laporanPelapor';
-            } else {
-                routePrefix = 'laporan';
-            }
             // Gedung
             $('#inputGedung').on('change', function() {
                 const idGedung = $(this).val();
@@ -172,10 +168,8 @@
                     true);
 
                 if (idGedung) {
-                    const url = `${baseURL}/${routePrefix}/get-lantai/${idGedung}`;
-                    // console.log(url);
-                    $.get(url, function(data) {
-                        // console.log(`${baseURL}/laporan/get-lantai/${idGedung}`);
+                    $.get(`${baseURL}/${laporanPrefix}/get-lantai/${idGedung}`, function(data) {
+                        console.log(`${baseURL}/${laporanPrefix}/get-lantai/${idGedung}`);
 
                         if (Array.isArray(data) && data.length > 0) {
                             $inputLantai.prop('disabled', false);
@@ -202,8 +196,7 @@
                     true);
 
                 if (idLantai) {
-                    const url = `${baseURL}/${routePrefix}/get-ruangan/${idLantai}`;
-                    $.get(url, function(data) {
+                    $.get(`${baseURL}/${laporanPrefix}/get-ruangan/${idLantai}`, function(data) {
                         if (Array.isArray(data) && data.length > 0) {
                             $inputRuangan.prop('disabled', false);
                             $inputRuangan.addClass('border-primary');
@@ -230,8 +223,7 @@
                 $jumlahKerusakan.val('').removeAttr('max'); // Reset max saat ruangan diganti
 
                 if (idRuangan) {
-                    const url = `${baseURL}/${routePrefix}/get-fasilitas/${idRuangan}`;
-                    $.get(url, function(data) {
+                    $.get(`${baseURL}/${laporanPrefix}/get-fasilitas/${idRuangan}`, function(data) {
                         if (Array.isArray(data) && data.length > 0) {
                             $inputFasilitas.prop('disabled', false);
                             $inputFasilitas.addClass('border-primary');
@@ -436,26 +428,26 @@
 
             const formData = new FormData(this);
 
-            $('#laporan-fasilitas section').each(function(index) {
-                formData.append('id_fasilitas[]', $(this).find('input[name="id_fasilitas[]"]').val());
-                formData.append('id_kategori_kerusakan[]', $(this).find(
-                    'input[name="id_kategori_kerusakan[]"]').val());
-                formData.append('jumlah_rusak[]', $(this).find('input[name="jumlah_rusak[]"]').val());
-                formData.append('deskripsi[]', $(this).find('input[name="deskripsi[]"]').val());
-                formData.append('path_foto[]', fileArray[index]);
-            });
+        submitUrl = `${baseURL}/${laporanPrefix}/store`;
+        const indexUrl = `${baseURL}/${laporanPrefix}`;
 
-            // Tentukan URL berdasarkan role pengguna
-            const userRole =
-                "{{ $authUser->peran->kode_peran ?? '' }}"; // Ambil role dari data yang dikirim controller
-            let submitUrl = '';
-
-            if (userRole === 'ADM') {
-                submitUrl = "{{ route('laporan.store') }}";
-            } else if (['MHS', 'DSN', 'TDK'].includes(userRole)) {
-                submitUrl = "{{ route('laporanPelapor.store') }}";
-            } else {
-                // Fallback untuk role tidak dikenali
+        $.ajax({
+            url: submitUrl,
+            method: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil',
+                    text: 'Laporan berhasil ditambahkan'
+                }).then(function() {
+                    window.location.href = indexUrl;
+                })
+            },
+            error: function(err) {
+                console.error(err);
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',

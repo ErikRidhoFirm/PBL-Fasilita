@@ -103,6 +103,10 @@ class PenugasanController extends Controller
             'id_status' => Status::SELESAI,
         ]);
 
+        $penugasan->update([
+            'is_complete' => true,
+        ]);
+
         // buat catatan riwayat
         RiwayatLaporanFasilitas::create([
             'id_laporan_fasilitas' => $id,

@@ -8,6 +8,7 @@ use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Str;
 
 class KategoriKerusakanController extends Controller
 {
@@ -72,33 +73,61 @@ class KategoriKerusakanController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
-        // cek apakah request berupa ajax
-        if ($request->ajax() || $request->wantsJson()) {
-            $rules = [
-                'kode_kerusakan' => 'required|string|min:3|unique:kategori_kerusakan,kode_kerusakan',
-                'nama_kerusakan' => 'required|string|max:100',
-            ];
+{
+    if ($request->ajax() || $request->wantsJson()) {
+        // 1) Validasi prefix (harus huruf, tanpa strip)
+        $rules = [
+            'prefix'          => ['required', 'string', 'max:10', 'regex:/^[A-Za-z]+$/'],
+            'nama_kerusakan'  => 'required|string|max:100',
+        ];
+        $messages = [
+            'prefix.regex' => 'Prefix hanya boleh berisi huruf (tanpa angka atau tanda “-”).',
+        ];
+        $validator = Validator::make($request->all(), $rules, $messages);
 
-            // use Illuminate\Support\Facades\Validator;
-            $validator = Validator::make($request->all(), $rules);
-
-            if ($validator->fails()) {
-                return response()->json([
-                    'status' => false, // response status, false: error/gagal, true: berhasil
-                    'message' => 'Validasi Gagal',
-                    'msgField' => $validator->errors(), // pesan error validasi
-                ]);
-            }
-
-            KategoriKerusakan::create($request->all());
+        if ($validator->fails()) {
             return response()->json([
-                'status' => true,
-                'message' => 'Data kategori kerusakan berhasil disimpan'
+                'status'   => false,
+                'message'  => 'Validasi Gagal',
+                'msgField' => $validator->errors(),
             ]);
         }
-        redirect('/');
+
+        // 2) Ambil prefix murni (buang apa pun di belakang strip jika ada)
+        $raw = strtoupper($request->input('prefix'));
+        $parts = explode('-', $raw);
+        $prefix = $parts[0]; // misal “HW” dari “HW-001” atau “HW”
+
+        // 3) Cari kode terakhir yang benar-benar pakai prefix itu
+        $last = KategoriKerusakan::where('kode_kerusakan', 'like', $prefix . '-%')
+            ->orderBy('kode_kerusakan', 'desc')
+            ->first();
+
+        $lastNumber = 0;
+        if ($last) {
+            // Ambil angka setelah strip terakhir
+            $lastNumber = (int) Str::afterLast($last->kode_kerusakan, '-');
+        }
+
+        $nextNumber    = $lastNumber + 1;
+        $numberPadded  = str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
+        $fullCode      = $prefix . '-' . $numberPadded;
+
+        // 4) Simpan
+        $kategori = KategoriKerusakan::create([
+            'kode_kerusakan' => $fullCode,
+            'nama_kerusakan' => $request->input('nama_kerusakan'),
+        ]);
+
+        return response()->json([
+            'status'  => true,
+            'message' => 'Data berhasil disimpan dengan kode: ' . $fullCode,
+            'data'    => $kategori,
+        ]);
     }
+
+    return redirect('/');
+}
 
     /**
      * Display the specified resource.
@@ -127,20 +156,20 @@ class KategoriKerusakanController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // cek apakah request dari ajax 
+        // cek apakah request dari ajax
         if ($request->ajax() || $request->wantsJson()) {
             $rules = [
                 'kode_kerusakan' => 'required|string|min:3|unique:kategori_kerusakan,kode_kerusakan,'.$id.',id_kategori_kerusakan',
                 'nama_kerusakan' => 'required|string|max:100',
             ];
-            // use Illuminate\Support\Facades\Validator; 
+            // use Illuminate\Support\Facades\Validator;
             $validator = Validator::make($request->all(), $rules);
 
             if ($validator->fails()) {
                 return response()->json([
-                    'status'   => false,    // respon json, true: berhasil, false: gagal 
+                    'status'   => false,    // respon json, true: berhasil, false: gagal
                     'message'  => 'Validasi gagal.',
-                    'msgField' => $validator->errors()  // menunjukkan field mana yang error 
+                    'msgField' => $validator->errors()  // menunjukkan field mana yang error
                 ]);
             }
 

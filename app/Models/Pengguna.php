@@ -18,6 +18,7 @@ class Pengguna extends Authenticatable
 
     protected $fillable = [
         'id_peran',
+        'no_induk',
         'username',
         'nama',
         'password',
@@ -31,6 +32,7 @@ class Pengguna extends Authenticatable
 
     protected $casts = [
         'password' => 'hashed',
+        'detail_induk' => 'array',
     ];
 
     // 2) Accessor untuk URL foto profil
@@ -77,7 +79,7 @@ class Pengguna extends Authenticatable
 
     public function penugasan(): HasMany
     {
-        return $this->hasMany(Penugasan::class, 'id_teknisi');
+        return $this->hasMany(Penugasan::class, 'id_pengguna');
     }
 
     public function penilaian(): HasMany

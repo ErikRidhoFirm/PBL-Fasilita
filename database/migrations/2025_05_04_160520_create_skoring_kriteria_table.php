@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('skoring_kriteria', function (Blueprint $table) {
             $table->id('id_skoring_kriteria');
             $table->unsignedBigInteger('id_kriteria')->index();
-            $table->string('parameter');
+            $table->string('parameter', 60);
             $table->integer('nilai_referensi');
             $table->timestamps();
 

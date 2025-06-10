@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('id_laporan_fasilitas')->index();
             $table->unsignedBigInteger('id_pengguna')->index(); // id mahasiswa, dosen, tendik
             $table->integer('nilai');
-            $table->text('komentar')->nullable();
+            $table->text('komentar', 100)->nullable();
             $table->timestamps();
 
             $table->foreign('id_laporan_fasilitas')->references('id_laporan_fasilitas')->on('laporan_fasilitas')->onDelete('cascade');

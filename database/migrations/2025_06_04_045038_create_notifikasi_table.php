@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id('id_notifikasi');
             $table->unsignedBigInteger('id_pengguna');
             $table->unsignedBigInteger('id_laporan_fasilitas');
-            $table->string('judul');
-            $table->text('pesan');
+            $table->string('judul', 50);
+            $table->text('pesan', 100);
             $table->boolean('is_read')->default(false);
             $table->timestamps();
 

@@ -84,7 +84,13 @@ public function list(Request $request)
         $sk = SkorTopsis::findOrFail($id_skor_topsis);
         $lap = $sk->laporanFasilitas;
 
-        $teknisis = Pengguna::whereHas('peran', fn($q)=> $q->where('kode_peran','TNS'))->get();
+        $teknisis = Pengguna::whereHas('peran', fn($q) =>
+            $q->where('kode_peran','TNS')
+        )
+        ->withCount(['penugasan as pending_tasks_count' => fn($q) =>
+            $q->where('is_complete', false)
+        ])
+        ->get();
 
         return view('skorTopsis.assign', compact('sk','lap','teknisis'));
     }
@@ -100,7 +106,8 @@ public function list(Request $request)
 
         Penugasan::create([
             'id_laporan_fasilitas'=>$lapfasId,
-            'id_pengguna'=>$r->teknisi_id
+            'id_pengguna'=>$r->teknisi_id,
+            'is_complete' => false,
         ]);
 
         $sk->laporanFasilitas()->update(['id_status'=>5]);

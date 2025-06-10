@@ -28,6 +28,7 @@
                                 <th>Lantai</th>
                                 <th>Ruangan</th>
                                 <th>Tanggal Laporan</th>
+                                <th>Jumlah Vote</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -83,6 +84,7 @@
                     {
                         data: 'created_at',
                     },
+                    { data: 'jumlah_vote', name: 'jumlah_vote' },
                     {
                         data: 'aksi',
                         orderable: false,

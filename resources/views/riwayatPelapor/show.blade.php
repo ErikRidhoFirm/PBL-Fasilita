@@ -186,40 +186,49 @@
     </div>
   </div> {{-- End of Riwayat Status Card --}}
 
-  @php
-    $last = $lf->status->nama_status;
-     use Illuminate\Support\Str;
-  @endphp
-@if($last==='Selesai' && !$lf->penilaianPengguna)
+ @php
+  // Jika penilaianPengguna adalah Collection, ambil first()
+  $feedback = $lf->penilaianPengguna;
+  if ($feedback instanceof \Illuminate\Support\Collection) {
+      $feedback = $feedback->first();
+  }
+@endphp
+
+@php
+  $last = $lf->status->nama_status;
+@endphp
+
+@if($last === 'Selesai' && !$feedback)
   <div class="text-center my-4">
     <button id="btnFeedback" class="btn btn-outline-primary">
       <i class="mdi mdi-star-outline me-1"></i> Berikan Feedback
     </button>
   </div>
-@elseif($last==='Selesai' && $lf->penilaianPengguna)
+@elseif($last === 'Selesai' && $feedback)
   <div class="card shadow-sm my-4">
     <div class="card-header bg-light py-3 d-flex justify-content-between align-items-center">
-    <h5 class="mb-0">Feedback Anda</h5>
-    <div class="d-flex">
+      <h5 class="mb-0">Feedback Anda</h5>
+      <div class="d-flex">
+        {{-- Edit: hanya render kalau $feedback ada --}}
         <button id="btnEditFeedback"
             class="btn btn-sm btn-outline-warning me-1"
             title="Edit Feedback"
-            data-edit-url="{{ route('feedback.edit', $lf->penilaianPengguna->id_penilaian_pengguna) }}">
-        <i class="mdi mdi-pencil"></i>
+            data-edit-url="{{ route('feedback.edit', $feedback->id_penilaian_pengguna) }}">
+          <i class="mdi mdi-pencil"></i>
         </button>
+        {{-- Delete: sama --}}
         <button id="btnDeleteFeedback"
             class="btn btn-sm btn-outline-danger"
             title="Hapus Feedback"
-            data-delete-url="{{ route('feedback.delete', $lf->penilaianPengguna->id_penilaian_pengguna) }}">
-        <i class="mdi mdi-delete"></i>
+            data-delete-url="{{ route('feedback.delete', $feedback->id_penilaian_pengguna) }}">
+          <i class="mdi mdi-delete"></i>
         </button>
+      </div>
     </div>
-  </div>
     <div class="card-body">
       <div class="mb-2">
-        {{-- Bintang rating --}}
         @for($i = 1; $i <= 5; $i++)
-          @if($i <= $lf->penilaianPengguna->nilai)
+          @if($i <= ($feedback->nilai ?? 0))
             <i class="mdi mdi-star fs-4 text-warning me-1"></i>
           @else
             <i class="mdi mdi-star-outline fs-4 text-muted me-1"></i>
@@ -227,11 +236,12 @@
         @endfor
       </div>
       <p class="text-muted fst-italic">
-        {{ $lf->penilaianPengguna->komentar ?: '- Tidak ada komentar -' }}
+        {{ $feedback->komentar ?: '- Tidak ada komentar -' }}
       </p>
     </div>
   </div>
 @endif
+
 
 </div>
 {{-- Modal container --}}

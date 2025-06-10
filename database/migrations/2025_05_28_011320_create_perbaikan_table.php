@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('id_penugasan')->index();
             $table->string('foto_perbaikan');
             $table->enum('jenis_perbaikan', ['perbaikan', 'penggantian'])->default('perbaikan');
-            $table->text('deskripsi_perbaikan');
+            $table->text('deskripsi_perbaikan', 100);
             $table->timestamps();
 
             $table->foreign('id_penugasan')->references('id_penugasan')->on('penugasan')->onDelete('cascade');

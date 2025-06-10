@@ -17,6 +17,12 @@
         <i class="fas fa-cogs mr-2"></i> Analisis TOPSIS untuk Prioritas Perbaikan Fasilitas
       </h4>
 
+      {{-- Status Perhitungan --}}
+      <div id="calculation-status" class="alert alert-info" style="display: none;">
+        <i class="fas fa-spinner fa-spin mr-2"></i>
+        <span>Perhitungan TOPSIS sedang berjalan otomatis...</span>
+      </div>
+
       {{-- Tombol Hitung --}}
       <form action="{{ route('spk.hitung') }}" method="POST" class="mb-4">
         @csrf
@@ -29,7 +35,7 @@
       <h5 class="mt-4"><i class="fas fa-table mr-2"></i> Data Alternatif & Skor Awal</h5>
       <p class="card-description">
         Berikut adalah data alternatif yang akan dievaluasi beserta skor awal berdasarkan kriteria yang ada.
-        Anda dapat mengubah skor melalui tombol “Edit”.
+        Anda dapat mengubah skor melalui tombol "Edit".
       </p>
       <div class="table-responsive">
         <table id="tbl-alternatif" class="table table-bordered">
@@ -47,175 +53,34 @@
         </table>
       </div>
 
-      @if(isset($Ci))
-        {{-- Ganti mekanisme collapse dengan jQuery slideToggle --}}
-        <button
-          id="btnToggleSteps"
-          class="btn btn-primary mb-4"
-          type="button"
-        >
-          <i class="fas fa-chevron-down mr-2"></i> Tampilkan Langkah Perhitungan
-        </button>
+      {{-- Container untuk Hasil Perhitungan --}}
+      <div id="calculation-results-container">
+        @if(isset($Ci))
+          {{-- Tombol Toggle Langkah Perhitungan --}}
+          <button
+            id="btnToggleSteps"
+            class="btn btn-primary mb-4"
+            type="button"
+          >
+            <i class="fas fa-chevron-down mr-2"></i> Tampilkan Langkah Perhitungan
+          </button>
 
-        {{-- Awalnya disembunyikan --}}
-        <div id="calculationSteps" style="display: none;">
-          {{-- 1) Matriks Keputusan Ternormalisasi --}}
-          <hr class="my-4">
-          <h6 class="mt-4">1) Matriks Keputusan Ternormalisasi (R)</h6>
-          <div class="table-responsive">
-            <table class="table table-sm table-striped table-bordered mb-4">
-              <thead class="thead-light">
-                <tr>
-                  <th>Alternatif</th>
-                  @foreach($kriterias as $k)
-                    <th class="text-center">{{ $k->kode_kriteria }}</th>
-                  @endforeach
-                </tr>
-              </thead>
-              <tbody>
-                @foreach($norm as $i => $row)
-                  <tr>
-                    <td>{{ $alternatifs[$i]->fasilitas->nama_fasilitas }}</td>
-                    @foreach($kriterias as $k)
-                      <td class="text-center">{{ number_format($row[$k->kode_kriteria], 4) }}</td>
-                    @endforeach
-                  </tr>
-                @endforeach
-              </tbody>
-            </table>
+          {{-- Container Langkah Perhitungan --}}
+          <div id="calculationSteps" style="display: none;">
+            @include('perhitungan.partials.calculation-steps')
           </div>
 
-          {{-- 2) Matriks Keputusan Ternormalisasi Terbobot --}}
-          <h6 class="mt-4">2) Matriks Keputusan Ternormalisasi Terbobot (V)</h6>
-          <div class="table-responsive">
-            <table class="table table-sm table-striped table-bordered mb-4">
-              <thead class="thead-light">
-                <tr>
-                  <th>Alternatif</th>
-                  @foreach($kriterias as $k)
-                    <th class="text-center">{{ $k->kode_kriteria }}</th>
-                  @endforeach
-                </tr>
-              </thead>
-              <tbody>
-                @foreach($V as $i => $row)
-                  <tr>
-                    <td>{{ $alternatifs[$i]->fasilitas->nama_fasilitas }}</td>
-                    @foreach($kriterias as $k)
-                      <td class="text-center">{{ number_format($row[$k->kode_kriteria], 4) }}</td>
-                    @endforeach
-                  </tr>
-                @endforeach
-              </tbody>
-            </table>
+          {{-- Container Hasil Akhir --}}
+          <div id="finalResults">
+            @include('perhitungan.partials.final-results')
           </div>
-
-          {{-- 3) Solusi Ideal Positif & Negatif --}}
-          <h6 class="mt-4">3) Solusi Ideal Positif (A<sup>+</sup>) dan Negatif (A<sup>-</sup>)</h6>
-          <div class="table-responsive">
-            <table class="table table-sm table-bordered mb-4">
-              <thead class="thead-light">
-                <tr>
-                  <th>Jenis Solusi Ideal</th>
-                  @foreach($kriterias as $k)
-                    <th class="text-center">{{ $k->kode_kriteria }}</th>
-                  @endforeach
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><strong>Positif (A<sup>+</sup>)</strong></td>
-                  @foreach($kriterias as $k)
-                    <td class="text-center">
-                      {{ number_format($idealPos[$k->kode_kriteria] ?? 0, 4) }}
-                    </td>
-                  @endforeach
-                </tr>
-                <tr>
-                  <td><strong>Negatif (A<sup>-</sup>)</strong></td>
-                  @foreach($kriterias as $k)
-                    <td class="text-center">
-                      {{ number_format($idealNeg[$k->kode_kriteria] ?? 0, 4) }}
-                    </td>
-                  @endforeach
-                </tr>
-              </tbody>
-            </table>
+        @else
+          <div id="no-results-message" class="alert alert-info mt-4">
+            <i class="fas fa-info-circle mr-2"></i>
+            Belum ada hasil perhitungan TOPSIS. Klik tombol "Hitung TOPSIS" untuk memulai perhitungan.
           </div>
-          <small class="text-muted">
-            * Untuk kriteria Cost: ideal positif = nilai minimum, ideal negatif = nilai maksimum. Sebaliknya untuk kriteria Benefit.
-          </small>
-
-          {{-- 4) Jarak ke Solusi Ideal --}}
-          <h6 class="mt-4">4) Jarak Setiap Alternatif ke Solusi Ideal</h6>
-          <div class="table-responsive">
-            <table class="table table-sm table-striped table-bordered mb-4">
-              <thead class="thead-light">
-                <tr>
-                  <th>Alternatif</th>
-                  <th class="text-center">Jarak ke Ideal Positif (D<sup>+</sup>)</th>
-                  <th class="text-center">Jarak ke Ideal Negatif (D<sup>-</sup>)</th>
-                </tr>
-              </thead>
-              <tbody>
-                @foreach($distPos as $i => $d1)
-                  <tr>
-                    <td>{{ $alternatifs[$i]->fasilitas->nama_fasilitas }}</td>
-                    <td class="text-center">{{ number_format($d1, 4) }}</td>
-                    <td class="text-center">{{ number_format($distNeg[$i], 4) }}</td>
-                  </tr>
-                @endforeach
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        {{-- Hasil Akhir Peringkat --}}
-        <h5 class="mt-5 text-primary"><i class="fas fa-award mr-2"></i> Hasil Akhir Peringkat Prioritas Perbaikan</h5>
-        <p class="card-description">
-          Alternatif diurutkan berdasarkan skor preferensi (C<sub>i</sub>) tertinggi, menunjukkan prioritas perbaikan tertinggi.
-        </p>
-        <div class="table-responsive">
-          <table class="table table-bordered table-hover">
-            <thead class="thead-dark">
-              <tr>
-                <th class="text-center">Peringkat</th>
-                <th>Alternatif (Fasilitas & Pelapor)</th>
-                <th class="text-center">Skor Preferensi (C<sub>i</sub>)</th>
-              </tr>
-            </thead>
-            <tbody>
-              @php
-                $result = collect($alternatifs)->map(function($alt, $index) use ($Ci, $distPos, $distNeg) {
-                    return [
-                        'alt'   => $alt,
-                        'skor'  => $Ci[$alt->id_laporan_fasilitas] ?? 0,
-                        'd_pos' => $distPos[$index] ?? 0,
-                        'd_neg' => $distNeg[$index] ?? 0
-                    ];
-                })->sortByDesc('skor')->values();
-              @endphp
-
-              @foreach($result as $idx => $row)
-                <tr class="{{ $idx === 0 ? 'table-primary' : '' }}">
-                  <td class="text-center"><strong>{{ $idx + 1 }}</strong></td>
-                  <td>
-                    <strong>{{ $row['alt']->fasilitas->nama_fasilitas }}</strong>
-                    <br>
-                    <small class="text-muted">Pelapor: {{ $row['alt']->laporan->pengguna->nama }}</small>
-                    <br>
-                    <small><em>
-                      (D<sup>+</sup>: {{ number_format($row['d_pos'], 4) }},
-                      D<sup>-</sup>: {{ number_format($row['d_neg'], 4) }})
-                    </em></small>
-                  </td>
-                  <td class="text-center"><strong>{{ number_format($row['skor'], 4) }}</strong></td>
-                </tr>
-              @endforeach
-            </tbody>
-          </table>
-        </div>
-      @endif
+        @endif
+      </div>
 
       {{-- Modal Container untuk AJAX Edit --}}
       <div id="modalContainer" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
@@ -234,6 +99,159 @@
   }
 
   $(function(){
+    let lastRunId = @json(optional($runId)->toString()) || null;
+    let isPollingActive = true;
+    let pollingInterval;
+
+    // Fungsi untuk memuat hasil perhitungan terbaru
+    function loadCalculationResults(runId) {
+      console.log('Loading calculation results for runId:', runId);
+
+      $.ajax({
+        url: "{{ route('spk.results') }}",
+        method: 'GET',
+        data: { runId: runId },
+        success: function(response) {
+          console.log('Calculation results response:', response);
+
+          if (response.success) {
+            // Update container hasil
+            const container = $('#calculation-results-container');
+
+            // Buat konten baru
+            let newContent = `
+              <button
+                id="btnToggleSteps"
+                class="btn btn-primary mb-4"
+                type="button"
+              >
+                <i class="fas fa-chevron-down mr-2"></i> Tampilkan Langkah Perhitungan
+              </button>
+
+              <div id="calculationSteps" style="display: none;">
+                ${response.calculationStepsHtml}
+              </div>
+
+              <div id="finalResults">
+                ${response.finalResultsHtml}
+              </div>
+            `;
+
+            // Animasi fade out -> update -> fade in
+            container.fadeOut(300, function() {
+              container.html(newContent);
+              container.fadeIn(300);
+
+              // Re-bind event handler untuk tombol toggle
+              bindToggleStepsEvent();
+            });
+
+            // Update runId
+            lastRunId = response.runId;
+
+            // Sembunyikan status perhitungan dan pesan no-results
+            $('#calculation-status').hide();
+            $('#no-results-message').hide();
+
+            // Reload tabel alternatif
+            if (typeof table !== 'undefined') {
+              table.ajax.reload(null, false);
+            }
+          } else {
+            console.error('Failed to load calculation results:', response.message);
+          }
+        },
+        error: function(xhr) {
+          console.error('Error loading calculation results:', xhr);
+          $('#calculation-status').hide();
+        }
+      });
+    }
+
+    // Fungsi untuk cek status perhitungan terbaru
+    function checkCalculationStatus() {
+      if (!isPollingActive) return;
+
+      $.ajax({
+        url: "{{ route('spk.status') }}",
+        method: 'GET',
+        success: function(data) {
+          console.log('Status check response:', data);
+
+          if (data.id && data.id !== lastRunId) {
+            // Ada perhitungan baru
+            console.log('New calculation detected, loading results...');
+            $('#calculation-status').show();
+            loadCalculationResults(data.id);
+          }
+        },
+        error: function(xhr) {
+          console.error('Error checking calculation status:', xhr);
+        }
+      });
+    }
+
+    // Fungsi untuk bind event toggle steps
+    function bindToggleStepsEvent() {
+      $('#btnToggleSteps').off('click').on('click', function() {
+        const container = $('#calculationSteps');
+        const button = $(this);
+
+        if (container.is(':visible')) {
+          container.slideUp();
+          button.html('<i class="fas fa-chevron-down mr-2"></i> Tampilkan Langkah Perhitungan');
+        } else {
+          container.slideDown();
+          button.html('<i class="fas fa-chevron-up mr-2"></i> Sembunyikan Langkah Perhitungan');
+        }
+      });
+    }
+
+    // Inisialisasi polling
+    function startPolling() {
+      pollingInterval = setInterval(checkCalculationStatus, 5000); // Check setiap 5 detik
+    }
+
+    function stopPolling() {
+      if (pollingInterval) {
+        clearInterval(pollingInterval);
+        pollingInterval = null;
+      }
+      isPollingActive = false;
+    }
+
+    // Load hasil saat pertama kali jika ada runId
+    if (lastRunId) {
+      console.log('Initial runId detected:', lastRunId);
+
+      // Cek apakah sudah ada hasil di halaman
+      if ($('#finalResults').length === 0 && $('#no-results-message').is(':visible')) {
+        console.log('Loading initial calculation results...');
+        loadCalculationResults(lastRunId);
+      }
+    }
+
+    // Mulai polling
+    startPolling();
+
+    // Stop polling ketika halaman tidak aktif
+    document.addEventListener('visibilitychange', function() {
+      if (document.hidden) {
+        stopPolling();
+      } else {
+        isPollingActive = true;
+        startPolling();
+      }
+    });
+
+    // Cleanup saat window unload
+    $(window).on('beforeunload', function() {
+      stopPolling();
+    });
+
+    // Bind event toggle steps untuk hasil yang sudah ada
+    bindToggleStepsEvent();
+
     // Inisialisasi DataTable untuk tabel 'Alternatif & Skor Awal'
     let cols = [
       { data: 'DT_RowIndex', orderable:false, searchable:false },
@@ -248,8 +266,29 @@
     let table = $('#tbl-alternatif').DataTable({
       processing: true,
       serverSide: true,
-      ajax: "{!! route('spk.alternatif.list') !!}",
-      columns: cols
+      ajax: {
+        url: "{!! route('spk.alternatif.list') !!}",
+        error: function(xhr, error, code) {
+          console.error('DataTable error:', xhr, error, code);
+        }
+      },
+      columns: cols,
+      language: {
+        processing: "Memuat data...",
+        loadingRecords: "Memuat...",
+        zeroRecords: "Tidak ada data yang cocok",
+        emptyTable: "Tidak ada data yang tersedia",
+        info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ entri",
+        infoEmpty: "Menampilkan 0 sampai 0 dari 0 entri",
+        infoFiltered: "(disaring dari _MAX_ entri keseluruhan)",
+        search: "Cari:",
+        paginate: {
+          first: "Pertama",
+          previous: "Sebelumnya",
+          next: "Selanjutnya",
+          last: "Terakhir"
+        }
+      }
     });
 
     // Handle tombol edit tiap baris
@@ -263,6 +302,10 @@
       e.preventDefault();
       let form = $(this);
 
+      // Disable submit button to prevent double submission
+      let submitBtn = form.find('button[type="submit"]');
+      submitBtn.prop('disabled', true);
+
       $.ajax({
         url: form.attr('action'),
         method: form.attr('method'),
@@ -271,11 +314,17 @@
           if (response.success) {
             $('#modalContainer').modal('hide');
             table.ajax.reload();
-            Swal.fire({
-              icon: 'success',
-              title: 'Berhasil',
-              text: response.message || 'Data berhasil diperbarui'
-            });
+
+            // Show success message
+            if (typeof Swal !== 'undefined') {
+              Swal.fire({
+                icon: 'success',
+                title: 'Berhasil',
+                text: response.message || 'Data berhasil diperbarui'
+              });
+            } else {
+              alert(response.message || 'Data berhasil diperbarui');
+            }
           } else {
             // Tampilkan error validasi di modal
             $('.error-text').text('');
@@ -300,26 +349,6 @@
           }
         }
       });
-    });
-
-    // ** Toggle manual langkah perhitungan **
-    $('#btnToggleSteps').on('click', function() {
-      const container = $('#calculationSteps');
-      const button = $(this);
-
-      if (container.is(':visible')) {
-        // Jika saat ini terlihat, maka kita sembunyikan
-        container.slideUp();
-        button.html(
-          `<i class="fas fa-chevron-down mr-2"></i> Tampilkan Langkah Perhitungan`
-        );
-      } else {
-        // Jika saat ini tersembunyi, maka kita tampilkan
-        container.slideDown();
-        button.html(
-          `<i class="fas fa-chevron-up mr-2"></i> Sembunyikan Langkah Perhitungan`
-        );
-      }
     });
   });
 </script>

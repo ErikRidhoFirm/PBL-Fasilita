@@ -11,9 +11,9 @@
             <div class="modal-body">
                 {{-- Form fields --}}
                 <div class="form-group">
-                    <label>Kode Kategori Kerusakan</label>
-                    <input type="text" name="kode_kerusakan" class="form-control" value="">
-                    <small id="error-kode_kerusakan" class="error-text form-text text-danger"></small>
+                    <label>Prefix Kode Kerusakan</label>
+                    <input type="text" name="prefix" class="form-control" maxlength="10" value="">
+                    <small id="error-prefix" class="error-text form-text text-danger"></small>
                 </div>
                 <div class="form-group">
                     <label>Nama Kategori Kerusakan</label>
@@ -34,7 +34,7 @@
             rules: {
                 kode_kerusakan: {
                     required: true,
-                    minlength: 3,
+                    minlength: 2,
                     maxlength: 20
                 },
                 nama_kerusakan: {

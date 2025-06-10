@@ -12,11 +12,11 @@ class DashboardController extends Controller
         /** @var \App\Models\Pengguna $user */
         $user = Auth::user();
 
-        if ($user->hasAnyRole(['MHS', 'DSN', 'TDK'])) {
+        if ($user->hasAnyRole(['MHS', 'DSN', 'TDK', 'GST'])) {
             return redirect()->route('dashboard-pelapor.index');
         }
 
-        
+
 
         return view('dashboard.index');
     }

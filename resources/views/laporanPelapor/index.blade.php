@@ -54,7 +54,9 @@
 @section('content')
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h3>Laporan Fasilitas Yang Sudah Ada</h3>
-    <a href="{{ url('laporanPelapor/create') }}" class="btn btn-primary">Buat Laporan</a>
+    @if (auth()->user()->peran->kode_peran !== 'GST')
+        <a href="{{ url('laporanPelapor/create') }}" class="btn btn-primary">Buat Laporan</a>
+    @endif
   </div>
 
   {{-- Bungkus dengan div scrollable --}}
@@ -202,15 +204,22 @@
                 <strong>Ruangan:</strong> ${ d.nama_ruangan || '-' }
               </p>
               <div class="mt-auto pt-2 d-flex align-items-center justify-content-between">
-                <button type="button"
-                        class="btn btn-transparent p-0 d-flex align-items-center btn-vote-icon"
-                        data-vote-url="{{ route('vote.store', ['id' => ':id']) }}"
-                        data-unvote-url="{{ route('vote.destroy', ['id' => ':id']) }}"
-                        data-voted="${votedData}"
-                        style="font-size:1rem;">
-                  <i class="mdi ${votedClass} fs-5 me-1 ${iconColor}"></i>
-                  <span class="vote-count">${ d.votes_count }</span>
-                </button>
+                @if(auth()->user()->peran->kode_peran !== 'GST')
+                    <button type="button"
+                            class="btn btn-transparent p-0 d-flex align-items-center btn-vote-icon"
+                            data-vote-url="{{ route('vote.store', ['id' => ':id']) }}"
+                            data-unvote-url="{{ route('vote.destroy', ['id' => ':id']) }}"
+                            data-voted="${votedData}"
+                            style="font-size:1rem;">
+                    <i class="mdi ${votedClass} fs-5 me-1 ${iconColor}"></i>
+                    <span class="vote-count">${ d.votes_count }</span>
+                    </button>
+                @else
+                    <div class="d-flex align-items-center text-muted">
+                        <i class="mdi mdi-thumb-up-outline fs-5 me-1"></i>
+                        <span class="vote-count">${ d.votes_count }</span>
+                    </div>
+                @endif
                 <button type="button"
                         class="btn btn-outline-primary btn-sm btn-detail"
                         data-detail-url="{{ route('laporanPelapor.show', ['id' => ':id']) }}">
@@ -223,58 +232,60 @@
 
         // Pasang event listener untuk vote
         const $tmp = $(cardWrapper);
-        $tmp.find('.btn-vote-icon').hover(
-          function(){
-            if ($(this).data('voted') === false) {
-              $(this).find('i').removeClass('text-muted').addClass('text-success');
+        if ("{{ auth()->user()->peran->kode_peran }}" !== 'GST') {
+            $tmp.find('.btn-vote-icon').hover(
+            function(){
+                if ($(this).data('voted') === false) {
+                $(this).find('i').removeClass('text-muted').addClass('text-success');
+                }
+            },
+            function(){
+                if ($(this).data('voted') === false) {
+                $(this).find('i').removeClass('text-success').addClass('text-muted');
+                }
             }
-          },
-          function(){
-            if ($(this).data('voted') === false) {
-              $(this).find('i').removeClass('text-success').addClass('text-muted');
-            }
-          }
-        );
-        $tmp.find('.btn-vote-icon').on('click', function(){
-          const btn       = $(this);
-          const countElem = btn.find('.vote-count');
-          const icon      = btn.find('i');
-          const isVoted   = btn.data('voted') === true;
-          const url       = isVoted ? btn.data('unvote-url') : btn.data('vote-url');
-          const method    = isVoted ? 'DELETE' : 'POST';
+            );
+            $tmp.find('.btn-vote-icon').on('click', function(){
+            const btn       = $(this);
+            const countElem = btn.find('.vote-count');
+            const icon      = btn.find('i');
+            const isVoted   = btn.data('voted') === true;
+            const url       = isVoted ? btn.data('unvote-url') : btn.data('vote-url');
+            const method    = isVoted ? 'DELETE' : 'POST';
 
-          $.ajax({
-            url: url,
-            method: method,
-            data: { _token: '{{ csrf_token() }}' },
-            dataType: 'json'
-          })
-          .done(res => {
-            if (res.status === 'success') {
-              countElem.text(res.votes_count);
-              if (isVoted) {
-                icon.removeClass('mdi-thumb-up text-success')
-                    .addClass('mdi-thumb-up-outline text-muted');
-                btn.data('voted', false);
-              } else {
-                icon.removeClass('mdi-thumb-up-outline text-muted')
-                    .addClass('mdi-thumb-up text-success');
-                btn.data('voted', true);
-              }
-              // Update cache agar state vote konsisten saat re-render
-              const itemInCache = cacheData.find(item => item.id_laporan_fasilitas == d.id_laporan_fasilitas);
-              if(itemInCache) {
-                itemInCache.voted_by_me = !isVoted;
-                itemInCache.votes_count = res.votes_count;
-              }
-            } else {
-              Swal.fire('Gagal', res.message, 'error');
-            }
-          })
-          .fail(() => {
-            Swal.fire('Error', 'Gagal memproses aksi.', 'error');
-          });
-        });
+            $.ajax({
+                url: url,
+                method: method,
+                data: { _token: '{{ csrf_token() }}' },
+                dataType: 'json'
+            })
+            .done(res => {
+                if (res.status === 'success') {
+                countElem.text(res.votes_count);
+                if (isVoted) {
+                    icon.removeClass('mdi-thumb-up text-success')
+                        .addClass('mdi-thumb-up-outline text-muted');
+                    btn.data('voted', false);
+                } else {
+                    icon.removeClass('mdi-thumb-up-outline text-muted')
+                        .addClass('mdi-thumb-up text-success');
+                    btn.data('voted', true);
+                }
+                // Update cache agar state vote konsisten saat re-render
+                const itemInCache = cacheData.find(item => item.id_laporan_fasilitas == d.id_laporan_fasilitas);
+                if(itemInCache) {
+                    itemInCache.voted_by_me = !isVoted;
+                    itemInCache.votes_count = res.votes_count;
+                }
+                } else {
+                Swal.fire('Gagal', res.message, 'error');
+                }
+            })
+            .fail(() => {
+                Swal.fire('Error', 'Gagal memproses aksi.', 'error');
+            });
+            });
+        }
 
         // Pasang event listener untuk detail
         $tmp.find('.btn-detail').on('click', function(){

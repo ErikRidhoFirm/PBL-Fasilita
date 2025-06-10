@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\Peran;
+use App\Models\Pengguna;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;

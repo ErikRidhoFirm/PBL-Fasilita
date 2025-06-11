@@ -83,32 +83,40 @@ class AuthController extends Controller
     }
 
     public function login(Request $request)
-{
-    $c = $request->validate([
-        'username' => 'required|string',
-        'password' => 'required|string',
-    ]);
+    {
+        $request->validate([
+            'username' => 'required|string',
+            'password' => 'required|string',
+        ]);
 
-    if (Auth::guard('web')->attempt($c, $request->boolean('remember'))) {
-        $request->session()->regenerate();
+        $identifier = $request->input('username');
+        $password = $request->input('password');
+
+        // Find user by username or no_induk
+        $user = Pengguna::where('username', $identifier)
+                        ->orWhere('no_induk', $identifier)
+                        ->first();
+
+        if ($user && Hash::check($password, $user->password)) {
+            Auth::guard('web')->login($user, $request->boolean('remember'));
+            $request->session()->regenerate();
+
+            return response()->json([
+                'status'   => true,
+                'message'  => 'Login Berhasil',
+                'redirect' => route('dashboard'),
+            ]);
+        }
 
         return response()->json([
-            'status'   => true,
-            'message'  => 'Login Berhasil',
-
-            'redirect' => route('dashboard'),
-        ]);
+            'status' => false,
+            'message'  => 'Username, no induk, atau password salah',
+            'errors'   => [
+                'username' => ['Username, no induk, atau password salah'],
+                'password' => ['Username, no induk, atau password salah'],
+            ],
+        ], 200);
     }
-
-    return response()->json([
-        'status' => false,
-         'message'  => 'Username atau password salah',
-         'errors'   => [
-            'username' => ['Username atau password salah'],
-            'password' => ['Username atau password salah'],
-        ],
-    ], 200);
-}
 
     public function logout(Request $request)
     {

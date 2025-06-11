@@ -16,7 +16,7 @@ class PenggunaSeeder extends Seeder
     {
         DB::table('pengguna')->insert([
             // 1 Admin
-['id_peran' => 2, 'no_induk' => '198005152010091002', 'username' => 'admin', 'nama' => 'Admin Utama', 'password' => Hash::make('12345')],
+['id_peran' => 2, 'no_induk' => '198005152010091002', 'username' => 'admin', 'nama' => 'Sarah Abellia', 'password' => Hash::make('12345')],
 
 // 10 Mahasiswa
     ['id_peran' => 3, 'no_induk' => '2021770123', 'username' => 'andiprasetyo', 'nama' => 'Andi Prasetyo', 'password' => Hash::make('12345')],

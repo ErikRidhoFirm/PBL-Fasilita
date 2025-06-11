@@ -81,7 +81,7 @@ class KategoriKerusakanController extends Controller
             'nama_kerusakan'  => 'required|string|max:100',
         ];
         $messages = [
-            'prefix.regex' => 'Prefix hanya boleh berisi huruf (tanpa angka atau tanda “-”).',
+            'prefix.regex' => 'Hanya boleh berisi huruf (tanpa angka atau tanda “-”).',
         ];
         $validator = Validator::make($request->all(), $rules, $messages);
 
@@ -162,7 +162,7 @@ class KategoriKerusakanController extends Controller
                 'kode_kerusakan' => 'required|string|min:3|unique:kategori_kerusakan,kode_kerusakan,'.$id.',id_kategori_kerusakan',
                 'nama_kerusakan' => 'required|string|max:100',
             ];
-            // use Illuminate\Support\Facades\Validator; 
+            // use Illuminate\Support\Facades\Validator;
             $validator = Validator::make($request->all(), $rules,[
                 'kode_kerusakan.unique' => 'Kode kerusakan sudah digunakan',
             ]);

@@ -29,15 +29,15 @@
 </button>
 
 <!-- Tombol Import -->
-<button class="btn btn-success btn-sm mr-2" 
-        onclick="modalAction('{{ route('gedung.import') }}')" 
+<button class="btn btn-success btn-sm mr-2"
+        onclick="modalAction('{{ route('gedung.import') }}')"
         style="min-width: 100px; height: 40px;">
   <i class="fa fa-file-import mr-1"></i> Import
 </button>
 
 <!-- Tombol Tambah Gedung -->
-<button class="btn btn-primary btn-sm" 
-        onclick="modalAction('{{ route('gedung.create') }}')" 
+<button class="btn btn-primary btn-sm"
+        onclick="modalAction('{{ route('gedung.create') }}')"
         style="min-width: 120px; height: 40px;">Tambah Gedung
 </button>
 

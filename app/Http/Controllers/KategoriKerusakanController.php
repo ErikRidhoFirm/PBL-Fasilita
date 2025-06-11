@@ -157,7 +157,7 @@ class KategoriKerusakanController extends Controller
     public function update(Request $request, $id)
     {
         // cek apakah request dari ajax
-        if ($request->ajax() || $request->wantsJson()) {
+        // if ($request->ajax() || $request->wantsJson()) {
             $rules = [
                 'kode_kerusakan' => 'required|string|min:3|unique:kategori_kerusakan,kode_kerusakan,'.$id.',id_kategori_kerusakan',
                 'nama_kerusakan' => 'required|string|max:100',
@@ -181,6 +181,7 @@ class KategoriKerusakanController extends Controller
                 return response()->json([
                     'status'  => true,
                     'message' => 'Data berhasil diupdate'
+
                 ]);
             } else {
                 return response()->json([
@@ -188,8 +189,8 @@ class KategoriKerusakanController extends Controller
                     'message' => 'Data tidak ditemukan'
                 ]);
             }
-        }
-        redirect('/');
+        // }
+        // redirect('/');
     }
 
     /**

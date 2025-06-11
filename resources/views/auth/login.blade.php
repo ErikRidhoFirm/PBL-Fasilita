@@ -592,17 +592,17 @@
         >
           @csrf
 
-          <div class="form-group-login">
-            <label for="username">Username</label>
+        <div class="form-group-login">
+            <label for="username">Username atau No Induk</label>
             <input
-              type="text"
-              name="username"
-              id="username"
-              class="form-control-login"
-              placeholder="Username"
+                type="text"
+                name="username"
+                id="username"
+                class="form-control-login"
+                placeholder="Masukkan Username atau No Induk"
             />
             <div id="error-username" class="invalid-feedback-login"></div>
-          </div>
+        </div>
 
            <div class="form-group-login">
             <label for="password">Password</label>

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Export PDF Grafik</title>
     <style>
@@ -7,10 +8,12 @@
             font-family: sans-serif;
             text-align: center;
         }
+
         img {
             width: 100%;
             max-width: 600px;
         }
+
         body {
             font-family: "Times New Roman", Times, serif;
             margin: 6px 20px 5px 20px;
@@ -20,6 +23,10 @@
         table {
             width: 100%;
             border-collapse: collapse;
+        }
+
+        h3 {
+            margin-top: 2em
         }
 
         td,
@@ -79,16 +86,35 @@
         .border-all td {
             border: 1px solid;
         }
-        .img-chart{
+
+        .img-chart {
             width: 400px;
         }
-        .chart{
+
+        .chart {
             display: flex;
             flex-direction: row;
             align-items: center;
         }
+
+        .axis-label {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 12px;
+            color: grey
+        }
+
+        .chart-container {
+            /* page-break-inside: avoid; */
+            margin-bottom: 2em;
+        }
+
+        p em {
+            color: gray;
+            font-size: 12pt;
+        }
     </style>
 </head>
+
 <body>
     <table class="border-bottom-header">
         <tr>
@@ -110,12 +136,46 @@
     <p>Tanggal Cetak: {{ $tanggal }}</p>
 
     <div class="chart-container">
-        <h3>Grafik Dalam Satu Bulan</h3>
-        <img class="img-chart" src="{{ $chartBulanan }}" alt="Grafik Kerusakan">
-        <br>
-        <br>
-        <h3>Grafik Dalam Satu Tahun</h3>
-        <img class="img-chart" src="{{ $chartTahunan }}" alt="Grafik Kerusakan">
+        <h3>Grafik Dalam 30 Hari</h3>
+        @if ($chartBulanan)
+            <p class="axis-label" style="text-align: left; margin-bottom: -300px; margin-left: 8em">Laporan<br>masuk
+            </p>
+            <img class="img-chart" src="{{ $chartBulanan }}" alt="Grafik Kerusakan">
+            <p class="axis-label">Hari</p>
+        @else
+            <p><em>Data belum tersedia untuk grafik bulanan.</em></p>
+        @endif
+
+        <br><br>
+
+        <h3>Grafik Dalam 12 Bulan</h3>
+        @if ($chartTahunan)
+            <p class="axis-label" style="text-align: left; margin-bottom: -300px; margin-left: 8em">Laporan<br>masuk
+            </p>
+            <img class="img-chart" src="{{ $chartTahunan }}" alt="Grafik Kerusakan">
+            <p class="axis-label">Bulan</p>
+        @else
+            <p><em>Data belum tersedia untuk grafik tahunan.</em></p>
+        @endif
+
+        <br><br>
+
+        <h3 style="margin-top: 4em">Frekuensi Perbaikan</h3>
+        @if ($chartPerbaikan)
+            <img class="img-chart" src="{{ $chartPerbaikan }}" alt="Grafik Perbaikan">
+        @else
+            <p><em>Data belum tersedia untuk diagram perbaikan.</em></p>
+        @endif
+
+        <br><br>
+
+        <h3>Umpan Balik Pengguna</h3>
+        @if ($chartRespon)
+            <img class="img-chart" src="{{ $chartRespon }}" alt="Grafik Respon Pengguna">
+        @else
+            <p><em>Data belum ada untuk umpan balik pengguna.</em></p>
+        @endif
     </div>
 </body>
+
 </html>

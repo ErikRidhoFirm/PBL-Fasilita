@@ -55,6 +55,18 @@
                     maxlength: 100
                 }
             },
+            messages: {
+                kode_peran: {
+                    required: 'Kode peran harus diisi',
+                    minlength: 'Kode peran minimal 3 karakter',
+                    maxlength: 'Kode peran maksimal 20 karakter'
+                },
+                nama_peran: {
+                    required: 'Nama peran harus diisi',
+                    minlength: 'Nama peran minimal 3 karakter',
+                    maxlength: 'Nama peran maksimal 100 karakter'
+                }
+            }
             submitHandler: function(form) {
                 $.ajax({
                     url: form.action,
@@ -72,12 +84,13 @@
                         } else {
                             $('.error-text').text('');
                             $.each(response.msgField, function(prefix, val) {
-                                $('#error-' + prefix).text(val[0]);
+                                $('#error-' + prefix).text(val[0]); 
                             });
+                            let firstError = Object.values(response.msgField)[0][0];
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Terjadi Kesalahan',
-                                text: response.message
+                                text: firstError
                             });
                         }
                     }

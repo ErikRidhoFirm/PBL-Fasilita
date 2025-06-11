@@ -59,8 +59,10 @@ class SkoringKriteriaController extends Controller
         if ($request->ajax() && $request->wantsJson()) {
 
             $validator = Validator::make($request->all(), [
-                'parameter'       => 'required|string|max:255',
+                'parameter'       => 'required|string|max:255|unique:skoring_kriteria,parameter',
                 'nilai_referensi' => 'required|integer|min:0',
+            ], [
+                'parameter.unique' => 'Skoring sudah digunakan.',
             ]);
 
             if ($validator->fails()) {
@@ -104,8 +106,10 @@ class SkoringKriteriaController extends Controller
             $sk = SkoringKriteria::find($id);
 
             $v = Validator::make($request->all(), [
-                'parameter'       => 'required|string|max:255',
+                'parameter'       => 'required|string|max:255|unique:skoring_kriteria,parameter,'.$id.',id_skoring_kriteria',
                 'nilai_referensi' => 'required|integer|min:0',
+            ], [
+                'parameter.unique' => 'Parameter skoring sudah digunakan.',
             ]);
 
             if ($v->fails()) {
@@ -119,7 +123,7 @@ class SkoringKriteriaController extends Controller
             $sk->update($request->only(['parameter','nilai_referensi']));
             return response()->json([
                 'status'  => true,
-                'message' => 'Skoring berhasil diperbarui'
+                'message' => 'Parameter skoring berhasil diperbarui'
             ]);
         }
         return redirect('/');

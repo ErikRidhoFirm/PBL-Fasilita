@@ -26,14 +26,14 @@ class GedungController extends Controller
         return DataTables::of($data)
             ->addIndexColumn()
             // Kolom PILIH, tombol full-width dan warna primer
-        ->addColumn('pilih', function($row){
-    return '<button
-                onclick="window.location=\''.route('gedung.lantai.index',$row->id_gedung).'\'"
+            ->addColumn('pilih', function ($row) {
+                return '<button
+                onclick="window.location=\'' . route('gedung.lantai.index', $row->id_gedung) . '\'"
                 class="btn btn-primary btn-pilih">
                 <i class="mdi mdi-layers"></i>
                 <span class="ms-1">Pilih</span>
             </button>';
-})
+            })
             ->addColumn('aksi', function ($row) {
                 return '
                 <div>
@@ -59,29 +59,62 @@ class GedungController extends Controller
 
     public function store(Request $r)
     {
-        $r->validate([
-            'kode_gedung' => 'required|max:10|unique:gedung,kode_gedung',
-            'nama_gedung' => 'required|max:100',
-        ]);
+        $validator = Validator::make(
+            $r->all(),
+            [
+                'kode_gedung' => 'required|max:10|unique:gedung,kode_gedung',
+                'nama_gedung' => 'required|max:100',
+            ],
+            [
+                'kode_gedung.unique' => 'Kode gedung sudah digunakan',
+            ]
+        );
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false, // response status, false: error/gagal, true: berhasil
+                'message' => 'Terjadi kesalahan',
+                'msgField' => $validator->errors(), // pesan error validasi
+            ]);
+        }
 
         Gedung::create($r->only('kode_gedung', 'nama_gedung'));
-        return response()->json(['status' => true, 'message' => 'Gedung ditambahkan']);
+        return response()->json([
+            'status' => true,
+            'message' => 'Gedung ditambahkan'
+        ]);
     }
 
     /* ----------  MODAL EDIT / UPDATE  ---------- */
-    public function edit(Gedung $gedung) {
+    public function edit(Gedung $gedung)
+    {
         return view('gedung.edit', compact('gedung'));
     }
 
     public function update(Request $r, Gedung $gedung)
     {
-        $r->validate([
-            'kode_gedung' => [
-                'required','max:10',
-                Rule::unique('gedung','kode_gedung')->ignore($gedung->id_gedung,'id_gedung'),
+        $validator = Validator::make(
+            $r->all(),
+            [
+                'kode_gedung' => [
+                    'required',
+                    'max:10',
+                    Rule::unique('gedung', 'kode_gedung')->ignore($gedung->id_gedung, 'id_gedung'),
+                ],
+                'nama_gedung' => 'required|max:100',
             ],
-            'nama_gedung' => 'required|max:100',
-        ]);
+            [
+                'kode_gedung.unique' => 'Kode gedung sudah digunakan',
+            ]
+            );
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false, // response status, false: error/gagal, true: berhasil
+                'message' => 'Terjadi kesalahan',
+                'msgField' => $validator->errors(), // pesan error validasi
+            ]);
+        }
 
         $gedung->update($r->only('kode_gedung', 'nama_gedung'));
         return response()->json(['status' => true, 'message' => 'Gedung diperbarui']);

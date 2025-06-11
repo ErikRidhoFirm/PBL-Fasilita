@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Status;
 use App\Models\Pengguna;
+use App\Models\PenilaianPengguna;
 use Illuminate\Http\Request;
 use App\Models\LaporanFasilitas;
+use App\Models\Perbaikan;
 use App\Models\RiwayatLaporanFasilitas;
 use Yajra\DataTables\Facades\DataTables;
 use PhpOffice\PhpSpreadsheet\IOFactory;
@@ -280,92 +282,291 @@ class RiwayatLaporanFasilitasController extends Controller
 
     public function chartTren()
     {
+
+        // Line chart tahunan
         $labelsTahun = collect(range(0, 11))->map(function ($i) {
-            return Carbon::now()->subMonths($i)->format('Y-m');
+            return Carbon::now()->subMonths($i)->format('m-Y');
         })->reverse()->values();
 
         $countsTahun = $labelsTahun->map(function ($month) {
-            return LaporanFasilitas::whereYear('created_at', substr($month, 0, 4))
-                ->whereMonth('created_at', substr($month, 5, 2))
+            return LaporanFasilitas::whereYear('created_at', substr($month, 3, 4))
+                ->whereMonth('created_at', substr($month, 0, 2))
                 ->count();
         });
 
+        if ($countsTahun->sum() == 0) {
+            $chartTahun = [
+                'type' => 'bar',
+                'data' => [
+                    'labels' => ['Tidak ada data'],
+                    'datasets' => [[
+                        'label' => 'Jumlah Kerusakan',
+                        'data' => [0],
+                        'backgroundColor' => 'rgb(220, 53, 69)',
+                    ]]
+                ],
+                'options' => [
+                    'plugins' => [
+                        'title' => [
+                            'display' => true,
+                            'text' => 'Tidak Ada Data Tahunan'
+                        ]
+                    ]
+                ]
+            ];
+        } else {
+            $chartTahun = [
+                'type' => 'line',
+                'data' => [
+                    'labels' => $labelsTahun,
+                    'datasets' => [[
+                        'label' => 'Jumlah Kerusakan',
+                        'data' => $countsTahun,
+                        'fill' => false,
+                        'borderColor' => 'rgb(0, 255, 72)',
+                        'tension' => 0.3,
+                    ]]
+                ],
+                'options' => [
+                    'scales' => [
+                        'y' => [
+                            'title' => ['display' => true, 'text' => 'Laporan Kerusakan'],
+                            'ticks' => ['stepSize' => 1, 'beginAtZero' => true, 'precision' => 0]
+                        ],
+                        'x' => [
+                            'title' => ['display' => true, 'text' => 'Bulan']
+                        ]
+                    ]
+                ]
+            ];
+        }
+
+        // Line chart bulanan
         $labelsBulanan = collect(range(0, 29))->map(function ($i) {
-            return Carbon::now()->subDays($i)->format('Y-m-d');
+            return Carbon::now()->subDays($i)->format('d-m-Y');
         })->reverse()->values();
 
         $countsBulanan = $labelsBulanan->map(function ($date) {
-            return LaporanFasilitas::whereDate('created_at', $date)->count();
-        })->values();
+            return LaporanFasilitas::whereDate('created_at', Carbon::createFromFormat('d-m-Y', $date))->count();
+        });
 
-        $chartTahun = [
-            'type' => 'line',
-            'data' => [
-                'labels' => $labelsTahun,
-                'datasets' => [[
-                    'label' => 'Jumlah Kerusakan Satu Tahunan',
-                    'data' => $countsTahun,
-                    'fill' => false,
-                    'borderColor' => 'rgb(0, 255, 72)',
-                    'tension' => 0.3,
-                ]]
-            ],
-            'options' => [
-                'scales' => [
-                    'y' => [
-                        'ticks' => [
-                            'stepSize' => 1,
-                            'beginAtZero' => true,
-                            'precision' => 0,
-                        ]
-                    ]
-                ]
-            ]
-        ];
-
-        $chartBulan = [
-            'type' => 'line',
-            'data' => [
-                'labels' => $labelsBulanan,
-                'datasets' => [[
-                    'label' => 'Jumlah Kerusakan Satu Bulan',
-                    'data' => $countsBulanan,
-                    'fill' => false,
-                    'borderColor' => 'rgb(75, 192, 192)',
-                    'tension' => 0.3,
-                ]]
-            ],
-            'options' => [
-                'plugins' => [
-                    'title' => [
-                        'display' => true,
-                        'text' => 'Grafik Kerusakan Fasilitas Satu Bulan'
-                    ]
+        if ($countsBulanan->sum() == 0) {
+            $chartBulan = [
+                'type' => 'bar',
+                'data' => [
+                    'labels' => ['Tidak ada data'],
+                    'datasets' => [[
+                        'label' => 'Jumlah Kerusakan',
+                        'data' => [0],
+                        'backgroundColor' => 'rgb(220, 53, 69)',
+                    ]]
                 ],
-                'scales' => [
-                    'y' => [
-                        'ticks' => [
-                            'stepSize' => 1,
-                            'beginAtZero' => true,
-                            'precision' => 0,
+                'options' => [
+                    'plugins' => [
+                        'title' => [
+                            'display' => true,
+                            'text' => 'Tidak Ada Data Bulanan'
                         ]
                     ]
                 ]
-            ]
-        ];
+            ];
+        } else {
+            $chartBulan = [
+                'type' => 'line',
+                'data' => [
+                    'labels' => $labelsBulanan,
+                    'datasets' => [[
+                        'label' => 'Jumlah Kerusakan',
+                        'data' => $countsBulanan,
+                        'fill' => false,
+                        'borderColor' => 'rgb(75, 192, 192)',
+                        'tension' => 0.3,
+                    ]]
+                ],
+                'options' => [
+                    'plugins' => [
+                        'title' => [
+                            'display' => true,
+                            'text' => 'Grafik Kerusakan Fasilitas Satu Bulan'
+                        ]
+                    ],
+                    'scales' => [
+                        'y' => [
+                            'ticks' => ['stepSize' => 1, 'beginAtZero' => true, 'precision' => 0]
+                        ]
+                    ]
+                ]
+            ];
+        }
 
-        $chartBulanan = "https://quickchart.io/chart?c=" . urlencode(json_encode($chartBulan));
-        $chartTahunan = "https://quickchart.io/chart?c=" . urlencode(json_encode($chartTahun));
-        // dd($chartBulanan . ' bawahnya ' . $chartTahunan);
+        // Pie chart perbaikan/penggantian
+        $sum = LaporanFasilitas::count();
+        if ($sum == 0) {
+            $configPerbaikan = [
+                'type' => 'pie',
+                'data' => [
+                    'labels' => ['Tidak ada data'],
+                    'datasets' => [[
+                        'data' => [100],
+                        'backgroundColor' => ['rgb(201, 203, 207)']
+                    ]]
+                ],
+                'options' => [
+                    'plugins' => [
+                        'title' => [
+                            'display' => true,
+                            'text' => 'Data Tidak Tersedia'
+                        ]
+                    ]
+                ]
+            ];
+        } else {
+            $persenPerbaikan = Perbaikan::where('jenis_perbaikan', 'perbaikan')->count() / $sum * 100;
+            $persenPenggantian = Perbaikan::where('jenis_perbaikan', 'penggantian')->count() / $sum * 100;
+
+            $configPerbaikan = [
+                'type' => 'pie',
+                'data' => [
+                    'labels' => ['Perbaikan (%)', 'Penggantian (%)'],
+                    'datasets' => [[
+                        'label' => 'Jumlah Kerusakan',
+                        'data' => [$persenPerbaikan, $persenPenggantian],
+                        'backgroundColor' => [
+                            'rgb(255, 99, 132)',
+                            'rgb(54, 162, 235)'
+                        ]
+                    ]]
+                ],
+                'options' => [
+                    'plugins' => [
+                        'legend' => [
+                            'labels' => [
+                                'color' => '#ffffff',
+                                'font' => ['size' => 30, 'weight' => 'bold']
+                            ]
+                        ],
+                        'tooltip' => [
+                            'bodyFont' => ['size' => 30, 'weight' => 'bold'],
+                            'titleFont' => ['size' => 30, 'weight' => 'bold']
+                        ]
+                    ]
+                ]
+            ];
+        }
+
+        // Doughnut chart penilaian pengguna
+        $dataRespon = PenilaianPengguna::select('nilai')
+            ->groupBy('nilai')
+            ->selectRaw('nilai, COUNT(*) as total')
+            ->pluck('total', 'nilai');
+
+        $nilaiRange = range(0, 5);
+        $chartData = [];
+        $labels = [];
+
+        foreach ($nilaiRange as $nilai) {
+            $chartData[] = $dataRespon->get($nilai, 0);
+            $labels[] = "Bintang $nilai";
+        }
+
+        $totalRespon = array_sum($chartData);
+
+        if ($totalRespon == 0) {
+            $chartConfig = [
+                "type" => "doughnut",
+                "data" => [
+                    "labels" => ["Tidak ada data"],
+                    "datasets" => [[
+                        "data" => [100],
+                        "backgroundColor" => ["#CCCCCC"]
+                    ]]
+                ],
+                "options" => [
+                    "plugins" => [
+                        "doughnutlabel" => [
+                            "labels" => [
+                                ["text" => "0", "font" => ["size" => 50]],
+                                ["text" => "Total Ulasan"]
+                            ]
+                        ]
+                    ]
+                ]
+            ];
+        } else {
+            $chartConfig = [
+                "type" => "doughnut",
+                "data" => [
+                    "labels" => $labels,
+                    "datasets" => [[
+                        "data" => $chartData,
+                        "backgroundColor" => [
+                            "#FF6384",
+                            "#00FF48",
+                            "#FFCE56",
+                            "#4BC0C0",
+                            "#9966FF",
+                            "#FF9F40"
+                        ]
+                    ]]
+                ],
+                "options" => [
+                    "plugins" => [
+                        "doughnutlabel" => [
+                            "labels" => [
+                                ["text" => "$totalRespon", "font" => ["size" => 50]],
+                                ["text" => "Total Ulasan"]
+                            ]
+                        ]
+                    ]
+                ]
+            ];
+        }
+
+        // $chartBulanan = "https://quickchart.io/chart?c=" . urlencode(json_encode($chartBulan));
+        // $chartTahunan = "https://quickchart.io/chart?c=" . urlencode(json_encode($chartTahun));
+        // $chartPerbaikan = "https://quickchart.io/chart?c=" . urlencode(json_encode($configPerbaikan));
+        // $chartRespon = "https://quickchart.io/chart?c=" . urlencode(json_encode($chartConfig));
+
+        // Line Chart Bulanan
+        $hasDataBulanan = $countsBulanan->sum() > 0;
+        $chartBulanan = $hasDataBulanan
+            ? "https://quickchart.io/chart?c=" . urlencode(json_encode($chartBulan))
+            : null;
+
+        // Line Chart Tahunan
+        $hasDataTahunan = $countsTahun->sum() > 0;
+        $chartTahunan = $hasDataTahunan
+            ? "https://quickchart.io/chart?c=" . urlencode(json_encode($chartTahun))
+            : null;
+
+        // Pie Chart Perbaikan
+        $sum = perbaikan::count();
+        $chartPerbaikan = null;
+        if ($sum > 0) {
+            $persenPerbaikan = Perbaikan::where('jenis_perbaikan', 'perbaikan')->count() / $sum * 100;
+            $persenPenggantian = Perbaikan::where('jenis_perbaikan', 'penggantian')->count() / $sum * 100;
+
+            $chartPerbaikan = "https://quickchart.io/chart?c=" . urlencode(json_encode($configPerbaikan));
+        }
+
+        // Doughnut Chart Respon
+        $hasRespon = $totalRespon > 0;
+        $chartRespon = $hasRespon
+            ? "https://quickchart.io/chart?c=" . urlencode(json_encode($chartConfig))
+            : null;
+
 
         $pdf = Pdf::loadView('riwayat.exportPdfChart', [
             'chartBulanan' => $chartBulanan,
             'chartTahunan' => $chartTahunan,
-            'tanggal' => now()->format('Y-m-d'),
+            'chartPerbaikan' => $chartPerbaikan,
+            'chartRespon' => $chartRespon,
+            'tanggal' => now()->format('d-m-Y'),
         ]);
         $pdf->setPaper('a4', 'portrait');
         $pdf->setOption('isRemoteEnabled', true);
         $pdf->render();
-        return $pdf->Download('Grafik Kerusakan - ' . date('Y-m-d H:i:s') . '.pdf');
+
+        return $pdf->download('Grafik Kerusakan - ' . date('Y-m-d H:i:s') . '.pdf');
     }
 }

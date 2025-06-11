@@ -68,6 +68,9 @@ class KriteriaController extends Controller
                 'bobot_kriteria' => 'required|numeric',
                 'tipe_kriteria'  => 'required|in:benefit,cost',
                 'deskripsi'      => 'nullable|string',
+            ],
+            [
+                'kode_kriteria.unique' => 'Kode kriteria sudah digunakan.',
             ]);
 
             if ($validator->fails()) {
@@ -105,6 +108,8 @@ class KriteriaController extends Controller
                 'bobot_kriteria' => 'required|numeric',
                 'tipe_kriteria'  => 'required|in:benefit,cost',
                 'deskripsi'      => 'nullable|string',
+            ], [
+                'kode_kriteria.unique' => 'Kode kriteria sudah digunakan.',
             ]);
 
             if ($validator->fails()) {

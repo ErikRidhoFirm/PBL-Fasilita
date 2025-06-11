@@ -25,11 +25,11 @@ class RuanganController extends Controller
     public function list(Lantai $lantai)
     {
         $query = $lantai->ruangan()
-                        ->select(['id_ruangan','kode_ruangan','nama_ruangan']);
+            ->select(['id_ruangan', 'kode_ruangan', 'nama_ruangan']);
 
         return DataTables::of($query)
             ->addIndexColumn()
-            ->addColumn('aksi', function($row){
+            ->addColumn('aksi', function ($row) {
                 // URL detail fasilitas
                 $urlFas  = route('ruangan.fasilitas.index', $row->id_ruangan);
                 $urlEdit = route('ruangan.edit',           $row->id_ruangan);
@@ -67,14 +67,31 @@ class RuanganController extends Controller
     // 4️⃣ Store new
     public function store(Request $r, Lantai $lantai)
     {
-        $r->validate([
-            'kode_ruangan' => 'required|max:20|unique:ruangan,kode_ruangan',
-            'nama_ruangan' => 'required|max:100',
+        $validator = Validator::make(
+            $r->all(),
+            [
+                'kode_ruangan' => 'required|max:20|unique:ruangan,kode_ruangan',
+                'nama_ruangan' => 'required|max:100',
+            ],
+            [
+                'kode_ruangan.unique' => 'Kode ruangan sudah digunakan',
+            ]
+        );
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false, // response status, false: error/gagal, true: berhasil
+                'message' => 'Terjadi kesalahan',
+                'msgField' => $validator->errors(), // pesan error validasi
+            ]);
+        }
+
+        $lantai->ruangan()->create($r->only('kode_ruangan', 'nama_ruangan'));
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Ruangan ditambahkan'
         ]);
-
-        $lantai->ruangan()->create($r->only('kode_ruangan','nama_ruangan'));
-
-        return response()->json(['status'=>true,'message'=>'Ruangan ditambahkan']);
     }
 
     // 5️⃣ Edit form
@@ -86,18 +103,33 @@ class RuanganController extends Controller
     // 6️⃣ Update existing
     public function update(Request $r, Ruangan $ruangan)
     {
-        $r->validate([
-            'kode_ruangan' => [
-                'required','max:20',
-                Rule::unique('ruangan','kode_ruangan')
-                    ->ignore($ruangan->id_ruangan,'id_ruangan'),
+        $validator = Validator::make(
+            $r->all(),
+            [
+                'kode_ruangan' => [
+                    'required',
+                    'max:20',
+                    Rule::unique('ruangan', 'kode_ruangan')
+                        ->ignore($ruangan->id_ruangan, 'id_ruangan'),
+                ],
+                'nama_ruangan' => 'required|max:100',
             ],
-            'nama_ruangan' => 'required|max:100',
-        ]);
+            [
+                'kode_ruangan.unique' => 'Kode ruangan sudah digunakan',
+            ]
+        );
 
-        $ruangan->update($r->only('kode_ruangan','nama_ruangan'));
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false, // response status, false: error/gagal, true: berhasil
+                'message' => 'Terjadi kesalahan',
+                'msgField' => $validator->errors(), // pesan error validasi
+            ]);
+        }
 
-        return response()->json(['status'=>true,'message'=>'Ruangan diperbarui']);
+        $ruangan->update($r->only('kode_ruangan', 'nama_ruangan'));
+
+        return response()->json(['status' => true, 'message' => 'Ruangan diperbarui']);
     }
 
     // 7️⃣ Delete confirmation form
@@ -116,8 +148,8 @@ class RuanganController extends Controller
         $ruangan->delete();
 
         return response()->json([
-          'status'  => true,
-          'message' => 'Ruangan dan fasilitasnya berhasil dihapus'
+            'status'  => true,
+            'message' => 'Ruangan dan fasilitasnya berhasil dihapus'
         ]);
     }
 
@@ -127,12 +159,12 @@ class RuanganController extends Controller
         return view('ruangan.show', compact('ruangan'));
     }
 
-        public function fasilitas()
+    public function fasilitas()
     {
         return $this->hasMany(Fasilitas::class, 'id_ruangan');
     }
 
-        public function exportPdf(Lantai $lantai)
+    public function exportPdf(Lantai $lantai)
     {
         // Load relasi 'gedung' agar bisa digunakan di view
         $lantai->load('gedung');
@@ -142,69 +174,68 @@ class RuanganController extends Controller
 
         // Kirim ke view
         $pdf = PDF::loadView('ruangan.export_pdf', compact('ruangan', 'lantai'))
-                ->setPaper('A4', 'portrait');
+            ->setPaper('A4', 'portrait');
 
         return $pdf->stream('Laporan_Ruangan_Lantai_' . $lantai->nomor_lantai . '_' . date('Y-m-d_H-i-s') . '.pdf');
     }
 
 
-        public function import(Lantai $lantai)
+    public function import(Lantai $lantai)
     {
         return view('ruangan.import', compact('lantai'));
     }
 
-        public function importAjax(Request $request, Lantai $lantai)
-        {
-            if ($request->ajax() || $request->wantsJson()) {
-                $rules = [
-                    'file_ruangan' => ['required', 'mimes:xlsx', 'max:2048'],
-                ];
-                $validator = Validator::make($request->all(), $rules);
-                if ($validator->fails()) {
-                    return response()->json([
-                        'status'   => false,
-                        'message'  => 'Validasi Gagal',
-                        'msgField' => $validator->errors(),
-                    ]);
-                }
-
-                $file = $request->file('file_ruangan');
-                $reader = IOFactory::createReader('Xlsx');
-                $reader->setReadDataOnly(true);
-                $spreadsheet = $reader->load($file->getPathname());
-                $sheet = $spreadsheet->getActiveSheet();
-                $rows = $sheet->toArray(null, true, true, true);
-
-                $insert = [];
-                foreach ($rows as $i => $row) {
-                    if ($i === 1) continue; // header
-                    if (empty($row['A']) && empty($row['B'])) continue;
-
-                    $insert[] = [
-                        'id_lantai'    => $lantai->id_lantai,
-                        'kode_ruangan' => $row['A'],
-                        'nama_ruangan' => $row['B'],
-                        'created_at'   => now(),
-                        'updated_at'   => now(),
-                    ];
-                }
-
-                if (count($insert) === 0) {
-                    return response()->json([
-                        'status'  => false,
-                        'message' => 'Tidak ada data yang diimport'
-                    ]);
-                }
-
-                Ruangan::insertOrIgnore($insert);
-
+    public function importAjax(Request $request, Lantai $lantai)
+    {
+        if ($request->ajax() || $request->wantsJson()) {
+            $rules = [
+                'file_ruangan' => ['required', 'mimes:xlsx', 'max:2048'],
+            ];
+            $validator = Validator::make($request->all(), $rules);
+            if ($validator->fails()) {
                 return response()->json([
-                    'status'  => true,
-                    'message' => 'Data ruangan berhasil diimport'
+                    'status'   => false,
+                    'message'  => 'Validasi Gagal',
+                    'msgField' => $validator->errors(),
                 ]);
             }
 
-            return redirect()->route('lantai.ruangan.index', $lantai);
+            $file = $request->file('file_ruangan');
+            $reader = IOFactory::createReader('Xlsx');
+            $reader->setReadDataOnly(true);
+            $spreadsheet = $reader->load($file->getPathname());
+            $sheet = $spreadsheet->getActiveSheet();
+            $rows = $sheet->toArray(null, true, true, true);
+
+            $insert = [];
+            foreach ($rows as $i => $row) {
+                if ($i === 1) continue; // header
+                if (empty($row['A']) && empty($row['B'])) continue;
+
+                $insert[] = [
+                    'id_lantai'    => $lantai->id_lantai,
+                    'kode_ruangan' => $row['A'],
+                    'nama_ruangan' => $row['B'],
+                    'created_at'   => now(),
+                    'updated_at'   => now(),
+                ];
+            }
+
+            if (count($insert) === 0) {
+                return response()->json([
+                    'status'  => false,
+                    'message' => 'Tidak ada data yang diimport'
+                ]);
+            }
+
+            Ruangan::insertOrIgnore($insert);
+
+            return response()->json([
+                'status'  => true,
+                'message' => 'Data ruangan berhasil diimport'
+            ]);
         }
 
+        return redirect()->route('lantai.ruangan.index', $lantai);
+    }
 }

@@ -138,7 +138,7 @@ class PeranController extends Controller
                 'kode_peran' => 'required|string|min:3|unique:peran,kode_peran,'.$id.',id_peran',
                 'nama_peran' => 'required|string|max:100',
             ];
-            // use Illuminate\Support\Facades\Validator;
+            // use Illuminate\Support\Facades\Validator; 
             $validator = Validator::make($request->all(), $rules,[
                 'kode_peran.unique' => 'Kode peran sudah digunakan',
             ]);

@@ -162,8 +162,10 @@ class KategoriKerusakanController extends Controller
                 'kode_kerusakan' => 'required|string|min:3|unique:kategori_kerusakan,kode_kerusakan,'.$id.',id_kategori_kerusakan',
                 'nama_kerusakan' => 'required|string|max:100',
             ];
-            // use Illuminate\Support\Facades\Validator;
-            $validator = Validator::make($request->all(), $rules);
+            // use Illuminate\Support\Facades\Validator; 
+            $validator = Validator::make($request->all(), $rules,[
+                'kode_kerusakan.unique' => 'Kode kerusakan sudah digunakan',
+            ]);
 
             if ($validator->fails()) {
                 return response()->json([

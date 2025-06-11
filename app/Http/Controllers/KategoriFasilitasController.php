@@ -69,7 +69,9 @@ class KategoriFasilitasController extends Controller
                 'nama_kategori' => 'required|string|max:100',
             ];
 
-            $validator = Validator::make($request->all(), $rules);
+            $validator = Validator::make($request->all(), $rules, [
+                'kode_kategori.unique' => 'Kode kategori sudah digunakan.',
+            ]);
 
             if ($validator->fails()) {
                 return response()->json([
@@ -108,7 +110,9 @@ class KategoriFasilitasController extends Controller
                 'nama_kategori' => 'required|string|max:100',
             ];
 
-            $validator = Validator::make($request->all(), $rules);
+            $validator = Validator::make($request->all(), $rules, [
+                'kode_kategori.unique' => 'Kode kategori sudah digunakan.',
+            ]);
 
             if ($validator->fails()) {
                 return response()->json([
@@ -231,5 +235,4 @@ class KategoriFasilitasController extends Controller
 
         return redirect()->route('kategoriF.index');
     }
-
 }

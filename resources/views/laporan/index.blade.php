@@ -70,7 +70,7 @@
                         searchable: false
                     },
                     {
-                        data: 'pengguna.username',
+                        data: 'pengguna.nama',
                     },
                     {
                         data: 'gedung.nama_gedung',

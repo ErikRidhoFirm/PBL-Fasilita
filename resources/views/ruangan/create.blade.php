@@ -51,7 +51,7 @@
                     required: 'Nama ruangan harus diisi',
                     maxlength: 'Nama ruangan maksimal 100 karakter'
                 }
-            }
+            },
             submitHandler(form) {
                 $.ajax({
                     url: form.action,

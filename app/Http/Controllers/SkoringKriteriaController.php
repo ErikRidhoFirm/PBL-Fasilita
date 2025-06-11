@@ -24,18 +24,19 @@ class SkoringKriteriaController extends Controller
         return view('subKriteria.index', compact('kriterias'));
     }
 
-    public function list($id){
+    public function list($id)
+    {
         $query = SkoringKriteria::where('id_kriteria', $id)
-                 ->select('id_skoring_kriteria','parameter','nilai_referensi');
+            ->select('id_skoring_kriteria', 'parameter', 'nilai_referensi');
         return DataTables::of($query)
             ->addIndexColumn()
-            ->addColumn('aksi', function($row) {
+            ->addColumn('aksi', function ($row) {
                 return
-                    '<button class="btn btn-warning btn-sm" onclick="modalAction(\''.route('skoring.edit',$row->id_skoring_kriteria).'\')">'.
-                      '<i class="mdi mdi-pencil"></i>'.
-                    '</button> '.
-                    '<button class="btn btn-danger btn-sm" onclick="modalAction(\''.route('skoring.confirm',$row->id_skoring_kriteria).'\')">'.
-                      '<i class="mdi mdi-delete"></i>'.
+                    '<button class="btn btn-warning btn-sm" onclick="modalAction(\'' . route('skoring.edit', $row->id_skoring_kriteria) . '\')">' .
+                    '<i class="mdi mdi-pencil"></i>' .
+                    '</button> ' .
+                    '<button class="btn btn-danger btn-sm" onclick="modalAction(\'' . route('skoring.confirm', $row->id_skoring_kriteria) . '\')">' .
+                    '<i class="mdi mdi-delete"></i>' .
                     '</button>';
             })
             ->rawColumns(['aksi'])
@@ -56,35 +57,31 @@ class SkoringKriteriaController extends Controller
      */
     public function store(Request $request, $id)
     {
-        if ($request->ajax() && $request->wantsJson()) {
+        $validator = Validator::make($request->all(), [
+            'parameter'       => 'required|string|max:255|unique:skoring_kriteria,parameter',
+            'nilai_referensi' => 'required|integer|min:0',
+        ], [
+            'parameter.unique' => 'Skoring sudah digunakan.',
+        ]);
 
-            $validator = Validator::make($request->all(), [
-                'parameter'       => 'required|string|max:255|unique:skoring_kriteria,parameter',
-                'nilai_referensi' => 'required|integer|min:0',
-            ], [
-                'parameter.unique' => 'Skoring sudah digunakan.',
-            ]);
-
-            if ($validator->fails()) {
-                return response()->json([
-                    'status'   => false,
-                    'message'  => 'Validasi gagal.',
-                    'msgField' => $validator->errors(),
-                ]);
-            }
-
-            SkoringKriteria::create([
-                'id_kriteria'      => $id,
-                'parameter'        => $request->parameter,
-                'nilai_referensi'  => $request->nilai_referensi,
-            ]);
-
+        if ($validator->fails()) {
             return response()->json([
-                'status'  => true,
-                'message' => 'Skoring berhasil ditambahkan',
+                'status'   => false,
+                'message'  => 'Validasi gagal.',
+                'msgField' => $validator->errors(),
             ]);
         }
-        return redirect('/');
+
+        SkoringKriteria::create([
+            'id_kriteria'      => $id,
+            'parameter'        => $request->parameter,
+            'nilai_referensi'  => $request->nilai_referensi,
+        ]);
+
+        return response()->json([
+            'status'  => true,
+            'message' => 'Skoring berhasil ditambahkan',
+        ]);
     }
 
     /**
@@ -94,7 +91,7 @@ class SkoringKriteriaController extends Controller
     {
         $sk = SkoringKriteria::find($id);
         $k = $sk->kriteria;
-        return view('subKriteria.edit', compact('sk','k'));
+        return view('subKriteria.edit', compact('sk', 'k'));
     }
 
     /**
@@ -106,7 +103,7 @@ class SkoringKriteriaController extends Controller
             $sk = SkoringKriteria::find($id);
 
             $v = Validator::make($request->all(), [
-                'parameter'       => 'required|string|max:255|unique:skoring_kriteria,parameter,'.$id.',id_skoring_kriteria',
+                'parameter'       => 'required|string|max:255|unique:skoring_kriteria,parameter,' . $id . ',id_skoring_kriteria',
                 'nilai_referensi' => 'required|integer|min:0',
             ], [
                 'parameter.unique' => 'Parameter skoring sudah digunakan.',
@@ -120,7 +117,7 @@ class SkoringKriteriaController extends Controller
                 ]);
             }
 
-            $sk->update($request->only(['parameter','nilai_referensi']));
+            $sk->update($request->only(['parameter', 'nilai_referensi']));
             return response()->json([
                 'status'  => true,
                 'message' => 'Parameter skoring berhasil diperbarui'

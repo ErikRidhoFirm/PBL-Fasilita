@@ -54,7 +54,7 @@
                     required: 'Nilai referensi harus diisi',
                     digits: 'Nilai referensi harus angka'
                 }
-            }
+            },
             submitHandler: function(form) {
                 $.ajax({
                     url: form.action,
@@ -64,7 +64,7 @@
                         if (res.status) {
                             $('#myModal').modal('hide');
                             Swal.fire('Berhasil', res.message, 'success');
-                            window.tableSkoring[{{ $kriteria->id_kriteria }}]
+                            window.tableSkoring[`{{ $kriteria->id_kriteria }}`]
                                 .ajax.reload(null, false);
                         } else {
                             $('.error-text').text('');

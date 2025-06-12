@@ -141,8 +141,8 @@ class RuanganSeeder extends Seeder
             ],
             [
                 'id_lantai' => 6,
-                'kode_ruangan' => 'RW3',
-                'nama_ruangan' => 'Ruang W3'
+                'kode_ruangan' => 'RWS',
+                'nama_ruangan' => 'Ruang Workshop'
             ],
             [
                 'id_lantai' => 6,
@@ -162,42 +162,42 @@ class RuanganSeeder extends Seeder
             [
                 'id_lantai' => 7,
                 'kode_ruangan' => 'LPR-1',
-                'nama_ruangan' => 'Lab Praktikum 1'
+                'nama_ruangan' => 'Lab Pemrograman 1'
             ],
             [
                 'id_lantai' => 7,
                 'kode_ruangan' => 'LPR-2',
-                'nama_ruangan' => 'Lab Praktikum 2'
+                'nama_ruangan' => 'Lab Pemrograman 2'
             ],
             [
                 'id_lantai' => 7,
                 'kode_ruangan' => 'LPR-3',
-                'nama_ruangan' => 'Lab Praktikum 3'
+                'nama_ruangan' => 'Lab Pemrograman 3'
             ],
             [
                 'id_lantai' => 7,
                 'kode_ruangan' => 'LPR-4',
-                'nama_ruangan' => 'Lab Praktikum 4'
+                'nama_ruangan' => 'Lab Pemrograman 4'
             ],
             [
                 'id_lantai' => 7,
                 'kode_ruangan' => 'LPR-5',
-                'nama_ruangan' => 'Lab Praktikum 5'
+                'nama_ruangan' => 'Lab Pemrograman 5'
             ],
             [
                 'id_lantai' => 7,
                 'kode_ruangan' => 'LPR-6',
-                'nama_ruangan' => 'Lab Praktikum 6'
+                'nama_ruangan' => 'Lab Pemrograman 6'
             ],
             [
                 'id_lantai' => 7,
                 'kode_ruangan' => 'LPR-7',
-                'nama_ruangan' => 'Lab Praktikum 7'
+                'nama_ruangan' => 'Lab Pemrograman 7'
             ],
             [
                 'id_lantai' => 7,
                 'kode_ruangan' => 'LPR-8',
-                'nama_ruangan' => 'Lab Praktikum 8'
+                'nama_ruangan' => 'Lab Pemrograman 8'
             ],
             [
                 'id_lantai' => 7,
@@ -217,12 +217,12 @@ class RuanganSeeder extends Seeder
             [
                 'id_lantai' => 7,
                 'kode_ruangan' => 'LIG-1',
-                'nama_ruangan' => 'Lab Internet 1'
+                'nama_ruangan' => 'Lab Visi Komputer 1'
             ],
             [
                 'id_lantai' => 7,
                 'kode_ruangan' => 'LIG-2',
-                'nama_ruangan' => 'Lab Internet 2'
+                'nama_ruangan' => 'Lab Visi Komputer 2'
             ],
             [
                 'id_lantai' => 7,
@@ -232,12 +232,12 @@ class RuanganSeeder extends Seeder
             [
                 'id_lantai' => 7,
                 'kode_ruangan' => 'LERP',
-                'nama_ruangan' => 'Lab ERP'
+                'nama_ruangan' => 'Lab Perencanaan Sumber Daya Perusahaan'
             ],
             [
                 'id_lantai' => 7,
                 'kode_ruangan' => 'LAI1',
-                'nama_ruangan' => 'Lab AI 1'
+                'nama_ruangan' => 'Lab Sistem Cerdas 1'
             ],
             [
                 'id_lantai' => 7,
@@ -279,7 +279,31 @@ class RuanganSeeder extends Seeder
                 'kode_ruangan' => 'RT-14',
                 'nama_ruangan' => 'Ruang Teori 14'
             ],
-
+            [
+                'id_lantai' => 8,
+                'kode_ruangan' => 'RSTD',
+                'nama_ruangan' => 'Ruang Studio'
+            ],
+            [
+                'id_lantai' => 8,
+                'kode_ruangan' => 'BA',
+                'nama_ruangan' => 'Lab Analisa Bisnis'
+            ],
+            [
+                'id_lantai' => 8,
+                'kode_ruangan' => 'DT',
+                'nama_ruangan' => 'Lab Teknologi Data'
+            ],
+            [
+                'id_lantai' => 8,
+                'kode_ruangan' => 'IS',
+                'nama_ruangan' => 'Lab Sistem Informasi'
+            ],
+            [
+                'id_lantai' => 8,
+                'kode_ruangan' => 'IVSS',
+                'nama_ruangan' => 'Lab Visi Cerdas dan Sistem Cerdas'
+            ],
             [
                 'id_lantai' => 8,
                 'kode_ruangan' => 'RPT-2',

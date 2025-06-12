@@ -1,13 +1,14 @@
+{{-- resources/views/gedung/create-ruangan.blade.php --}}
 <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
 
         <div class="modal-header bg-primary text-white">
             <h5 class="modal-title"><i class="mdi mdi-plus-box"></i> Tambah Ruangan</h5>
-            <button type="button" class="btn-close btn-close-white" data-dismiss="modal">x</button>
+            <button type="button" class="btn-close btn-close-white" data-dismiss="modal">×</button>
         </div>
 
-        <form id="form-ruangan-create" class="ajax" action="{{ route('lantai.ruangan.store', $lantai) }}"
-            method="POST">
+        <form id="form-ruangan-create" action="{{ route('lantai.ruangan.store', $lantai) }}"
+              method="POST">
             @csrf
             <div class="modal-body p-4">
                 <div class="mb-3">
@@ -30,63 +31,93 @@
 </div>
 
 <script>
-    $(function() {
-        $('#form-ruangan-create').validate({
-            rules: {
-                kode_ruangan: {
-                    required: true,
-                    maxlength: 20
-                },
-                nama_ruangan: {
-                    required: true,
-                    maxlength: 100
-                }
+$(function() {
+    // Inisialisasi jQuery Validate
+    $('#form-ruangan-create').validate({
+        rules: {
+            kode_ruangan: {
+                required: true,
+                maxlength: 20
             },
-            messages: {
-                kode_ruangan: {
-                    required: 'Kode ruangan harus diisi',
-                    maxlength: 'Kode ruangan maksimal 20 karakter'
-                },
-                nama_ruangan: {
-                    required: 'Nama ruangan harus diisi',
-                    maxlength: 'Nama ruangan maksimal 100 karakter'
-                }
+            nama_ruangan: {
+                required: true,
+                maxlength: 100
             }
-            submitHandler(form) {
-                $.ajax({
-                    url: form.action,
-                    type: form.method,
-                    data: $(form).serialize(),
-                    success(res) {
-                        if (res.status) {
-                            $('#myModal').modal('hide');
-                            Swal.fire('Berhasil', res.message, 'success');
-                            window.tableRuangan.ajax.reload();
+        },
+        messages: {
+            kode_ruangan: {
+                required: 'Kode ruangan harus diisi',
+                maxlength: 'Kode ruangan maksimal 20 karakter'
+            },
+            nama_ruangan: {
+                required: 'Nama ruangan harus diisi',
+                maxlength: 'Nama ruangan maksimal 100 karakter'
+            }
+        },    // <-- koma penting di sini
+        submitHandler: function(form) {
+            $.ajax({
+                url: form.action,
+                type: form.method,
+                dataType: 'json',
+                data: $(form).serialize(),
+                success: function(res) {
+                    if (res.status) {
+                        // Tutup dan bersihkan modal
+                        $('#myModal').modal('hide').html('');
+                        // Reload DataTable global
+                        window.tableRuangan.ajax.reload(null, false);
+                        // Tampilkan popup sukses
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil',
+                            text: res.message,
+                            timer: 1500,
+                            showConfirmButton: false
+                        });
+                    } else {
+                        // Reset pesan error
+                        $('.error-text').text('');
+                        if (res.msgField) {
+                            $.each(res.msgField, function(name, msgs) {
+                                $('#error-' + name).text(msgs[0]);
+                            });
+                            // Tampilkan popup error dengan field pertama
+                            let first = Object.values(res.msgField)[0][0];
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Gagal',
+                                text: first
+                            });
                         } else {
-                            $('.error-text').text('');
-                            if (res.msgField) {
-                                $.each(res.msgField, function(name, val) {
-                                    $('#error-' + name).text(val[0]);
-                                });
-                            }
-                            let errMsg = Object.values(res.msgField)[0][0];
-                            Swal.fire('Gagal', errMsg, 'error');
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Gagal',
+                                text: res.message || 'Terjadi kesalahan'
+                            });
                         }
                     }
-                });
-                return false;
-            },
-            errorElement: 'span',
-            errorPlacement: function(error, element) {
-                error.addClass('invalid-feedback');
-                element.closest('.form-group').append(error);
-            },
-            highlight: function(element, errorClass, validClass) {
-                $(element).addClass('is-invalid');
-            },
-            unhighlight: function(element, errorClass, validClass) {
-                $(element).removeClass('is-invalid');
-            }
-        });
+                },
+                error: function(xhr) {
+                    // Jika validasi jQuery saja
+                    if (xhr.status !== 422) {
+                        Swal.fire('Error', 'Terjadi kesalahan server', 'error');
+                    }
+                }
+            });
+            return false; // cegah submit normal
+        },
+        errorElement: 'span',
+        errorPlacement: function(error, element) {
+            // letakkan di <small class="error-text"> yang sesuai
+            let field = element.attr('name');
+            $('#error-' + field).text(error.text());
+        },
+        highlight: function(element) {
+            $(element).addClass('is-invalid');
+        },
+        unhighlight: function(element) {
+            $(element).removeClass('is-invalid');
+        }
     });
+});
 </script>

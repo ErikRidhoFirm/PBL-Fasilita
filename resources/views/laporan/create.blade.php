@@ -1,81 +1,95 @@
 @extends('layouts.main')
 
 @section('content')
-    <div class="w-100 grid-margin stretch-card">
-        <div class="card">
-            <div class="card-body w-auto">
-                <div class="d-flex justify-content-between align-items-center">
-                    <h3 class="card-title my-2 w-25"></h3>
-                </div>
-                @if($authUser->peran->kode_peran === 'ADM')
-                    <a href="{{ route('laporan.index') }}" class="btn"><i class="mdi mdi-arrow-left"> Kembali</i></a>
-                @else
-                    <a href="{{ route('laporanPelapor.index') }}" class="btn"><i class="mdi mdi-arrow-left"> Kembali</i></a>
-                @endif
-                <h3 class="my-2 mx-4">Silakan lengkapi form di bawah ini dengan jelas dan detail.</h3>
-                <p class="my-3 mx-4">Data yang Anda isi akan membantu tim sarana dan prasarana kampus dalam menindaklanjuti
-                    laporan secara
-                    cepat dan tepat. Pastikan Anda menyertakan lokasi, jenis fasilitas, serta deskripsi kerusakan atau
-                    masalah yang ditemukan.</p>
-                <form class="my-5 col-9 w-100" id="form-tambah" method="post">
-                    @csrf
-                    <input type="hidden" name="id_pengguna" value="{{ $authUser->id_pengguna }}">
-                    <div class="form-group">
-                        <select class="form-control text-dark border-primary" id="inputGedung" name="id_gedung">
-                            <option value="">Pilih Gedung</option>
-                            @foreach ($gedung as $g)
-                                <option value="{{ $g->id_gedung }}">{{ $g->nama_gedung }}</option>
-                            @endforeach
-                        </select>
-                        <small id="error-id_gedung" class="error-text form-text text-danger"></small>
-                    </div>
-
-                    {{-- Lantai & Ruangan --}}
-                    <div class="my-5 d-flex justify-content-between gap-5" style="gap: 20px">
-                        <div class="form-group w-100">
-                            <select class="form-control text-dark " id="inputLantai" name="id_lantai" disabled>
-                                <option value="">Pilih Lantai</option>
-                            </select>
-                            <small id="error-id_lantai" class="error-text form-text text-danger"></small>
-                        </div>
-                        <div class="form-group w-100">
-                            <select class="form-control text-dark " id="inputRuangan" name="id_ruangan" disabled>
-                                <option value="">Pilih Ruangan</option>
-                            </select>
-                            <small id="error-id_ruangan" class="error-text form-text text-danger"></small>
-                        </div>
-                    </div>
-
-                    {{-- Container --}}
-                    <div class="px-4 py-2 border border-primary rounded-lg d-flex flex-column justify-content-center"
-                        style="min-height: 200px" id="container-fasilitas">
-                        <div id="laporan-fasilitas">
-
-                        </div>
-                        <div class="w-100 d-flex justify-content-center align-items-center">
-                            <button type="button" class="btn py-2 w-100 btn-primary my-5" id="btn-tambah-row"
-                                onclick="modalAction()">
-                                <span class="bg-light p-1 rounded-lg text-primary p-1 btn mx-3">
-                                    <i class="mdi mdi-plus"></i>
-                                </span>
-                                Tambah Pelaporan
-                            </button>
-                        </div>
-                    </div>
-                    <small id="error-fasilitas-row" class="error-text form-text text-danger"></small>
-
-                    <button type="submit" class="btn btn-lg w-100 my-5 btn-primary">
-                        <h4 class="my-0">Simpan</h4>
-                    </button>
-                </form>
-            </div>
+      <div class="w-100 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <div class="row mb-3 align-items-center">
+          <div class="col-12 col-md-6">
+            @if($authUser->peran->kode_peran === 'ADM')
+              <a href="{{ route('laporan.index') }}" class="btn btn-sm btn-outline-primary mb-2 mb-md-0">
+                <i class="mdi mdi-arrow-left"></i> Kembali
+              </a>
+            @else
+              <a href="{{ route('laporanPelapor.index') }}" class="btn btn-sm btn-outline-primary mb-2 mb-md-0">
+                <i class="mdi mdi-arrow-left"></i> Kembali
+              </a>
+            @endif
+          </div>
         </div>
+         <h3 class="mb-0">Silakan lengkapi form di bawah ini dengan jelas dan detail.</h3>
+        <p class="mb-4">
+          Data yang Anda isi akan membantu tim sarana dan prasarana kampus dalam menindaklanjuti laporan secara
+          cepat dan tepat. Pastikan Anda menyertakan lokasi, jenis fasilitas, serta deskripsi kerusakan atau
+          masalah yang ditemukan.
+        </p>
+
+        <div class="row">
+          <div class="col-12 col-lg-9">
+            <form id="form-tambah" class="my-4" method="post">
+              @csrf
+              <input type="hidden" name="id_pengguna" value="{{ $authUser->id_pengguna }}">
+
+              {{-- Gedung --}}
+              <div class="form-group">
+                <label>Pilih Gedung</label>
+                <select class="form-control border-primary" id="inputGedung" name="id_gedung">
+                  <option value="">-- Pilih Gedung --</option>
+                  @foreach ($gedung as $g)
+                    <option value="{{ $g->id_gedung }}">{{ $g->nama_gedung }}</option>
+                  @endforeach
+                </select>
+                <small id="error-id_gedung" class="text-danger"></small>
+              </div>
+
+              {{-- Lantai & Ruangan --}}
+              <div class="form-row">
+                <div class="form-group col-12 col-md-6">
+                  <label>Pilih Lantai</label>
+                  <select class="form-control" id="inputLantai" name="id_lantai" disabled>
+                    <option value="">-- Pilih Lantai --</option>
+                  </select>
+                  <small id="error-id_lantai" class="text-danger"></small>
+                </div>
+                <div class="form-group col-12 col-md-6">
+                  <label>Pilih Ruangan</label>
+                  <select class="form-control" id="inputRuangan" name="id_ruangan" disabled>
+                    <option value="">-- Pilih Ruangan --</option>
+                  </select>
+                  <small id="error-id_ruangan" class="text-danger"></small>
+                </div>
+              </div>
+
+              {{-- Container Pelaporan --}}
+              <div class="border border-primary rounded-lg p-3 mb-3" id="container-fasilitas">
+                <div id="laporan-fasilitas"></div>
+                <div class="text-center mt-3">
+                  <button
+                    type="button"
+                    class="btn btn-outline-primary w-100 w-sm-auto"
+                    id="btn-tambah-row"
+                    onclick="modalAction()"
+                  >
+                    <i class="mdi mdi-plus"></i> Tambah Pelaporan
+                  </button>
+                </div>
+              </div>
+              <small id="error-fasilitas-row" class="text-danger"></small>
+
+              {{-- Submit --}}
+              <button type="submit" class="btn btn-primary btn-lg btn-block">
+                Simpan
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
     {{-- Modal --}}
-    <div id="myModal" class="modal fade animate shake" tabindex="-1" role="dialog" data-backdrop="static"
-        data-keyboard="false" data-width="75%" aria-hidden="true">
-        <div class="modal-dialog modal-lg w-50">
-            <div class="modal-content">
+    <div id="myModal" class="modal fade" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
                 <div class="modal-header bg-primary text-light">
                     <h5 class="modal-title">Isi Laporan Fasilitas</h5>
                     <button type="button" class="btn close text-white" data-dismiss="modal" aria-label="Close">
@@ -135,8 +149,8 @@
                     </div>
                 </form>
             </div>
-        </div>
     </div>
+  </div>
 @endsection
 @push('css')
 @endpush
@@ -257,6 +271,14 @@
                     $jumlahKerusakan.removeAttr('max');
                 }
             });
+        });
+
+        $('#laporan-fasilitas').css({
+            display: 'flex',
+            flexWrap: 'nowrap',
+            overflowX: 'auto',
+            gap: '1rem',
+            paddingBottom: '0.5rem'
         });
 
         // validasi form
@@ -390,49 +412,42 @@
             const deskripsi = item.deskripsi;
             const imageSrc = URL.createObjectURL(item.foto);
             let cardHtml = `
-                <section class="row my-2 mx-1 py-3 border border-dark rounded-lg shadow-lg">
-                    <div class="col-3">
-                        <img src="${imageSrc}" class="w-100 h-100 border rounded-lg" alt=""
-                        style="overflow: hidden; object-fit: cover; object-position: center">
-                    <input type="hidden" name="path_foto[]" class="border-0" value="${imageSrc}"></input>
-                    </div>
-                    <div class="col-8">
-                        <table>
-                            <tr>
-                                <th>Nama Fasilitas</th>
-                                <th class="px-4">:</th>
-                                <td>${textFasilitas}</td>
-                                <td><input type="hidden" name="id_fasilitas[]" class="border-0" value="${fasilitas}"></td>
-                            </tr>
-                            <tr>
-                                <th>Kategori Kerusakan</th>
-                                <th class="px-4">:</th>
-                                <td>${textKerusakan}</td>
-                                <td><input type="hidden" name="id_kategori_kerusakan[]" class="border-0" value="${kategori}"></td>
-                            </tr>
-                            <tr>
-                                <th>Deskripsi</th>
-                                <th class="px-4">:</th>
-                                <td>${deskripsi}</td>
-                                <td><input type="hidden" name="deskripsi[]" class="border-0" value="${deskripsi}"></td>
-                            </tr>
-                            <tr>
-                                <th>Jumlah</th>
-                                <th class="px-4">:</th>
-                                <td>${jumlahRusak}</td>
-                                <td><input type="hidden" name="jumlah_rusak[]" class="border-0" value="${jumlahRusak}"></td>
-                            </tr>
-                        </table>
-                        </div>
-                        <div class="col-1 d-flex align-items-center">
-                            <button type="button" class="btn btn-danger btn-sm h-25 btnHapusRow" style="height: 30px">
-                                &times;
-                            </button>
-                        </div>
-                </section>
-            `;
-
-            $('#laporan-fasilitas').append(cardHtml);
+            <section class="border border-dark rounded-lg shadow-lg flex-shrink-0" style="min-width: 300px;">
+            <div class="row no-gutters">
+                <div class="col-4">
+                <img src="${imageSrc}"
+                    class="w-100 h-100 rounded-lg"
+                    style="object-fit:cover"
+                    alt="Foto">
+                <input type="hidden" name="path_foto[]" value="${imageSrc}">
+                </div>
+                <div class="col-7 px-2">
+                <table class="table table-sm mb-0">
+                    <tr>
+                    <th>Fasilitas</th><td>${textFasilitas}</td>
+                    <input type="hidden" name="id_fasilitas[]" value="${fasilitas}">
+                    </tr>
+                    <tr>
+                    <th>Kategori</th><td>${textKerusakan}</td>
+                    <input type="hidden" name="id_kategori_kerusakan[]" value="${kategori}">
+                    </tr>
+                    <tr>
+                    <th>Deskripsi</th><td>${deskripsi}</td>
+                    <input type="hidden" name="deskripsi[]" value="${deskripsi}">
+                    </tr>
+                    <tr>
+                    <th>Jumlah</th><td>${jumlahRusak}</td>
+                    <input type="hidden" name="jumlah_rusak[]" value="${jumlahRusak}">
+                    </tr>
+                </table>
+                </div>
+                <div class="col-1 d-flex align-items-center justify-content-center">
+                <button type="button" class="btn btn-danger btn-sm btnHapusRow">&times;</button>
+                </div>
+            </div>
+            </section>
+        `;
+        $('#laporan-fasilitas').append(cardHtml);
         }
 
         // hapus row

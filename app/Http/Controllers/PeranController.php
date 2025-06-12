@@ -46,13 +46,16 @@ class PeranController extends Controller
                             <i class="mdi mdi-file-document-box m-0"></i>
                         </button>';
 
-            $deleteBtn = '<button onclick="modalAction(\'' . url('/peran/delete/' . $row->id_peran) . '\')"
-                            type="button"
-                            class="btn btn-sm btn-outline-danger"
-                            data-bs-toggle="tooltip" data-bs-placement="top" title="Hapus"
-                            data-id="'.$row->id_peran.'">
-                            <i class="mdi mdi-delete m-0"></i>
-                        </button>';
+            $deleteBtn = '';
+            if (strtolower($row->nama_peran) !== 'admin') {
+                $deleteBtn = '<button onclick="modalAction(\'' . url('/peran/delete/' . $row->id_peran) . '\')"
+                                type="button"
+                                class="btn btn-sm btn-outline-danger"
+                                data-bs-toggle="tooltip" data-bs-placement="top" title="Hapus"
+                                data-id="'.$row->id_peran.'">
+                                <i class="mdi mdi-delete m-0"></i>
+                            </button>';
+            }
 
             return '<div class="d-flex">' . $editBtn . $showBtn . $deleteBtn . '</div>';
         })

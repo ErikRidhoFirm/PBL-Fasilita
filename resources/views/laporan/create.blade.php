@@ -16,11 +16,8 @@
               </a>
             @endif
           </div>
-          <div class="col-12 col-md-6 text-md-right">
-            <h3 class="mb-0">Silakan lengkapi form di bawah ini dengan jelas dan detail.</h3>
-          </div>
         </div>
-
+         <h3 class="mb-0">Silakan lengkapi form di bawah ini dengan jelas dan detail.</h3>
         <p class="mb-4">
           Data yang Anda isi akan membantu tim sarana dan prasarana kampus dalam menindaklanjuti laporan secara
           cepat dan tepat. Pastikan Anda menyertakan lokasi, jenis fasilitas, serta deskripsi kerusakan atau

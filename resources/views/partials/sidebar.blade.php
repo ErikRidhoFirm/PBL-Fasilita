@@ -117,7 +117,7 @@
         @endif
 
         {{-- EXTERNAL USER MENU (MHS/DSN/TDK) --}}
-        @if (auth()->user()->hasAnyRole(['MHS', 'DSN', 'TDK']))
+        @if (auth()->user()->hasAnyRole(['MHS', 'DSN', 'TDK', 'GST']))
             <li class="nav-item">
                 {{-- [FIX] ID Unik: pelaporan-menu --}}
                 <a class="nav-link" data-toggle="collapse" href="#pelaporan-menu" aria-expanded="false"
@@ -129,7 +129,9 @@
                 <div class="collapse" id="pelaporan-menu" data-parent="#sidebar">
                     <ul class="nav flex-column sub-menu">
                         <li class="nav-item"> <a class="nav-link" href="{{ route('laporanPelapor.index') }}"> <i class="fas fa-plus-circle menu-icon"></i> Buat Laporan </a> </li>
+                        @if (auth()->user()->hasAnyRole(['MHS', 'DSN', 'TDK']))
                         <li class="nav-item"> <a class="nav-link" href="{{ route('riwayatPelapor.index') }}"> <i class="fas fa-history menu-icon"></i> Riwayat Laporan </a> </li>
+                        @endif
                     </ul>
                 </div>
             </li>

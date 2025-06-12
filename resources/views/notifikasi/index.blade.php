@@ -123,14 +123,15 @@
                             @endif
 
                             {{-- Hapus --}}
-                            <form action="{{ route('notifikasi.destroy', $item->id_notifikasi) }}"
-                                  method="POST"
-                                  onsubmit="return confirm('Anda yakin ingin menghapus notifikasi ini?');"
-                                  class="d-inline">
+                            <form id="delete-form-{{ $item->id_notifikasi }}"
+                                action="{{ route('notifikasi.destroy', $item->id_notifikasi) }}"
+                                method="POST"
+                                class="d-inline">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit"
-                                        class="btn btn-outline-danger btn-sm"
+                                <button type="button"
+                                        class="btn btn-outline-danger btn-sm btn-delete"
+                                        data-id="{{ $item->id_notifikasi }}"
                                         title="Hapus Notifikasi">
                                     <i class="ti-trash"></i>
                                     <span class="d-none d-sm-inline ml-1">Hapus</span>
@@ -230,6 +231,25 @@ $(document).ready(function() {
             $('#modalDetail' + id).modal('show');
         });
     });
+
+    $('.btn-delete').on('click', function(e) {
+    e.preventDefault();
+    const id = $(this).data('id');
+    Swal.fire({
+        title: 'Yakin ingin menghapus?',
+        text: "Notifikasi akan dihapus secara permanen!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Ya, hapus!',
+        cancelButtonText: 'Batal',
+        reverseButtons: true,
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Submit form jika user konfirmasi
+            $('#delete-form-' + id).submit();
+        }
+    });
+});
 });
 </script>
 

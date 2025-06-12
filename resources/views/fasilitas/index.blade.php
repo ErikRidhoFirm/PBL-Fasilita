@@ -39,15 +39,15 @@
 </button>
 
 <!-- Tombol Import -->
-<button class="btn btn-success btn-sm mr-2" 
-        onclick="modalAction('{{ route('ruangan.fasilitas.import', $ruangan) }}')" 
+<button class="btn btn-success btn-sm mr-2"
+        onclick="modalAction('{{ route('ruangan.fasilitas.import', $ruangan) }}')"
         style="min-width: 100px; height: 40px;">
   <i class="fa fa-file-import mr-1"></i> Import
 </button>
 
 <!-- Tombol Tambah Fasilitas -->
-<button class="btn btn-primary btn-sm" 
-        onclick="modalAction('{{ route('ruangan.fasilitas.create', $ruangan) }}')" 
+<button class="btn btn-primary btn-sm"
+        onclick="modalAction('{{ route('ruangan.fasilitas.create', $ruangan) }}')"
         style="min-width: 120px; height: 40px;"> Tambah Fasilitas
 </button>
 
@@ -55,7 +55,12 @@
 </div>
 
 
-    <table class="table table-hover table-striped" id="table-fasilitas">
+    <div class="table-responsive">
+  <table
+    class="table table-hover table-striped nowrap"
+    id="table-fasilitas"
+    style="width:100%"
+  >
       <thead>
         <tr>
           <th>No</th>
@@ -65,6 +70,7 @@
         </tr>
       </thead>
     </table>
+    </div>
   </div>
 </div>
 

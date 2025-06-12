@@ -55,7 +55,12 @@
 </div>
 
 
-    <table class="table table-hover table-striped" id="table-lantai">
+    <div class="table-responsive">
+  <table
+    class="table table-hover table-striped nowrap"
+    id="table-lantai"
+    style="width:100%"
+  >
       <thead>
         <tr>
           <th>No</th>
@@ -65,6 +70,7 @@
         </tr>
       </thead>
     </table>
+    </div>
   </div>
 </div>
 

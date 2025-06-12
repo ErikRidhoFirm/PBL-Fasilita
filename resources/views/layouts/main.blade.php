@@ -31,6 +31,8 @@
 
     <link rel="stylesheet" href="{{ asset('assets/vendors/mdi/css/materialdesignicons.min.css') }}">
 
+    <link rel="stylesheet" href="{{ asset('assets/css/custom-responsive.css') }}">
+
     <!-- endinject -->
     <link rel="shortcut icon" href="{{ asset('assets/images/fasilita-icon.png') }}" />
 
@@ -39,35 +41,17 @@
 
 <body>
     <div class="container-scroller">
-        <!-- partial:partials/_navbar.html -->
         @include('partials.navbar')
-
-        <!-- partial -->
         <div class="container-fluid page-body-wrapper">
-
-            <!-- partial:partials/_sidebar.html -->
             @include('partials.sidebar')
-            <!-- partial -->
-
-
-            <div class="main-panel" style="margin-left: 265px">
-                {{-- partial:partials/_breadcrumb.html --}}
+            <div class="main-panel">
                 <div class="content-wrapper">
                     @includeWhen(View::exists('partials.breadcrumb'), 'partials.breadcrumb')
-
-                    {{-- Page Content --}}
                     @yield('content')
                 </div>
-
-                <!-- content-wrapper ends -->
-
-                <!-- partial:partials/_footer.html -->
                 @include('partials.footer')
-                <!-- partial -->
             </div>
-            <!-- main-panel ends -->
         </div>
-        <!-- page-body-wrapper ends -->
     </div>
 
     <!-- page-body-wrapper ends -->
@@ -127,6 +111,34 @@
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
+        });
+
+        $(document).ready(function() {
+            const $offcanvasToggler = $('[data-toggle="offcanvas"]');
+            const $sidebar = $('.sidebar-offcanvas');
+            const $wrapper = $('.page-body-wrapper');
+
+            function toggleSidebar() {
+                $sidebar.toggleClass('active');
+                $wrapper.toggleClass('sidebar-open');
+            }
+
+            $offcanvasToggler.on('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                toggleSidebar();
+            });
+
+            // Event untuk menutup saat overlay/area luar diklik
+            $(document).on('click', function(e) {
+                // Cek jika sidebar terbuka DAN target klik BUKAN bagian dari sidebar DAN BUKAN tombol toggler
+                if ($wrapper.hasClass('sidebar-open') &&
+                    $(e.target).closest('.sidebar-offcanvas').length === 0 &&
+                    $(e.target).closest('[data-toggle="offcanvas"]').length === 0)
+                {
+                    toggleSidebar();
+                }
+            });
         });
     </script>
     @stack('js')

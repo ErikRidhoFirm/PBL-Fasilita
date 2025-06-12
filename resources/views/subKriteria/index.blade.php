@@ -17,10 +17,12 @@
         </button>
       </div>
       <div class="card-body">
-        <table
-          class="table table-sm table-striped"
-          id="table-skoring-{{ $k->id_kriteria }}"
-        >
+        <div class="table-responsive">
+            <table
+                class="table table-sm table-striped nowrap"
+                id="table-skoring-{{ $k->id_kriteria }}"
+                style="width:100%;"
+            >
           <thead>
             <tr>
               <th>No</th>

@@ -4,13 +4,18 @@
     <div class="w-100 grid-margin stretch-card">
         <div class="card">
             <div class="card-body w-auto">
-                <div class="d-flex justify-content-between align-items-center">
-                    <h3 class="card-title my-5 w-25">Data Laporan</h3>
+                <div class="row mb-4 align-items-center">
+                <div class="col-12 col-md-6 mb-3 mb-md-0">
+                    <h3 class="card-title">Data Laporan</h3>
+                </div>
+                <div class="col-12 col-md-6 text-md-right">
                     @if ($authUser->peran->kode_peran == 'ADM')
-                    <a href="{{ url('laporan/create') }}" class="btn btn-primary h-25 w-25" >
+                    <a href="{{ url('laporan/create') }}"
+                        class="btn btn-primary btn-block btn-md-auto">
                         Tambah Laporan
                     </a>
                     @endif
+                </div>
                 </div>
                 <div class="table-responsive">
                     @if (session('success'))

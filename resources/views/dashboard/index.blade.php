@@ -1,5 +1,6 @@
 @extends('layouts.main')
 
+
 @section('content')
     {{-- status dari keseluruhan laporan --}}
     <div class="container-fluid">
@@ -207,7 +208,7 @@
                 }
             })(jQuery);
 
-            // 
+            //
             (function($) {
                 'use strict';
 
@@ -454,6 +455,4 @@
             }
         });
     </script>
-    </div>
-    </div>
 @endsection

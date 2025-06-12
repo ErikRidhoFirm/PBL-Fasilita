@@ -20,7 +20,7 @@
         $lapFas = $perbaikan->penugasan->laporanFasilitas ?? null;
         // Ambil objek fasilitas, bisa null
         $fas    = optional($lapFas)->fasilitas;
-        $fotoF  = optional($fas)->path_foto;
+        $fotoF  = optional($lapFas)->path_foto;
         $namaF  = optional($fas)->nama_fasilitas ?? '-';
       @endphp
 
@@ -31,7 +31,7 @@
           <div class="card shadow-sm">
             <div class="card-body p-0">
               @if($fotoF)
-                <img src="{{ asset('storage/foto_laporan/'.$fotoF) }}"
+                <img src="{{ asset('storage/'.$fotoF) }}"
                      alt="Foto Fasilitas {{ $namaF }}"
                      class="img-fluid rounded-top">
               @else
@@ -135,7 +135,7 @@
               @php $gambarPerbaikan = $perbaikan->foto_perbaikan; @endphp
 
               @if($gambarPerbaikan)
-                <img src="{{ asset('storage/foto_perbaikan/'.$gambarPerbaikan) }}"
+                <img src="{{ asset('storage/'.$gambarPerbaikan) }}"
                      alt="Gambar Perbaikan"
                      class="img-fluid rounded-top">
               @else

@@ -44,7 +44,7 @@
                           <small class="text-muted d-block">Nomor Induk</small>
                           <span class="font-weight-bold text-break">{{ $pengguna->no_induk }}</span>
                         </div>
-                      </div>Add commentMore actions
+                    </div>
                     </div>
 
 

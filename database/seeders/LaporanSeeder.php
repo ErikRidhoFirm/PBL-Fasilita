@@ -31,7 +31,7 @@ class LaporanSeeder extends Seeder
                 'updated_at'  => now()->subDays(2),
             ],
             [
-                'id_pengguna' => 3,
+                'id_pengguna' => 12,
                 'id_gedung'   => 1,
                 'id_lantai'   => 5,
                 'id_ruangan'  => 1,
@@ -39,7 +39,7 @@ class LaporanSeeder extends Seeder
                 'updated_at'  => now()->subDays(2),
             ],
             [
-                'id_pengguna' => 4,
+                'id_pengguna' => 17,
                 'id_gedung'   => 1,
                 'id_lantai'   => 5,
                 'id_ruangan'  => 1,

@@ -17,10 +17,10 @@ class DashboardController extends Controller
         /** @var \App\Models\Pengguna $user */
         $user = Auth::user();
 
-        if ($user->hasAnyRole(['MHS', 'DSN', 'TDK'])) {
+        if ($user->hasAnyRole(['MHS', 'DSN', 'TDK', 'GST'])) {
             return redirect()->route('dashboard-pelapor.index');
         }
-        
+
          // Hitung jumlah laporan berdasarkan id_status
         $jumlahStatus = [
         'menunggu' => LaporanFasilitas::where('id_status', 1)->count(),
@@ -29,7 +29,7 @@ class DashboardController extends Controller
         'valid' => LaporanFasilitas::where('id_status', 4)->count(),
         'ditugaskan' => LaporanFasilitas::where('id_status', 5)->count(),
         'selesai' => LaporanFasilitas::where('id_status', 6)->count(),
-    ];        
+    ];
 
      // Hitung jumlah laporan berdasarkan peran pelapor
     $laporanPerPeran = Pengguna::withCount('laporan')

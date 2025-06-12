@@ -1,4 +1,4 @@
-<div class="modal-dialog modal-lg w-75">
+<div class="modal-dialog modal-lg w-50">
     <div class="modal-content">
       <!-- Header Modal -->
       <div class="modal-header bg-primary text-white">

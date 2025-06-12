@@ -35,7 +35,6 @@
                 <td>{{ $k->kode_kriteria }} - {{ $k->nama_kriteria }}</td>
                 <td>
                   <select name="nilai[{{ $k->id_kriteria }}]" class="form-select">
-                    <option value="">-- Pilih --</option>
                     @foreach($k->skoringKriterias as $s)
                       <option value="{{ $s->nilai_referensi }}"
                         {{ $selected == $s->nilai_referensi ? 'selected' : '' }}>

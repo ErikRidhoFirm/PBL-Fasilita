@@ -27,12 +27,14 @@
 
     body {
       display: flex;
+      flex-direction: column; /* Default mobile layout */
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       min-height: 100vh;
     }
 
     /* ================ LEFT SECTION (Animasi & Kartu) ================ */
     .left-section {
+      display: none; /* Hidden by default on mobile */
       width: 50%;
       height: 100vh;
       position: relative;
@@ -115,7 +117,6 @@
         width: 300px;
         height: 180px;
       background: linear-gradient(135deg, #4B49AC, #6B46C1);
-      /* Ubah sudut rounded ke kanan atas */
       border-radius: 0 0 50px 0;
       display: flex;
       flex-direction: column;
@@ -126,12 +127,10 @@
       padding: 30px;
       box-shadow: 0 10px 30px rgba(75, 73, 172, 0.3);
       z-index: 3;
-      /* Ganti animasi agar muncul dari kanan */
       animation: slideInRightCard 1s ease-out;
     }
 
-
-     @keyframes slideInRightCard {
+    @keyframes slideInRightCard {
       from {
         opacity: 0;
         transform: translateX(100px);
@@ -150,10 +149,7 @@
 
     .tooltip-card {
       position: absolute;
-      /* Posisikan di atas notification-card */
-      /* Kalkulasi: 50px (jarak notif dari bawah) + ~100px (tinggi notif) + 15px (gap) */
       bottom: 165px;
-      /* Samakan posisi kiri dengan notification-card */
       left: 50px;
       background: rgba(0, 0, 0, 0.8);
       color: white;
@@ -268,14 +264,15 @@
 
     /* ================ RIGHT SECTION (Form Login) ================ */
     .right-section {
-      width: 50%;
-      height: 100vh;
+      width: 100%; /* Full width on mobile */
+      min-height: 100vh;
       position: relative;
       background: #f5f5f5;
       display: flex;
       align-items: center;
       justify-content: center;
       overflow: hidden;
+      padding: 20px; /* Added padding for mobile */
     }
 
     .main-container-login {
@@ -286,16 +283,14 @@
       justify-content: center;
     }
 
-    /* LOGIN CARD kini memenuhi penuh main-container-login */
+    /* LOGIN CARD */
     .login-card {
       width: 100%;
-      height: 100%;
+      max-width: 500px; /* Limit width on mobile */
       background: rgba(255, 255, 255, 0.98);
-      border-radius: 20px 0 0 20px; /* Hanya sisi kiri membulat */
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-      padding: 40px;
-      backdrop-filter: blur(15px);
-      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      padding: 30px 20px;
       animation: slideInRight 0.8s ease-out;
       display: flex;
       flex-direction: column;
@@ -307,57 +302,55 @@
     @keyframes slideInRight {
       from {
         opacity: 0;
-        transform: translateX(50px);
+        transform: translateY(20px);
       }
       to {
         opacity: 1;
-        transform: translateX(0);
+        transform: translateY(0);
       }
     }
 
     /* Logo & Text di atas form */
     .logo-login {
       display: flex;
-      justify-content: start;
+      justify-content: center;
       align-items: center;
       margin-bottom: 20px;
       width: 100%;
     }
 
     .logo-login img {
-      max-width: 120px;
+      max-width: 100px; /* Smaller logo on mobile */
     }
 
     .welcome-text-login {
-      margin-bottom: 30px;
+      margin-bottom: 25px;
+      text-align: center;
     }
 
     .welcome-text-login h2 {
       color: #333;
-      font-size: 35px;
+      font-size: 28px; /* Smaller heading on mobile */
       margin-bottom: 8px;
       font-weight: 600;
     }
 
     .welcome-text-login p {
       color: #666;
-      font-size: 18px;
-      opacity: 0.5;
+      font-size: 16px; /* Smaller text on mobile */
+      opacity: 0.7;
       line-height: 1.5;
     }
 
     /* Lebar form login */
     .form-fields-container-login {
-      max-width: 600px;
       width: 100%;
       margin: 0 auto;
-      flex: 1 1 auto;
-      overflow-y: auto;
     }
 
     /* Form Group Login */
     .form-group-login {
-      margin-bottom: 20px;
+      margin-bottom: 18px;
       position: relative;
     }
 
@@ -394,16 +387,16 @@
 
     .form-control-login {
       width: 100%;
-      padding: 15px 20px;
+      padding: 14px 16px;
       border: 2px solid #e1e5e9;
-      border-radius: 12px;
-      font-size: 16px;
+      border-radius: 10px;
+      font-size: 15px;
       transition: all 0.3s ease;
       background: rgba(255, 255, 255, 0.95);
     }
 
     .form-control-login::placeholder {
-      font-size: 16px;
+      font-size: 15px;
       color: #999;
     }
 
@@ -450,11 +443,10 @@
     /* Tombol Login */
     .btn-primary-login {
       width: 100%;
-      max-width: 600px;
-      padding: 15px;
+      padding: 14px;
       background: linear-gradient(135deg, #667eea, #764ba2);
       border: none;
-      border-radius: 12px;
+      border-radius: 10px;
       color: white;
       font-size: 16px;
       font-weight: 600;
@@ -463,7 +455,6 @@
       margin-top: 10px;
       position: relative;
       overflow: hidden;
-      flex-shrink: 0;
     }
 
     .btn-primary-login:hover {
@@ -501,7 +492,6 @@
       margin-top: 15px;
       color: #666;
       font-size: 14px;
-      flex-shrink: 0;
     }
 
     .register-link a {
@@ -514,30 +504,64 @@
       text-decoration: underline;
     }
 
-    /* ================ Responsive (≤ 768px) ================ */
-    @media (max-width: 768px) {
+    /* ================ Tablet & Desktop (≥ 768px) ================ */
+    @media (min-width: 768px) {
       body {
-        flex-direction: column;
+        flex-direction: row;
       }
-      .left-section,
+
+      .left-section {
+        display: block; /* Show left section on desktop */
+      }
+
       .right-section {
-        width: 100%;
-        height: auto;
+        width: 50%;
+        padding: 0;
       }
-      .purple-card {
-        display: none; /* Sembunyikan kartu di mobile */
-      }
-      .tooltip-card {
-        display: none;
-      }
-      .notification-card {
-        display: none;
-      }
+
       .login-card {
-        height: auto;
-        border-radius: 20px;
-        margin: 20px;
-        padding: 30px 20px;
+        height: 100%;
+        max-width: none;
+        border-radius: 20px 0 0 20px;
+        padding: 40px;
+      }
+
+      .logo-login {
+        justify-content: start;
+      }
+
+      .logo-login img {
+        max-width: 120px;
+      }
+
+      .welcome-text-login {
+        text-align: left;
+      }
+
+      .welcome-text-login h2 {
+        font-size: 35px;
+      }
+
+      .welcome-text-login p {
+        font-size: 18px;
+      }
+
+      .form-control-login {
+        padding: 15px 20px;
+        border-radius: 12px;
+        font-size: 16px;
+      }
+
+      .btn-primary-login {
+        padding: 15px;
+        border-radius: 12px;
+      }
+    }
+
+    /* ================ Large Desktop (≥ 1200px) ================ */
+    @media (min-width: 1200px) {
+      .login-card {
+        padding: 50px;
       }
     }
   </style>
@@ -569,74 +593,62 @@
     </div>
   </div>
 
-<div class="right-section">
-  <div class="main-container-login">
-    <div class="login-card">
+  <div class="right-section">
+    <div class="main-container-login">
+      <div class="login-card">
+        <div class="login-content-wrapper">
+          <div class="logo-login">
+            <a href="{{ route('landing.index') }}"><img src="{{ asset('assets/images/fasilita-logo.png') }}" alt="FASILITA Logo"></a>
+          </div>
 
-      <div class="login-content-wrapper">
+          <div class="welcome-text-login">
+            <h2>Welcome Back</h2>
+            <p>Sistem pelaporan dan perbaikan fasilitas kampus yang cepat dan terpercaya.</p>
+          </div>
 
-        <div class="logo-login">
-          <a href="{{ route('landing.index') }}"><img src="{{ asset('assets/images/fasilita-logo.png') }}" alt="FASILITA Logo"></a>
-        </div>
+          <form id="form-login" action="{{ route('login.attempt') }}" method="POST" novalidate>
+            @csrf
 
-        <div class="welcome-text-login">
-          <h2>Welcome Back</h2>
-          <p>Sistem pelaporan dan perbaikan fasilitas kampus yang cepat dan terpercaya.</p>
-        </div>
-
-        <form
-          id="form-login"
-          action="{{ route('login.attempt') }}"
-          method="POST"
-          novalidate
-        >
-          @csrf
-
-        <div class="form-group-login">
-            <label for="username">Username atau No Induk</label>
-            <input
+            <div class="form-group-login">
+              <label for="username">Username atau No Induk</label>
+              <input
                 type="text"
                 name="username"
                 id="username"
                 class="form-control-login"
                 placeholder="Masukkan Username atau No Induk"
-            />
-            <div id="error-username" class="invalid-feedback-login"></div>
-        </div>
-
-           <div class="form-group-login">
-            <label for="password">Password</label>
-            <div class="password-container-login">
-              <input
-                type="password"
-                name="password"
-                id="password"
-                class="form-control-login"
-                placeholder="Password"
               />
-              <i class="fas fa-eye password-toggle-login" id="toggle-password-login" data-target="password"></i>
+              <div id="error-username" class="invalid-feedback-login"></div>
             </div>
-            <div id="error-password" class="invalid-feedback-login"></div>
-          </div>
 
-          <button
-            type="submit"
-            class="btn-primary-login"
-            id="submit-btn-login"
-          >
-            <span class="btn-text-login">Login</span>
-          </button>
+            <div class="form-group-login">
+              <label for="password">Password</label>
+              <div class="password-container-login">
+                <input
+                  type="password"
+                  name="password"
+                  id="password"
+                  class="form-control-login"
+                  placeholder="Password"
+                />
+                <i class="fas fa-eye password-toggle-login" id="toggle-password-login" data-target="password"></i>
+              </div>
+              <div id="error-password" class="invalid-feedback-login"></div>
+            </div>
 
-          <div class="register-link">
-            Belum punya akun?
-            <a href="{{ route('register') }}">Register di sini</a>
-          </div>
-        </form>
+            <button type="submit" class="btn-primary-login" id="submit-btn-login">
+              <span class="btn-text-login">Login</span>
+            </button>
 
+            <div class="register-link">
+              Belum punya akun?
+              <a href="{{ route('register') }}">Register di sini</a>
+            </div>
+          </form>
+        </div>
       </div>
-      </div>
+    </div>
   </div>
-</div>
 
   {{-- SweetAlert2 --}}
   <script src="{{ asset('assets/vendors/sweetalert2/sweetalert2.all.min.js') }}"></script>
@@ -837,88 +849,85 @@
     });
 
     $(function() {
-    var images = [
-        'bg-register1.png',
-        'bg-register5.png',
-        'bg-register3.png',
-        'bg-register4.png'
-    ];
-    var baseUrl = "{{ asset('assets/images') }}";
-    var $container = $('.left-section');
-    var idx = 0;
+      var images = [
+          'bg-register1.png',
+          'bg-register5.png',
+          'bg-register3.png',
+          'bg-register4.png'
+      ];
+      var baseUrl = "{{ asset('assets/images') }}";
+      var $container = $('.left-section');
+      var idx = 0;
 
-    // Pastikan container sudah memiliki positioning yang benar
-    $container.css({
-        'position': 'relative',
-        'overflow': 'hidden'
+      // Pastikan container sudah memiliki positioning yang benar
+      $container.css({
+          'position': 'relative',
+          'overflow': 'hidden'
+      });
+
+      // Create overlay div untuk crossfade effect dengan z-index yang tepat
+      var $overlay = $('<div>').css({
+          'position': 'absolute',
+          'top': 0,
+          'left': 0,
+          'width': '100%',
+          'height': '100%',
+          'background-size': 'cover',
+          'background-position': 'center',
+          'background-repeat': 'no-repeat',
+          'opacity': 0,
+          'z-index': 0, // Di bawah gradient overlay (yang z-index: 1)
+          'pointer-events': 'none' // Agar tidak menghalangi interaksi
+      });
+
+      // Insert overlay sebagai child pertama (di bawah semua elemen lain)
+      $container.prepend($overlay);
+
+      // Set background image pertama di container utama
+      $container.css({
+          'background-image': 'url(' + baseUrl + '/' + images[idx] + ')',
+          'background-size': 'cover',
+          'background-position': 'center',
+          'background-repeat': 'no-repeat'
+      });
+
+      // Preload gambar untuk transisi yang smooth
+      function preloadImages() {
+          images.forEach(function(imageName) {
+              var img = new Image();
+              img.src = baseUrl + '/' + imageName;
+          });
+      }
+
+      function rotateBackground() {
+          idx = (idx + 1) % images.length;
+          var nextImageUrl = 'url(' + baseUrl + '/' + images[idx] + ')';
+
+          // Set gambar baru di overlay terlebih dahulu
+          $overlay.css('background-image', nextImageUrl);
+
+          // Fade in overlay dengan smooth transition
+          $overlay.stop(true, true).animate({
+              opacity: 1
+          }, {
+              duration: 2000,
+              easing: 'swing',
+              complete: function() {
+                  // Setelah overlay fade in selesai:
+                  // 1. Pindahkan gambar overlay ke background utama
+                  $container.css('background-image', nextImageUrl);
+                  // 2. Reset opacity overlay ke 0 untuk transisi selanjutnya
+                  $overlay.css('opacity', 0);
+              }
+          });
+      }
+
+      // Preload semua gambar terlebih dahulu
+      preloadImages();
+
+      // Mulai rotasi setelah 6 detik
+      setInterval(rotateBackground, 6000);
     });
-
-    // Create overlay div untuk crossfade effect dengan z-index yang tepat
-    var $overlay = $('<div>').css({
-        'position': 'absolute',
-        'top': 0,
-        'left': 0,
-        'width': '100%',
-        'height': '100%',
-        'background-size': 'cover',
-        'background-position': 'center',
-        'background-repeat': 'no-repeat',
-        'opacity': 0,
-        'z-index': 0, // Di bawah gradient overlay (yang z-index: 1)
-        'pointer-events': 'none' // Agar tidak menghalangi interaksi
-    });
-
-    // Insert overlay sebagai child pertama (di bawah semua elemen lain)
-    $container.prepend($overlay);
-
-    // Set background image pertama di container utama
-    $container.css({
-        'background-image': 'url(' + baseUrl + '/' + images[idx] + ')',
-        'background-size': 'cover',
-        'background-position': 'center',
-        'background-repeat': 'no-repeat'
-    });
-
-    // Preload gambar untuk transisi yang smooth
-    function preloadImages() {
-        images.forEach(function(imageName) {
-            var img = new Image();
-            img.src = baseUrl + '/' + imageName;
-        });
-    }
-
-    function rotateBackground() {
-        idx = (idx + 1) % images.length;
-        var nextImageUrl = 'url(' + baseUrl + '/' + images[idx] + ')';
-
-        // Set gambar baru di overlay terlebih dahulu
-        $overlay.css('background-image', nextImageUrl);
-
-        // Fade in overlay dengan smooth transition
-        $overlay.stop(true, true).animate({
-            opacity: 1
-        }, {
-            duration: 2000,
-            easing: 'swing',
-            complete: function() {
-                // Setelah overlay fade in selesai:
-                // 1. Pindahkan gambar overlay ke background utama
-                $container.css('background-image', nextImageUrl);
-                // 2. Reset opacity overlay ke 0 untuk transisi selanjutnya
-                $overlay.css('opacity', 0);
-            }
-        });
-    }
-
-    // Preload semua gambar terlebih dahulu
-    preloadImages();
-
-    // Mulai rotasi setelah 6 detik
-    setInterval(rotateBackground, 6000);
-
-    // Optional: Trigger rotasi pertama setelah 3 detik untuk demo
-    // setTimeout(rotateBackground, 3000);
-});
   </script>
 </body>
 </html>

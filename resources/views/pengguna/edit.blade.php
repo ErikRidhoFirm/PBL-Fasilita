@@ -108,18 +108,20 @@ $(document).ready(function() {
                     }
                 },
                 error: function(xhr) {
-                    if (xhr.status === 403 || xhr.status === 401) {
-                        window.location.href = '{{ route("login") }}';
-                    } else if (xhr.status === 422) {
-                        let errs = xhr.responseJSON.msgField;
-                        $('.error-text').text('');  
-                        $.each(errs, function(field, msgs) {
-                            $('#error-' + field).text(msgs[0]);
-                        });
-                        Swal.fire('Gagal', 'Validasi gagal.', 'error');
-                    } else {
-                        Swal.fire('Kesalahan Server', 'Tidak dapat menyimpan data.', 'error');
-                    }
+                if (xhr.status === 422) {
+                    let errs = xhr.responseJSON.msgField;
+                    $('.error-text').text('');
+                    $.each(errs, function(field, msgs) {
+                    $('#error-' + field).text(msgs[0]);
+                    });
+                    // Ambil pesan pertama untuk Swal
+                    let firstMsg = Object.values(errs)[0][0];
+                    Swal.fire('Gagal', firstMsg, 'error');
+                } else if (xhr.status === 403 || xhr.status === 401) {
+                    window.location.href = '{{ route("login") }}';
+                } else {
+                    Swal.fire('Kesalahan Server', 'Tidak dapat menyimpan data.', 'error');
+                }
                 }
             });
             return false;

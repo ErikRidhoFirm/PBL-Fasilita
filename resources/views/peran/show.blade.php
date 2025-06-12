@@ -29,7 +29,6 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-warning" data-dismiss="modal">Tutup</button>
-                <button type="submit" class="btn btn-danger">Hapus</button>
             </div>
         @endempty
     </div>

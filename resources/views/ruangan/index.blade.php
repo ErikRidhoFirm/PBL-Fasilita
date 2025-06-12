@@ -32,19 +32,24 @@
       </a>
     </button>
 
-    <button class="btn btn-success btn-sm mr-2" 
-            onclick="modalAction('{{ route('lantai.ruangan.import', $lantai) }}')" 
+    <button class="btn btn-success btn-sm mr-2"
+            onclick="modalAction('{{ route('lantai.ruangan.import', $lantai) }}')"
             style="min-width: 100px; height: 40px;">
       <i class="fa fa-file-import"></i> Import
     </button>
-    <button class="btn btn-primary btn-sm" 
-            onclick="modalAction('{{ route('lantai.ruangan.create', $lantai) }}')" 
+    <button class="btn btn-primary btn-sm"
+            onclick="modalAction('{{ route('lantai.ruangan.create', $lantai) }}')"
             style="min-width: 120px; height: 40px;"> Tambah Ruangan
     </button>
   </div>
 </div>
 
-    <table class="table table-hover table-striped" id="table-ruangan">
+    <div class="table-responsive">
+  <table
+    class="table table-hover table-striped nowrap"
+    id="table-ruangan"
+    style="width:100%"
+  >
       <thead>
         <tr>
           <th>No</th>
@@ -54,7 +59,7 @@
         </tr>
       </thead>
     </table>
-
+    </div>
   </div>
 </div>
 

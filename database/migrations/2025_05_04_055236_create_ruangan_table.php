@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id('id_ruangan');
             $table->unsignedBigInteger('id_lantai')->index();
             $table->string('kode_ruangan', 10);
-            $table->string('nama_ruangan', 30);
+            $table->string('nama_ruangan', 50);
             $table->timestamps();
 
             $table->foreign('id_lantai')->references('id_lantai')->on('lantai')->onDelete('cascade');

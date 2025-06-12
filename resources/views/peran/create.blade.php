@@ -54,7 +54,7 @@
                     minlength: 'Nama peran minimal 3 karakter',
                     maxlength: 'Nama peran maksimal 100 karakter'
                 }
-            }
+            },
             submitHandler: function(form) {
                 $.ajax({
                     url: form.action,

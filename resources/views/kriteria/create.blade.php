@@ -85,7 +85,7 @@
                 tipe_kriteria: {
                     required: 'Tipe kriteria harus diisi'
                 }
-            }
+            },
             submitHandler: function(form) {
                 $.ajax({
                     url: form.action,

@@ -70,10 +70,260 @@ class RuanganSeeder extends Seeder
                 'nama_ruangan' => 'Toilet Perempuan 5'
             ],
             [
+                'id_lantai' => 6,
+                'kode_ruangan' => 'RD-1',
+                'nama_ruangan' => 'Ruang Dosen 1'
+            ],
+            [
+                'id_lantai' => 6,
+                'kode_ruangan' => 'RD-2',
+                'nama_ruangan' => 'Ruang Dosen 2'
+            ],
+            [
+                'id_lantai' => 6,
+                'kode_ruangan' => 'RD-3',
+                'nama_ruangan' => 'Ruang Dosen 3'
+            ],
+            [
+                'id_lantai' => 6,
+                'kode_ruangan' => 'RD-4',
+                'nama_ruangan' => 'Ruang Dosen 4'
+            ],
+            [
+                'id_lantai' => 6,
+                'kode_ruangan' => 'RD-5',
+                'nama_ruangan' => 'Ruang Dosen 5'
+            ],
+            [
+                'id_lantai' => 6,
+                'kode_ruangan' => 'RD-6',
+                'nama_ruangan' => 'Ruang Dosen 6'
+            ],
+            [
+                'id_lantai' => 6,
+                'kode_ruangan' => 'RJS',
+                'nama_ruangan' => 'Ruang Jurusan'
+            ],
+            [
+                'id_lantai' => 6,
+                'kode_ruangan' => 'RBC',
+                'nama_ruangan' => 'Ruang Baca'
+            ],
+            [
+                'id_lantai' => 6,
+                'kode_ruangan' => 'LSI-1',
+                'nama_ruangan' => 'Ruang Lab Sistem Informasi 1'
+            ],
+            [
+                'id_lantai' => 6,
+                'kode_ruangan' => 'LSI-2',
+                'nama_ruangan' => 'Ruang Lab Sistem Informasi 2'
+            ],
+            [
+                'id_lantai' => 6,
+                'kode_ruangan' => 'LSI-3',
+                'nama_ruangan' => 'Ruang Lab Sistem Informasi 3'
+            ],
+            [
+                'id_lantai' => 6,
+                'kode_ruangan' => 'LPY-2',
+                'nama_ruangan' => 'Ruang Lab Proyek 2'
+            ],
+            [
+                'id_lantai' => 6,
+                'kode_ruangan' => 'LPY-3',
+                'nama_ruangan' => 'Ruang Lab Proyek 3'
+            ],
+            [
+                'id_lantai' => 6,
+                'kode_ruangan' => 'RAS',
+                'nama_ruangan' => 'Ruang Arsip'
+            ],
+            [
+                'id_lantai' => 6,
+                'kode_ruangan' => 'RWS',
+                'nama_ruangan' => 'Ruang Workshop'
+            ],
+            [
+                'id_lantai' => 6,
+                'kode_ruangan' => 'RPT-1',
+                'nama_ruangan' => 'Ruang Rapat 1'
+            ],
+            [
+                'id_lantai' => 6,
+                'kode_ruangan' => 'TL-6',
+                'nama_ruangan' => 'Toilet Laki-Laki 6'
+            ],
+            [
+                'id_lantai' => 6,
+                'kode_ruangan' => 'TP-6',
+                'nama_ruangan' => 'Toilet Perempuan 6'
+            ],
+            [
                 'id_lantai' => 7,
                 'kode_ruangan' => 'LPR-1',
-                'nama_ruangan' => 'Lab Praktikum 1'
-            ]
+                'nama_ruangan' => 'Lab Pemrograman 1'
+            ],
+            [
+                'id_lantai' => 7,
+                'kode_ruangan' => 'LPR-2',
+                'nama_ruangan' => 'Lab Pemrograman 2'
+            ],
+            [
+                'id_lantai' => 7,
+                'kode_ruangan' => 'LPR-3',
+                'nama_ruangan' => 'Lab Pemrograman 3'
+            ],
+            [
+                'id_lantai' => 7,
+                'kode_ruangan' => 'LPR-4',
+                'nama_ruangan' => 'Lab Pemrograman 4'
+            ],
+            [
+                'id_lantai' => 7,
+                'kode_ruangan' => 'LPR-5',
+                'nama_ruangan' => 'Lab Pemrograman 5'
+            ],
+            [
+                'id_lantai' => 7,
+                'kode_ruangan' => 'LPR-6',
+                'nama_ruangan' => 'Lab Pemrograman 6'
+            ],
+            [
+                'id_lantai' => 7,
+                'kode_ruangan' => 'LPR-7',
+                'nama_ruangan' => 'Lab Pemrograman 7'
+            ],
+            [
+                'id_lantai' => 7,
+                'kode_ruangan' => 'LPR-8',
+                'nama_ruangan' => 'Lab Pemrograman 8'
+            ],
+            [
+                'id_lantai' => 7,
+                'kode_ruangan' => 'LKJ-1',
+                'nama_ruangan' => 'Lab Komputer Jaringan 1'
+            ],
+            [
+                'id_lantai' => 7,
+                'kode_ruangan' => 'LKJ-2',
+                'nama_ruangan' => 'Lab Komputer Jaringan 2'
+            ],
+            [
+                'id_lantai' => 7,
+                'kode_ruangan' => 'LKJ-3',
+                'nama_ruangan' => 'Lab Komputer Jaringan 3'
+            ],
+            [
+                'id_lantai' => 7,
+                'kode_ruangan' => 'LIG-1',
+                'nama_ruangan' => 'Lab Visi Komputer 1'
+            ],
+            [
+                'id_lantai' => 7,
+                'kode_ruangan' => 'LIG-2',
+                'nama_ruangan' => 'Lab Visi Komputer 2'
+            ],
+            [
+                'id_lantai' => 7,
+                'kode_ruangan' => 'LPY-4',
+                'nama_ruangan' => 'Lab Proyek 4'
+            ],
+            [
+                'id_lantai' => 7,
+                'kode_ruangan' => 'LERP',
+                'nama_ruangan' => 'Lab Perencanaan Sumber Daya Perusahaan'
+            ],
+            [
+                'id_lantai' => 7,
+                'kode_ruangan' => 'LAI1',
+                'nama_ruangan' => 'Lab Sistem Cerdas 1'
+            ],
+            [
+                'id_lantai' => 7,
+                'kode_ruangan' => 'TL-7',
+                'nama_ruangan' => 'Toilet Laki-Laki 7'
+            ],
+            [
+                'id_lantai' => 7,
+                'kode_ruangan' => 'TP-7',
+                'nama_ruangan' => 'Toilet Perempuan 7'
+            ],
+            [
+                'id_lantai' => 7,
+                'kode_ruangan' => 'RTEK-2',
+                'nama_ruangan' => 'Ruang Teknisi 2'
+            ],
+            [
+                'id_lantai' => 7,
+                'kode_ruangan' => 'RSVR',
+                'nama_ruangan' => 'Ruang Server'
+            ],
+            [
+                'id_lantai' => 8,
+                'kode_ruangan' => 'RADT',
+                'nama_ruangan' => 'Ruang Auditorium'
+            ],
+            [
+                'id_lantai' => 8,
+                'kode_ruangan' => 'RT-12',
+                'nama_ruangan' => 'Ruang Teori 12'
+            ],
+            [
+                'id_lantai' => 8,
+                'kode_ruangan' => 'RT-13',
+                'nama_ruangan' => 'Ruang Teori 13'
+            ],
+            [
+                'id_lantai' => 8,
+                'kode_ruangan' => 'RT-14',
+                'nama_ruangan' => 'Ruang Teori 14'
+            ],
+            [
+                'id_lantai' => 8,
+                'kode_ruangan' => 'RSTD',
+                'nama_ruangan' => 'Ruang Studio'
+            ],
+            [
+                'id_lantai' => 8,
+                'kode_ruangan' => 'BA',
+                'nama_ruangan' => 'Lab Analisa Bisnis'
+            ],
+            [
+                'id_lantai' => 8,
+                'kode_ruangan' => 'DT',
+                'nama_ruangan' => 'Lab Teknologi Data'
+            ],
+            [
+                'id_lantai' => 8,
+                'kode_ruangan' => 'IS',
+                'nama_ruangan' => 'Lab Sistem Informasi'
+            ],
+            [
+                'id_lantai' => 8,
+                'kode_ruangan' => 'IVSS',
+                'nama_ruangan' => 'Lab Visi Cerdas dan Sistem Cerdas'
+            ],
+            [
+                'id_lantai' => 8,
+                'kode_ruangan' => 'RPT-2',
+                'nama_ruangan' => 'Ruang Rapat 2'
+            ],
+            [
+                'id_lantai' => 8,
+                'kode_ruangan' => 'RKTN',
+                'nama_ruangan' => 'Kantin'
+            ],
+            [
+                'id_lantai' => 8,
+                'kode_ruangan' => 'TL-8',
+                'nama_ruangan' => 'Toilet Laki-Laki 8'
+            ],
+            [
+                'id_lantai' => 8,
+                'kode_ruangan' => 'TP-8',
+                'nama_ruangan' => 'Toilet Perempuan 8'
+            ],
         ];
 
         foreach ($ruangan as $data) {

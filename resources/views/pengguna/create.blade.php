@@ -90,16 +90,19 @@ $(document).ready(function() {
       },
       error: function(xhr) {
         if (xhr.status === 422) {
-          let errs = xhr.responseJSON.msgField;
-          $('.error-text').text('');
-          $.each(errs, function(field, msgs) {
+            let errs = xhr.responseJSON.msgField;
+            $('.error-text').text('');
+            // set error ke tiap <small>
+            $.each(errs, function(field, msgs) {
             $('#error-' + field).text(msgs[0]);
-          });
-          Swal.fire('Gagal', 'Validasi gagal.', 'error');
+            });
+            // ambil pesan pertama dari errs untuk swal
+            let firstMsg = Object.values(errs)[0][0];
+            Swal.fire('Gagal', firstMsg, 'error');
         } else {
-          Swal.fire('Kesalahan Server', 'Tidak dapat menyimpan data.', 'error');
+            Swal.fire('Kesalahan Server', 'Tidak dapat menyimpan data.', 'error');
         }
-      }
+        }
     });
     return false;
   },

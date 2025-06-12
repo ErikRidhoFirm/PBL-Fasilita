@@ -53,7 +53,7 @@
                     minlength: 'Nama kategori minimal 3 karakter',
                     maxlength: 'Nama kategori maksimal 100 karakter'
                 }
-            }
+            },
             submitHandler: function (form) {
                 $.ajax({
                     url: form.action,

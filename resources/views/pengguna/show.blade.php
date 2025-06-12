@@ -20,6 +20,8 @@
                    class="img-thumbnail rounded-circle border-primary"
                    style="width: 150px; height: 150px; object-fit: cover; border-width: 3px !important;"
                    alt="Foto Profil">
+
+
             </div>
             <h4 class="mt-3 mb-1 text-break">{{ $pengguna->nama }}</h4>
             <span class="badge badge-pill badge-info py-2 px-3">{{ $pengguna->peran->nama_peran }}</span>
@@ -42,7 +44,7 @@
                           <small class="text-muted d-block">Nomor Induk</small>
                           <span class="font-weight-bold text-break">{{ $pengguna->no_induk }}</span>
                         </div>
-                      </div>
+                      </div>Add commentMore actions
                     </div>
 
 
@@ -86,30 +88,34 @@
                   </div>
 
                   <!-- Dibuat Pada -->
-                  <div class="list-group-item border-0 py-2 px-0">
-                    <div class="d-flex align-items-center">
-                      <div class="rounded-circle d-flex align-items-center justify-content-center mr-3" style="width: 40px; height: 40px;">
-                        <i class="far fa-calendar-plus text-success"></i>
-                      </div>
-                      <div>
-                        <small class="text-muted d-block">Dibuat Pada</small>
-                        <span class="font-weight-bold">{{ $pengguna->created_at->format('d M Y H:i') }}</span>
-                      </div>
+                <div class="list-group-item border-0 py-2 px-0">
+                <div class="d-flex align-items-center">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center mr-3" style="width: 40px; height: 40px;">
+                    <i class="far fa-calendar-plus text-success"></i>
                     </div>
-                  </div>
+                    <div>
+                    <small class="text-muted d-block">Dibuat Pada</small>
+                    <span class="font-weight-bold">
+                        {{ optional($pengguna->created_at)->format('d M Y H:i') ?? '-' }}
+                    </span>
+                    </div>
+                </div>
+                </div>
 
-                  <!-- Terakhir Diubah -->
-                  <div class="list-group-item border-0 py-2 px-0">
-                    <div class="d-flex align-items-center">
-                      <div class="rounded-circle d-flex align-items-center justify-content-center mr-3" style="width: 40px; height: 40px;">
-                        <i class="fas fa-history text-purple"></i>
-                      </div>
-                      <div>
-                        <small class="text-muted d-block">Terakhir Diubah</small>
-                        <span class="font-weight-bold">{{ $pengguna->updated_at->format('d M Y H:i') }}</span>
-                      </div>
+                <!-- Terakhir Diubah -->
+                <div class="list-group-item border-0 py-2 px-0">
+                <div class="d-flex align-items-center">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center mr-3" style="width: 40px; height: 40px;">
+                    <i class="fas fa-history text-purple"></i>
                     </div>
-                  </div>
+                    <div>
+                    <small class="text-muted d-block">Terakhir Diubah</small>
+                    <span class="font-weight-bold">
+                        {{ optional($pengguna->updated_at)->format('d M Y H:i') ?? '-' }}
+                    </span>
+                    </div>
+                </div>
+                </div>
                 </div>
               </div>
             </div>

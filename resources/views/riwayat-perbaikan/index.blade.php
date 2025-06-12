@@ -9,14 +9,6 @@
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h3 class="card-title">Daftar Riwayat Perbaikan</h3>
                     <div class="d-flex">
-                        {{-- Tombol Export PDF --}}
-                        <button class="btn btn-danger btn-sm mr-2" style="min-width: 80px; height: 40px;">
-                            <a href="{{ url('riwayat-perbaikan/export_pdf') }}"
-                               class="text-white text-decoration-none d-flex align-items-center justify-content-center w-100 h-100"
-                               target="_blank">
-                                <i class="fa fa-file-pdf mr-1"></i> PDF
-                            </a>
-                        </button>
                         {{-- (Opsional) Tombol Tambah jika perlu --}}
                         {{-- <button class="btn btn-primary btn-sm" onclick="modalAction('{{ url('riwayat-perbaikan/create') }}')"
                                 style="min-width: 120px; height: 40px;">

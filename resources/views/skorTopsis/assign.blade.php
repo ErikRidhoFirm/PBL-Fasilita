@@ -1,4 +1,4 @@
-<div class="modal-dialog modal-dialog-centered modal-lg w-75">
+<div class="modal-dialog modal-lg w-50">
   <div class="modal-content">
     {{-- Header --}}
     <div class="modal-header bg-primary text-white">
@@ -26,7 +26,8 @@
         </div>
       @endif
       {{-- Tampilkan Data LaporanFasilitas dan Laporan --}}
-      <table class="table table-striped mb-4">
+    <div class="table-responsive mb-4">
+        <table class="table table-striped mb-0">
         <tbody>
           <tr>
             <th style="width: 30%;">Nama Fasilitas</th>
@@ -58,6 +59,7 @@
           </tr>
         </tbody>
       </table>
+      </div>
 
       {{-- Form Input Teknisi --}}
       <form id="form-assign">

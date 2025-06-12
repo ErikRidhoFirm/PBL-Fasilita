@@ -73,24 +73,30 @@
 @push('js')
 <script>
   $(function(){
-    // URL endpoint JSON (paginated)
-    const urlList = "{{ route('laporanPelapor.list') }}";
-
-    // Konstanta
-    const perPage          = 8;      // sama dengan backend
-    const columns          = 4;      // 4 kolom per baris
+    // Endpoint paginated JSON
+    const urlList          = "{{ route('laporanPelapor.list') }}";
+    const perPage          = 8;      // per halaman di backend
     const rowGap           = 24;     // jarak vertikal antar kartu (px)
-    const cardVisualHeight = 350;    // tinggi visual kartu (img + teks + tombol)
-    const itemHeight       = cardVisualHeight + rowGap; // total tinggi slot item
+    const cardVisualHeight = 350;    // tinggi “isi” kartu (px)
+    const itemHeight       = cardVisualHeight + rowGap;
 
-    let cacheData    = [];     // akan menampung data klien per index
-    let totalItems   = null;   // nantinya = res.total atau last_page * perPage
-    let lastPage     = null;   // jumlah total halaman
+    let cacheData    = [];     // buffer data menurut index global
+    let totalItems   = null;
+    let lastPage     = null;
     let fetchedPages = new Set();
     let isFetching   = false;
 
     const scrollContainer = document.getElementById('scroll-container');
     const innerContainer  = document.getElementById('inner-container');
+
+    // Tentukan jumlah kolom berdasarkan lebar viewport
+    function getColumns() {
+      const w = window.innerWidth;
+      if (w < 576)   return 1;  // xs
+      if (w < 768)   return 2;  // sm
+      if (w < 992)   return 3;  // md
+                     return 4;  // lg ke atas
+    }
 
     function fetchPage(page) {
       if (isFetching) return Promise.resolve();
@@ -108,11 +114,9 @@
         lastPage = res.last_page;
         fetchedPages.add(page);
 
-        if (res.total !== undefined) {
-          totalItems = res.total;
-        } else {
-          totalItems = res.last_page * perPage;
-        }
+        totalItems = (res.total !== undefined)
+          ? res.total
+          : res.last_page * perPage;
 
         const startIndex = (res.current_page - 1) * perPage;
         res.data.forEach((item, idx) => {
@@ -122,7 +126,7 @@
         updateVisible();
       })
       .fail(() => {
-        console.error('Error memuat data halaman ' + page);
+        console.error('Error memuat halaman ' + page);
       })
       .always(() => {
         isFetching = false;
@@ -132,65 +136,61 @@
     function updateVisible() {
       if (totalItems === null) return;
 
+      const columns     = getColumns();
       const totalRows   = Math.ceil(totalItems / columns);
       const totalHeight = totalRows * itemHeight;
       innerContainer.style.height = totalHeight + 'px';
 
       const scrollTop      = scrollContainer.scrollTop;
       const viewportHeight = scrollContainer.clientHeight;
+      const firstRow       = Math.floor(scrollTop / itemHeight);
+      const lastRow        = Math.floor((scrollTop + viewportHeight) / itemHeight);
 
-      const firstVisibleRow = Math.floor(scrollTop / itemHeight);
-      const lastVisibleRow  = Math.floor((scrollTop + viewportHeight) / itemHeight);
+      const startRow = Math.max(0, firstRow - 2);
+      const endRow   = Math.min(totalRows - 1, lastRow + 2);
+      const startIdx = startRow * columns;
+      const endIdx   = Math.min(totalItems, (endRow + 1) * columns) - 1;
 
-      let startRow = Math.max(0, firstVisibleRow - 2);
-      let endRow   = Math.min(totalRows - 1, lastVisibleRow + 2);
-
-      const startIndex = startRow * columns;
-      const endIndex   = Math.min(totalItems, (endRow + 1) * columns) - 1;
-
-      // Pastikan halaman‐halaman yang diperlukan sudah di‐fetch
-      const neededPages = new Set();
-      for (let i = startIndex; i <= endIndex; i++) {
-        const pageReq = Math.floor(i / perPage) + 1;
-        if (!fetchedPages.has(pageReq)) neededPages.add(pageReq);
+      // Request halaman–halaman yang diperlukan
+      const needed = new Set();
+      for (let i = startIdx; i <= endIdx; i++) {
+        const pg = Math.floor(i / perPage) + 1;
+        if (!fetchedPages.has(pg)) needed.add(pg);
       }
-      neededPages.forEach(pg => fetchPage(pg));
+      needed.forEach(pg => fetchPage(pg));
 
-      // Kumpulkan item yang siap dirender
-      const itemsToRender = [];
-      for (let i = startIndex; i <= endIndex; i++) {
-        if (cacheData[i]) {
-          itemsToRender.push({ index: i, data: cacheData[i] });
-        }
-      }
-
+      // Render kartu
       innerContainer.innerHTML = '';
       const frag = document.createDocumentFragment();
+      const itemWidth = 100 / columns;
 
-      itemsToRender.forEach(itemObj => {
-        const i = itemObj.index;
-        const d = itemObj.data;
+      for (let i = startIdx; i <= endIdx; i++) {
+        const d = cacheData[i];
+        if (!d) continue;
 
         const row = Math.floor(i / columns);
         const col = i % columns;
 
-        const cardWrapper = document.createElement('div');
-        cardWrapper.style.position    = 'absolute';
-        cardWrapper.style.top         = (row * itemHeight) + 'px';
-        cardWrapper.style.left        = (col * 25) + '%';
-        cardWrapper.style.width       = '25%';
-        cardWrapper.style.height      = cardVisualHeight + 'px';
-        cardWrapper.style.padding     = '0 .5rem';
-        cardWrapper.style.boxSizing   = 'border-box';
+        const wrapper = document.createElement('div');
+        Object.assign(wrapper.style, {
+          position: 'absolute',
+          top:    (row * itemHeight) + 'px',
+          left:   (col  * itemWidth)  + '%',
+          width:  itemWidth            + '%',
+          height: cardVisualHeight     + 'px',
+          padding: '0 .5rem',
+          boxSizing: 'border-box'
+        });
 
+        // Path foto & vote icon
         const foto = d.path_foto
-                     ? `{{ asset('storage') }}/${d.path_foto}`
-                     : '{{ asset("img/placeholder.png") }}';
-        const votedClass = d.voted_by_me ? 'mdi-thumb-up' : 'mdi-thumb-up-outline';
-        const votedData  = d.voted_by_me ? 'true' : 'false';
-        const iconColor  = d.voted_by_me ? 'text-success' : 'text-muted';
+          ? `{{ asset('storage') }}/${d.path_foto}`
+          : '{{ asset("img/placeholder.png") }}';
+        const voted = d.voted_by_me ? 'true' : 'false';
+        const ic    = d.voted_by_me ? 'mdi-thumb-up text-success' : 'mdi-thumb-up-outline text-muted';
 
-        cardWrapper.innerHTML = `
+        // Isi kartu
+        wrapper.innerHTML = `
           <div class="role-card h-100 d-flex flex-column">
             <img src="${foto}"
                  class="card-img-top"
@@ -205,20 +205,18 @@
               </p>
               <div class="mt-auto pt-2 d-flex align-items-center justify-content-between">
                 @if(auth()->user()->peran->kode_peran !== 'GST')
-                    <button type="button"
-                            class="btn btn-transparent p-0 d-flex align-items-center btn-vote-icon"
-                            data-vote-url="{{ route('vote.store', ['id' => ':id']) }}"
-                            data-unvote-url="{{ route('vote.destroy', ['id' => ':id']) }}"
-                            data-voted="${votedData}"
-                            style="font-size:1rem;">
-                    <i class="mdi ${votedClass} fs-5 me-1 ${iconColor}"></i>
+                  <button type="button"
+                          class="btn btn-transparent p-0 d-flex align-items-center btn-vote-icon"
+                          data-voted="${voted}"
+                          style="font-size:1rem;">
+                    <i class="mdi ${ic} fs-5 me-1"></i>
                     <span class="vote-count">${ d.votes_count }</span>
-                    </button>
+                  </button>
                 @else
-                    <div class="d-flex align-items-center text-muted">
-                        <i class="mdi mdi-thumb-up-outline fs-5 me-1"></i>
-                        <span class="vote-count">${ d.votes_count }</span>
-                    </div>
+                  <div class="d-flex align-items-center text-muted">
+                    <i class="mdi mdi-thumb-up-outline fs-5 me-1"></i>
+                    <span class="vote-count">${ d.votes_count }</span>
+                  </div>
                 @endif
                 <button type="button"
                         class="btn btn-outline-primary btn-sm btn-detail"
@@ -230,84 +228,53 @@
           </div>
         `.replace(/:id/g, d.id_laporan_fasilitas);
 
-        // Pasang event listener untuk vote
-        const $tmp = $(cardWrapper);
+        // Event vote
+        const $w = $(wrapper);
         if ("{{ auth()->user()->peran->kode_peran }}" !== 'GST') {
-            $tmp.find('.btn-vote-icon').hover(
-            function(){
-                if ($(this).data('voted') === false) {
-                $(this).find('i').removeClass('text-muted').addClass('text-success');
-                }
-            },
-            function(){
-                if ($(this).data('voted') === false) {
-                $(this).find('i').removeClass('text-success').addClass('text-muted');
-                }
-            }
-            );
-            $tmp.find('.btn-vote-icon').on('click', function(){
-            const btn       = $(this);
-            const countElem = btn.find('.vote-count');
-            const icon      = btn.find('i');
-            const isVoted   = btn.data('voted') === true;
-            const url       = isVoted ? btn.data('unvote-url') : btn.data('vote-url');
-            const method    = isVoted ? 'DELETE' : 'POST';
-
+          $w.on('click', '.btn-vote-icon', function(){
+            const btn = $(this);
+            const cnt = btn.find('.vote-count');
+            const icn = btn.find('i');
+            const isV = btn.data('voted') === true;
+            const url = isV
+              ? '{{ route("vote.destroy", ":id") }}'
+              : '{{ route("vote.store",   ":id") }}';
+            const method = isV ? 'DELETE' : 'POST';
             $.ajax({
-                url: url,
-                method: method,
-                data: { _token: '{{ csrf_token() }}' },
-                dataType: 'json'
+              url: url.replace(':id', d.id_laporan_fasilitas),
+              method: method,
+              data: { _token: '{{ csrf_token() }}' },
+              dataType: 'json'
             })
             .done(res => {
-                if (res.status === 'success') {
-                countElem.text(res.votes_count);
-                if (isVoted) {
-                    icon.removeClass('mdi-thumb-up text-success')
-                        .addClass('mdi-thumb-up-outline text-muted');
-                    btn.data('voted', false);
-                } else {
-                    icon.removeClass('mdi-thumb-up-outline text-muted')
-                        .addClass('mdi-thumb-up text-success');
-                    btn.data('voted', true);
-                }
-                // Update cache agar state vote konsisten saat re-render
-                const itemInCache = cacheData.find(item => item.id_laporan_fasilitas == d.id_laporan_fasilitas);
-                if(itemInCache) {
-                    itemInCache.voted_by_me = !isVoted;
-                    itemInCache.votes_count = res.votes_count;
-                }
-                } else {
-                Swal.fire('Gagal', res.message, 'error');
-                }
-            })
-            .fail(() => {
-                Swal.fire('Error', 'Gagal memproses aksi.', 'error');
+              if (res.status === 'success') {
+                cnt.text(res.votes_count);
+                btn.data('voted', !isV);
+                icn.toggleClass('mdi-thumb-up-outline mdi-thumb-up')
+                   .toggleClass('text-muted text-success');
+              }
             });
-            });
+          });
         }
 
-        // Pasang event listener untuk detail
-        $tmp.find('.btn-detail').on('click', function(){
+        // Event detail
+        $w.on('click', '.btn-detail', function(){
           const url = $(this).data('detail-url');
           $('#myModal').load(url, function(){
             new bootstrap.Modal(this).show();
           });
         });
 
-        frag.appendChild(cardWrapper);
-      });
+        frag.appendChild(wrapper);
+      }
 
       innerContainer.appendChild(frag);
     }
 
-    // Inisialisasi: muat page 1 pertama kali
+    // Inisialisasi
     fetchPage(1);
-
-    // Pasang listener scroll
-    scrollContainer.addEventListener('scroll', function(){
-      updateVisible();
-    });
+    scrollContainer.addEventListener('scroll', updateVisible);
+    window.addEventListener('resize', updateVisible);
   });
 </script>
 @endpush

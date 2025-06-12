@@ -61,7 +61,7 @@
                     required: 'Nama gedung harus diisi',
                     maxlength: 'Nama gedung maksimal 100 karakter'
                 }
-            }
+            },
             submitHandler: function(form) {
                 $.ajax({
                     url: form.action,

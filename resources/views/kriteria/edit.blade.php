@@ -97,7 +97,7 @@
                 tipe_kriteria: {
                     required: 'Tipe kriteria harus dipilih'
                 }
-            }
+            },
             submitHandler: function(form) {
                 $.ajax({
                     url: form.action,

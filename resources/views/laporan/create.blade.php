@@ -221,6 +221,7 @@
                 const idRuangan = $(this).val();
                 const $inputFasilitas = $('#inputFasilitas');
                 const $jumlahKerusakan = $('#jumlahKerusakan');
+                const simpanPelaporan = $('#simpanPelaporan');
 
                 $inputFasilitas.empty().append('<option value="">Pilih Fasilitas</option>');
                 $jumlahKerusakan.val('').removeAttr('max'); // Reset max saat ruangan diganti
@@ -229,6 +230,7 @@
                     $.get(`${baseURL}/${laporanPrefix}/get-fasilitas/${idRuangan}`, function(data) {
                         if (Array.isArray(data) && data.length > 0) {
                             $inputFasilitas.prop('disabled', false);
+                            simpanPelaporan.prop('disabled', false);
                             $inputFasilitas.addClass('border-primary');
                             data.forEach(item => {
                                 // Misalnya item.jumlah berisi jumlah maksimal fasilitas
@@ -238,6 +240,7 @@
                             });
                         } else {
                             $inputFasilitas.prop('disabled', true);
+                            simpanPelaporan.prop('disabled', true);
                             $inputFasilitas.removeClass('border-primary');
                         }
                     });
@@ -270,6 +273,17 @@
                     id_ruangan: {
                         required: true,
                     }
+                },
+                messages: {
+                  id_gedung: {
+                    required: 'Gedung harus dipilih',
+                  },
+                  id_lantai: {
+                    required: 'Lantai harus dipilih',
+                  },
+                  id_ruangan: {
+                    required: 'Ruangan harus dipilih',
+                  }
                 },
                 errorElement: 'span',
                 errorPlacement: function(error, element) {
@@ -308,6 +322,26 @@
                     },
                     deskripsi: {
                         required: true
+                    }
+                },
+                messages: {
+                    id_kategori_kerusakan: {
+                        required: 'Kategori kerusakan harus dipilih'
+                    },
+                    id_fasilitas: {
+                        required: 'Fasilitas harus dipilih'
+                    },
+                    jumlah_kerusakan: {
+                        required: 'Jumlah kerusakan harus diisi',
+                        number: 'Jumlah kerusakan harus angka',
+                        min: 'Jumlah kerusakan minimal 1',
+                        max: 'Jumlah kerusakan maksimal {0}'
+                    },
+                    path_foto: {
+                        required: 'Foto harus diisi'
+                    },
+                    deskripsi: {
+                        required: 'Deskripsi harus diisi'
                     }
                 },
                 errorElement: 'span',
@@ -418,7 +452,7 @@
             e.preventDefault();
             $('#container-fasilitas').removeClass('border-primary');
             $('#container-fasilitas').addClass('border-danger');
-            $('#error-fasilitas-row').text('At least one report must be added.');
+            $('#error-fasilitas-row').text('Buat laporan terlebih dahulu');
             $('html, body').animate({
                 scrollTop: $('#error-fasilitas-row').offset().top - 100
             }, 500);
@@ -442,21 +476,6 @@
 
         submitUrl = `${baseURL}/${laporanPrefix}/store`;
         const indexUrl = `${baseURL}/${laporanPrefix}`;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         $.ajax({
             url: submitUrl,
@@ -928,21 +947,6 @@
 
         submitUrl = `${baseURL}/${laporanPrefix}/store`;
         const indexUrl = `${baseURL}/${laporanPrefix}`;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         $.ajax({
             url: submitUrl,

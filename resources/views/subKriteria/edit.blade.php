@@ -53,7 +53,7 @@
                     required: 'Nilai referensi harus diisi',
                     digits: 'Nilai referensi harus angka'
                 }
-            }
+            },
             submitHandler: function(form) {
                 $.ajax({
                     url: form.action,

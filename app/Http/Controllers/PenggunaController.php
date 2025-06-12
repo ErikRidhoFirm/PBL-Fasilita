@@ -6,15 +6,16 @@ use App\Models\Peran;
 use App\Models\Pengguna;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Helpers\GuestCountManager;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Database\QueryException;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use App\Services\NoIndukVerifierService;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Illuminate\Validation\ValidationException;
-use App\Helpers\GuestCountManager;
 
 
 class PenggunaController extends Controller
@@ -41,7 +42,9 @@ class PenggunaController extends Controller
     }
 
     public function list(Request $request)
-    {
+     {
+        $currentId = Auth::id();
+
         $query = Pengguna::select('id_pengguna','username','nama','id_peran')
                  ->with('peran:id_peran,nama_peran');
 
@@ -52,7 +55,7 @@ class PenggunaController extends Controller
 
         return DataTables::of($query)
             ->addIndexColumn()
-            ->addColumn('aksi', function ($row) {
+            ->addColumn('aksi', function ($row) use ($currentId) {
                 $editBtn = '<button type="button"
                                 class="btn btn-sm btn-outline-warning"
                                 data-bs-toggle="tooltip" data-bs-placement="top" title="Edit"
@@ -69,12 +72,14 @@ class PenggunaController extends Controller
                                 <i class="mdi mdi-file-document-box"></i>
                             </button>';
 
-                $deleteBtn = '<button type="button"
-                                class="btn btn-sm btn-outline-danger"
-                                data-bs-toggle="tooltip" data-bs-placement="top" title="Hapus"
-                                onclick="modalAction(\'' . route('pengguna.delete', $row->id_pengguna) . '\')">
-                                <i class="mdi mdi-delete"></i>
-                            </button>';
+                $deleteBtn = '';
+                if ($row->id_pengguna !== $currentId) {
+                    $deleteBtn = '<button type="button"
+                                        class="btn btn-sm btn-outline-danger"
+                                        onclick="modalAction(\''.route('pengguna.delete', $row->id_pengguna).'\')">
+                                        <i class="mdi mdi-delete"></i>
+                                    </button>';
+                }
 
                 return '<div class="d-flex">' . $editBtn . $showBtn . $deleteBtn . '</div>';
             })
@@ -131,59 +136,74 @@ class PenggunaController extends Controller
      */
     public function store(Request $request)
     {
-         // aturan validasi
-         $validator = Validator::make($request->all(), [
-            'no_induk' => 'required|string|max:20|unique:pengguna,no_induk',
-            'username'   => 'required|string|min:4|max:50|unique:pengguna,username',
-            'nama'       => 'required|string|min:3|max:255',
-            'password'   => 'required|string|min:5',
-            'id_peran'   => 'required|exists:peran,id_peran',
+        // 1) Validasi input
+        $validator = Validator::make($request->all(), [
+            'no_induk'  => 'required|string|max:20|unique:pengguna,no_induk',
+            'username'  => 'required|string|min:4|max:50|unique:pengguna,username',
+            'nama'      => 'required|string|min:3|max:255',
+            'password'  => 'required|string|min:5',
+            'id_peran'  => 'required|exists:peran,id_peran',
         ], [
             'id_peran.required' => 'Peran harus dipilih',
             'id_peran.exists'   => 'Peran tidak valid',
+            'no_induk.required'  => 'Nomor induk wajib diisi',
+            'no_induk.unique'    => 'Nomor induk sudah terdaftar',
+            'username.required'  => 'Username wajib diisi',
+            'username.unique'    => 'Username sudah digunakan',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
-                'status'     => false,
-                'message'    => 'Validasi gagal, cek input Anda',
-                'msgField'   => $validator->errors(),
-            ]);
+                'status'   => false,
+                'message'  => 'Validasi gagal, periksa input Anda.',
+                'msgField' => $validator->errors(),
+            ], 422);
         }
 
+        // 2) Verifikasi format no_induk
         try {
-            $ver = $this->noIndukVerifier->verify($request->input('no_induk'));
-
-            if (
-                $ver['type'] === 'Tidak Valid' ||
-                $ver['type'] === 'Tidak Diketahui' ||
-                !empty($ver['errors'])
-            ) {
+            $ver = $this->noIndukVerifier->verify($request->no_induk);
+            if (in_array($ver['type'], ['Tidak Valid','Tidak Diketahui']) || !empty($ver['errors'])) {
                 throw ValidationException::withMessages([
                     'no_induk' => ['Nomor induk tidak valid']
                 ]);
             }
-        } catch (ValidationException $e) {
+        } catch (ValidationException $ex) {
             return response()->json([
                 'status'   => false,
-                'message'  => 'Validasi gagal, cek input Anda',
-                'msgField' => $e->errors(),
+                'message'  => 'Validasi gagal, periksa input Anda.',
+                'msgField' => $ex->errors(),
             ], 422);
         }
 
-        // simpan pengguna baru
-        Pengguna::create([
-            'no_induk'   => $request->no_induk,
-            'username'   => $request->username,
-            'nama'       => $request->nama,
-            'password'   => $request->password, // di-hash via cast di model
-            'id_peran'   => $request->id_peran,
-        ]);
+        // 3) Simpan ke DB dengan penanganan exception
+        try {
+            Pengguna::create([
+                'no_induk'  => $request->no_induk,
+                'username'  => $request->username,
+                'nama'      => $request->nama,
+                'password'  => $request->password, // cast hashed di model
+                'id_peran'  => $request->id_peran,
+            ]);
 
-        return response()->json([
-            'status'  => true,
-            'message' => 'Pengguna berhasil ditambahkan',
-        ]);
+            return response()->json([
+                'status'  => true,
+                'message' => 'Pengguna berhasil ditambahkan.',
+            ]);
+        } catch (QueryException $qe) {
+            // kemungkinan duplikasi di DB
+            return response()->json([
+                'status'  => false,
+                'message' => 'Gagal menyimpan: data sudah ada atau duplikat.',
+            ], 409);
+        } catch (\Exception $e) {
+            // error umum
+            // \Log::error($e); // opsional: log untuk debugging
+            return response()->json([
+                'status'  => false,
+                'message' => 'Terjadi kesalahan pada server, silakan coba lagi.',
+            ], 500);
+        }
     }
 
     /**
@@ -215,74 +235,94 @@ class PenggunaController extends Controller
      */
     public function update(Request $request, $id)
     {
-        if ($request->ajax() || $request->wantsJson()) {
-            $rules = [
-                'no_induk' => ['required', 'string', 'max:20', 'unique:pengguna,no_induk,' . $id . ',id_pengguna'],
-                'id_peran' => ['required', 'integer'],
-                'username' => ['required', 'max:20', 'unique:pengguna,username,' . $id . ',id_pengguna'],
-                'nama' => ['required', 'max:100'],
-                'password' => ['nullable', 'min:6', 'max:20'],
-            ];
+        // 1) Validasi input
+        $rules = [
+            'no_induk' => 'required|string|max:20|unique:pengguna,no_induk,'.$id.',id_pengguna',
+            'username' => 'required|string|min:4|max:50|unique:pengguna,username,'.$id.',id_pengguna',
+            'nama'     => 'required|string|min:3|max:255',
+            'password' => 'nullable|string|min:5',
+            'id_peran' => 'required|exists:peran,id_peran',
+        ];
+        $validator = Validator::make($request->all(), $rules, [
+            'id_peran.required' => 'Peran harus dipilih',
+            'id_peran.exists'   => 'Peran tidak valid',
+            'no_induk.required'  => 'Nomor induk wajib diisi',
+            'no_induk.unique'    => 'Nomor induk sudah terdaftar',
+            'username.required'  => 'Username wajib diisi',
+            'username.unique'    => 'Username sudah digunakan',
+            'nama.required'      => 'Nama wajib diisi',
+            'id_peran.required'  => 'Peran harus dipilih',
+            'id_peran.exists'    => 'Peran tidak valid',
+            'password.min'       => 'Password minimal 5 karakter',
+        ]);
 
-            $validator = Validator::make($request->all(), $rules);
-            if ($validator->fails()) {
-                return response()->json([
-                    'status' => false,
-                    'message' => 'Validasi gagal.',
-                    'msgField' => $validator->errors()
-                ]);
-            }
+        if ($validator->fails()) {
+            return response()->json([
+                'status'   => false,
+                'message'  => 'Validasi gagal, periksa input Anda.',
+                'msgField' => $validator->errors(),
+            ], 422);
+        }
 
-            try {
-            $ver = $this->noIndukVerifier->verify($request->input('no_induk'));
-
-            if (
-                $ver['type'] === 'Tidak Valid' ||
-                $ver['type'] === 'Tidak Diketahui' ||
-                !empty($ver['errors'])
-            ) {
+        // 2) Verifikasi no_induk
+        try {
+            $ver = $this->noIndukVerifier->verify($request->no_induk);
+            if (in_array($ver['type'], ['Tidak Valid','Tidak Diketahui']) || !empty($ver['errors'])) {
                 throw ValidationException::withMessages([
                     'no_induk' => ['Nomor induk tidak valid']
                 ]);
             }
-        } catch (ValidationException $e) {
-            // Kembalikan JSON agar JS dapat menampilkannya di form
+        } catch (ValidationException $ex) {
             return response()->json([
                 'status'   => false,
-                'message'  => 'Validasi gagal.',
-                'msgField' => $e->errors(),
+                'message'  => 'Validasi gagal, periksa input Anda.',
+                'msgField' => $ex->errors(),
             ], 422);
         }
 
-            $check = Pengguna::find($id);
-            if ($check) {
-                $data = $request->only(['no_induk', 'username','nama','id_peran']);
+        // 3) Update record
+        $pengguna = Pengguna::find($id);
+        if (! $pengguna) {
+            return response()->json([
+                'status'  => false,
+                'message' => 'Data pengguna tidak ditemukan.',
+            ], 404);
+        }
 
-                if ($request->filled('password')) {
-                    $data['password'] = $request->password;
-                }
+        $data = $request->only(['no_induk','username','nama','id_peran']);
+        if ($request->filled('password')) {
+            $data['password'] = $request->password;
+        }
 
-                $check->update($data);
-                if (Auth::id() == $id && $request->id_peran != Peran::where('nama_peran','ADM')->value('id_peran')) {
-                    Auth::logout(); // invalidasi
-                    return response()->json([
-                        'status' => true,
-                        'redirect' => route('login'),
-                        'message' => 'Peran Anda diubah. Silakan login ulang.'
-                    ]);
-                }
+        try {
+            $pengguna->update($data);
+
+            // Jika admin sedang mengubah perannya sendiri, minta relogin
+            if (Auth::id() == $id && $request->id_peran != Peran::where('nama_peran','ADM')->value('id_peran')) {
+                Auth::logout();
                 return response()->json([
-                    'status'  => true,
-                    'message' => 'Data berhasil diupdate'
-                ]);
-            } else {
-                return response()->json([
-                    'status'  => false,
-                    'message' => 'Data tidak ditemukan'
+                    'status'   => true,
+                    'redirect' => route('login'),
+                    'message'  => 'Peran Anda berubah, silakan login ulang.',
                 ]);
             }
+
+            return response()->json([
+                'status'  => true,
+                'message' => 'Data berhasil diupdate.',
+            ]);
+        } catch (QueryException $qe) {
+            return response()->json([
+                'status'  => false,
+                'message' => 'Gagal memperbarui: data sudah ada atau duplikat.',
+            ], 409);
+        } catch (\Exception $e) {
+            // \Log::error($e);
+            return response()->json([
+                'status'  => false,
+                'message' => 'Terjadi kesalahan pada server, silakan coba lagi.',
+            ], 500);
         }
-        return redirect('/');
     }
 
     /**
@@ -299,6 +339,13 @@ class PenggunaController extends Controller
      */
     public function destroy($id)
     {
+        if ($id == Auth::id()) {
+            return response()->json([
+                'status'  => false,
+                'message' => 'Anda tidak dapat menghapus akun Anda sendiri.',
+            ], 403);
+        }
+
         Pengguna::destroy($id);
         return response()->json([
             'status'  => true,

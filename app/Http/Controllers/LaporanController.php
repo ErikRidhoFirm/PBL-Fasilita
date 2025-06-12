@@ -192,7 +192,8 @@ class LaporanController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'status' => false,
-                'message' => 'Data laporan gagal disimpan: ' . $e->getMessage()
+                'message' => 'Data laporan gagal disimpan',
+                'error' => $e->getMessage()
             ]);
         }
     }

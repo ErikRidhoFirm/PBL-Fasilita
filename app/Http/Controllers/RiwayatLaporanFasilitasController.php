@@ -203,10 +203,9 @@ class RiwayatLaporanFasilitasController extends Controller
         $sheet->setCellValue('I1', 'Jumlah Rusak');
         $sheet->setCellValue('J1', 'Deskripsi');
         $sheet->setCellValue('K1', 'Teknisi');
-        $sheet->setCellValue('L1', 'Skor Topsis');
-        $sheet->setCellValue('M1', 'Pelapor');
-        $sheet->setCellValue('N1', 'Nilai Umpan Balik');
-        $sheet->setCellValue('O1', 'Komentar Umpan Balik');
+        $sheet->setCellValue('L1', 'Pelapor');
+        $sheet->setCellValue('M1', 'Nilai Umpan Balik');
+        $sheet->setCellValue('N1', 'Komentar Umpan Balik');
 
 
         $sheet->getStyle('A1:O1')->getFont()->setBold(true);  // bold header
@@ -226,17 +225,16 @@ class RiwayatLaporanFasilitasController extends Controller
                 $sheet->setCellValue('I' . $baris, $value->jumlah_rusak);
                 $sheet->setCellValue('J' . $baris, $value->deskripsi);
                 $sheet->setCellValue('K' . $baris, optional($value->penugasan?->teknisi)->nama ?? '-');
-                $sheet->setCellValue('L' . $baris, $value->skorTopsis->first()?->skor ?? '-');
-                $sheet->setCellValue('M' . $baris, $value->laporan->pengguna->nama);
-                $sheet->setCellValue('N' . $baris, $value->penilaianPengguna->nilai ?? '-');
-                $sheet->setCellValue('O' . $baris, $value->penilaianPengguna->komentar ?? '-');
+                $sheet->setCellValue('L' . $baris, $value->laporan->pengguna->nama);
+                $sheet->setCellValue('M' . $baris, $value->penilaianPengguna->nilai ?? '-');
+                $sheet->setCellValue('N' . $baris, $value->penilaianPengguna->komentar ?? '-');
 
                 $baris++;
                 $no++;
             }
         }
 
-        foreach (range('A', 'O') as $columnID) {
+        foreach (range('A', 'N') as $columnID) {
             $sheet->getColumnDimension($columnID)
                 ->setAutoSize(true); // set auto size untuk kolom
         }

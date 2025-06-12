@@ -77,39 +77,41 @@
                 },
                 // fungsi kirim AJAX
                 submitHandler(form) {
-                    $.ajax({
-                        url: form.action,
-                        type: form.method, // POST (spoof PUT)
-                        data: $(form).serialize(),
-                        success(res) {
-                            if (res.status) {
-                                $('#myModal').modal('hide');
-                                Swal.fire('Berhasil', res.message, 'success');
-                                window.tableGedung.ajax.reload();
-                            } else {
-                                // tampilkan pesan field error (jika backend kirim msgField)
-                                $('.error-text').text('');
-                                if (res.msgField) {
-                                    $.each(res.msgField, (n, v) => $('#error-' + n).text(v[0]));
-                                }
-                                let errMsg = Object.values(res.msgField)[0][0];
-                                Swal.fire('Gagal', errMsg, 'error');
-                            }
-                        }
-                    });
-                    return false; // cegah submit normal
-                },
-                errorElement: 'span',
-                errorPlacement: function(error, element) {
-                    error.addClass('invalid-feedback');
-                    element.closest('.form-group').append(error);
-                },
-                highlight: function(element, errorClass, validClass) {
-                    $(element).addClass('is-invalid');
-                },
-                unhighlight: function(element, errorClass, validClass) {
-                    $(element).removeClass('is-invalid');
-                }
+  $.ajax({
+    url: form.action,
+    type: form.method,           // POST (spoof PUT)
+    dataType: 'json',            // <— penting
+    data: $(form).serialize(),
+    success(res) {
+      if (res.status) {
+        // tutup modal
+        $('#myModal').modal('hide')
+                      .html(''); // <— clear content
+        // reload DataTable
+        tableGedung.ajax.reload(null, false);
+        Swal.fire('Berhasil', res.message, 'success');
+      } else {
+        // reset pesan error
+        $('.error-text').text('');
+        if (res.msgField) {
+          $.each(res.msgField, (n, v) => $('#error-' + n).text(v[0]));
+        }
+        const errMsg = Object.values(res.msgField)[0][0];
+        Swal.fire('Gagal', errMsg, 'error');
+      }
+    },
+    error(xhr) {
+      // jika validasi gagal, koko sudah di-handle di validate plugin
+      if (xhr.status === 422) {
+        // biarkan jQuery Validate yang menampilkan error
+        return;
+      }
+      Swal.fire('Error', 'Terjadi kesalahan server', 'error');
+    }
+  });
+  return false; // cegah submit normal
+},
+
             })
         });
     </script>

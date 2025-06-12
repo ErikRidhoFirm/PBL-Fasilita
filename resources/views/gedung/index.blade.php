@@ -70,7 +70,7 @@
     $('#myModal').load(url, ()=> $('#myModal').modal('show'));
   }
 
-  let tableGedung = $('#table-gedung').DataTable({
+  tableGedung = $('#table-gedung').DataTable({
     processing: true,
     serverSide: true,
     ajax: { url: "{{ route('gedung.list') }}", type: 'GET' },

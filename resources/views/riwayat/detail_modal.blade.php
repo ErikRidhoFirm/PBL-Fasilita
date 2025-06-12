@@ -1,6 +1,6 @@
 
 
-<div class="modal-dialog modal-lg w-75">
+<div class="modal-dialog modal-lg w-50">
   <div class="modal-content">
     {{-- Header Modal --}}
     <div class="modal-header bg-primary text-white">
@@ -32,7 +32,8 @@
         <a href="{{ url('/riwayat') }}" class="btn btn-warning">Kembali</a>
       @else
         {{-- Tabel Informasi Umum --}}
-        <table class="table table-striped">
+        <div class="table-responsive mb-4">
+        <table class="table table-striped mb-0">
           <tbody>
             <tr>
               <th style="width: 30%;">Fasilitas</th>
@@ -78,6 +79,7 @@
             </tr>
           </tbody>
         </table>
+        </div>
 
         {{-- Konten Khusus Berdasarkan Status --}}
         @switch($s)
@@ -88,7 +90,8 @@
               $penilaian = $riwayat->laporanFasilitas->penilaian->first();
             @endphp
 
-            <table class="table table-bordered">
+            <div class="table-responsive mb-4">
+            <table class="table table-striped mb-0">
               <thead class="table-light">
                 <tr>
                   <th style="width: 5%;">No</th>
@@ -116,6 +119,7 @@
                 @endif
               </tbody>
             </table>
+            </div>
           @break
 
           @case('Tidak Valid')
@@ -144,7 +148,8 @@
             <hr>
             <h6 class="mb-3">Detail Penugasan</h6>
             @if($riwayat->laporanFasilitas->penugasan)
-              <table class="table table-striped">
+              <div class="table-responsive mb-4">
+                <table class="table table-striped mb-0">
                 <tbody>
                   <tr>
                     <th style="width: 30%;">Teknisi</th>
@@ -161,6 +166,7 @@
                   </tr>
                 </tbody>
               </table>
+              </div>
             @else
               <p><em>Belum ada data teknisi atau penugasan.</em></p>
             @endif
@@ -180,7 +186,8 @@
                      alt="Foto Perbaikan"
                      class="img-fluid rounded shadow-sm">
               </div>
-              <table class="table table-striped">
+             <div class="table-responsive mb-4">
+                <table class="table table-striped mb-0">
                 <tbody>
                   <tr>
                     <th style="width: 30%;">Tipe Perbaikan</th>
@@ -199,6 +206,7 @@
                   </tr>
                 </tbody>
               </table>
+             </div>
             @else
               <p><em>Belum ada hasil perbaikan yang diunggah.</em></p>
             @endif

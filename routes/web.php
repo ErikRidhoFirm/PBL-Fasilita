@@ -474,6 +474,10 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/dashboard-pelapor', [PelaporDashboardController::class, 'index'])->name('dashboard-pelapor.index');
     });
 
+    Route::middleware(['role:ADM,SPR,TNS'])->group(function () {
+       Route::get('/dashboard/repair-data', [DashboardController::class, 'getRepairData'])->name('dashboard.repair-data');
+       Route::get('/dashboard/status-data', [DashboardController::class, 'getStatusChartData'])->name('dashboard.status-data');
+    });
 
     Route::prefix('profile')->group(function () {
         Route::get('/', [ProfileController::class, 'index'])->name('profile.index');

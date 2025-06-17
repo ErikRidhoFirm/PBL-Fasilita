@@ -149,12 +149,12 @@ class LaporanController extends Controller
                 ->where('id_ruangan', $request->id_ruangan);
             })
             ->where('id_fasilitas', $request->id_fasilitas)
+            // Hanya yang statusnya bukan 'selesai'
+            ->where('id_status', '!=', Status::SELESAI)
             ->get();
 
         $data = $dupes->map(function($lf) use ($userId) {
-            // total votes untuk laporan ini
-            $votes = $lf->pelaporLaporanFasilitas()->count();
-            // apakah login user sudah vote
+            $votes     = $lf->pelaporLaporanFasilitas()->count();
             $votedByMe = $lf->pelaporLaporanFasilitas()
                             ->where('id_pengguna', $userId)
                             ->exists();
@@ -339,6 +339,8 @@ public function formByLaporan($id_laporan)
         'laporanFasilitas.tingkatKerusakan',
         'laporanFasilitas.dampakPengguna',
     ])->findOrFail($id_laporan);
+
+    $laporan->laporanFasilitas->loadCount('pelaporLaporanFasilitas');
 
     $kriterias = Kriteria::with('skoringKriterias')
         ->orderBy('kode_kriteria')

@@ -29,10 +29,10 @@ class KriteriaSeeder extends Seeder
             ],
             [
                 'kode_kriteria'  => 'C3',
-                'nama_kriteria'  => 'Jumlah Unit Rusak',
+                'nama_kriteria'  => 'Jumlah Suara',
                 'bobot_kriteria' => 0.15,
                 'tipe_kriteria'  => 'benefit',
-                'deskripsi'      => 'Banyaknya unit rusak dalam satu laporan (diskor 1–5 berdasarkan rentang jumlah unit)'
+                'deskripsi'      => 'Banyaknya jumlah pelapor dalam satu laporan (diskor 1–5 berdasarkan rentang jumlah pelapor)'
             ],
             [
                 'kode_kriteria'  => 'C4',

@@ -418,9 +418,9 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/get-lantai/{idGedung}', [LaporanController::class, 'getLantai']);
             Route::get('/get-ruangan/{idLantai}', [LaporanController::class, 'getRuangan']);
             Route::get('/get-fasilitas/{idRuangan}', [LaporanController::class, 'getFasilitas']);
-            Route::get('/check-duplicates', [LaporanController::class, 'checkDuplicates'])->name('laporan.checkDuplicates');
-            Route::post('/{id}/vote', [LaporanController::class, 'vote'])->name('laporan.vote');
-            Route::delete('/{id}/unvote', [LaporanController::class, 'unvote'])->name('laporan.unvote');
+            Route::get('/check-duplicates-pelapor', [LaporanController::class, 'checkDuplicates'])->name('laporan.checkDuplicatesPelapor');
+            Route::post('/{id}/vote-pelapor', [LaporanController::class, 'vote'])->name('laporan.votePelapor');
+            Route::delete('/{id}/unvote-pelapor', [LaporanController::class, 'unvote'])->name('laporan.unvotePelapor');
         });
 
         Route::prefix('vote')->group(function(){

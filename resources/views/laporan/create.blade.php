@@ -191,6 +191,9 @@
 <script>
   const laporanPrefix = "{{ $authUser->peran->kode_peran === 'ADM' ? 'laporan' : 'laporanPelapor' }}";
   const baseURL       = $('meta[name="base-url"]').attr('content');
+  const vote = "{{ $authUser->peran->kode_peran === 'ADM' ? 'vote' : 'vote-pelapor' }}"
+  const unVote = "{{ $authUser->peran->kode_peran === 'ADM' ? 'unvote' : 'unvote-pelapor' }}"
+  const checkDuplicates = "{{ $authUser->peran->kode_peran === 'ADM' ? 'check-duplicates' : 'check-duplicates-pelapor' }}"
   let fileArray       = [];
 
   function modalAction() {
@@ -242,7 +245,7 @@
       const idFasilitas = $('#inputFasilitas').val();
 
       if(idGedung && idLantai && idRuangan && idFasilitas){
-        $.getJSON("{{ route('laporan.checkDuplicates') }}", {
+        $.getJSON(`${baseURL}/${laporanPrefix}/${checkDuplicates}`, {
           id_gedung: idGedung,
           id_lantai: idLantai,
           id_ruangan: idRuangan,
@@ -304,8 +307,8 @@
             icn = btn.find('i.btn-vote-icon'),
             cnt = btn.find('.vote-count'),
             url = isV
-              ? `${baseURL}/${laporanPrefix}/${id}/unvote`
-              : `${baseURL}/${laporanPrefix}/${id}/vote`,
+              ? `${baseURL}/${laporanPrefix}/${id}/${unVote}`
+              : `${baseURL}/${laporanPrefix}/${id}/${vote}`,
             mtd = isV ? 'DELETE' : 'POST';
 
       $.ajax({

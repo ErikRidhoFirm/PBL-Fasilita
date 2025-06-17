@@ -28,12 +28,12 @@ class SkoringKriteriaSeeder extends Seeder
             ['id_kriteria' => 2, 'parameter' => '6–10x/minggu',     'nilai_referensi' => 4],
             ['id_kriteria' => 2, 'parameter' => '> 10x/minggu',     'nilai_referensi' => 5],
 
-            // C3: Jumlah Unit Rusak
-            ['id_kriteria' => 3, 'parameter' => '1 unit rusak',    'nilai_referensi' => 1],
-            ['id_kriteria' => 3, 'parameter' => '2–3 unit rusak',  'nilai_referensi' => 2],
-            ['id_kriteria' => 3, 'parameter' => '4–5 unit rusak',  'nilai_referensi' => 3],
-            ['id_kriteria' => 3, 'parameter' => '6–7 unit rusak',  'nilai_referensi' => 4],
-            ['id_kriteria' => 3, 'parameter' => '≥ 8 unit rusak',   'nilai_referensi' => 5],
+            // C3: Jumlah pelpaor
+            ['id_kriteria' => 3, 'parameter' => '< 5 suara',    'nilai_referensi' => 1],
+            ['id_kriteria' => 3, 'parameter' => '5–10 suara',  'nilai_referensi' => 2],
+            ['id_kriteria' => 3, 'parameter' => '11–20 suara',  'nilai_referensi' => 3],
+            ['id_kriteria' => 3, 'parameter' => '21–30 suara',  'nilai_referensi' => 4],
+            ['id_kriteria' => 3, 'parameter' => '≥ 31 suara',   'nilai_referensi' => 5],
 
             // C4: Dampak Akademik
             ['id_kriteria' => 4, 'parameter' => 'Tidak berdampak signifikan',                     'nilai_referensi' => 1],

@@ -67,6 +67,9 @@
                   <span class="badge bg-warning text-dark ms-2">
                     {{ $det->tingkatKerusakan->parameter }}
                   </span>
+                  <span class="badge bg-info text-white ms-2">
+                    {{ $det->pelapor_laporan_fasilitas_count }} suara
+                </span>
                 </h6>
               </div>
               <span class="badge bg-{{ $det->status->color ?? 'secondary' }} fs-6">

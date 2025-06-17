@@ -41,7 +41,7 @@
                 <strong>Gedung:</strong> {{ $gedung->nama_gedung ?? '-' }}
               </div>
               <div class="mb-3">
-                <strong>Lantai:</strong> {{ $lantai->nama_lantai ?? '-' }}
+                <strong>Lantai:</strong> {{ $lantai->nomor_lantai ?? '-' }}
               </div>
               <div class="mb-3">
                 <strong>Ruangan:</strong> {{ $ruangan->nama_ruangan ?? '-' }}
@@ -91,7 +91,7 @@
                 <i class="fas fa-image mr-1"></i>Gambar Perbaikan
               </h6>
               @if($gambar)
-                <img src="{{ asset('storage/foto_perbaikan/'.$gambar) }}"
+                <img src="{{ asset('storage/'.$gambar) }}"
                      alt="Gambar Perbaikan"
                      class="img-fluid w-100 rounded-bottom">
               @else

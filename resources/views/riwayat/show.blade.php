@@ -39,12 +39,12 @@
       {{ $lapfas->fasilitas->nama_fasilitas }}
      </p>
      <p class="mb-3">
-      <strong class="d-block"><i class="fas fa-tools fa-fw me-2"></i>Jenis Kerusakan:</strong>
-      {{ $lapfas->kategoriKerusakan->nama_kerusakan }}
+      <strong class="d-block"><i class="fas fa-tools fa-fw me-2"></i>Tingkat Kerusakan:</strong>
+      {{ $lapfas->tingkatKerusakan->parameter }}
      </p>
      <p class="mb-3 mb-lg-0">
-      <strong class="d-block"><i class="fas fa-hashtag fa-fw me-2"></i>Jumlah Unit Rusak:</strong>
-      {{ $lapfas->jumlah_rusak }} unit
+      <strong class="d-block"><i class="fas fa-hashtag fa-fw me-2"></i>Dampak bagi Pengguna:</strong>
+      {{ $lapfas->dampakPengguna->parameter }} 
      </p>
      </div>
      <div class="col-lg-6">

@@ -51,7 +51,12 @@
 
                 <span class="badge bg-info text-white">
                   <i class="mdi mdi-alert-circle-outline me-1"></i>
-                  {{ optional($laporanFasilitas->kategoriKerusakan)->nama_kerusakan ?? '–' }}
+                  {{ optional($laporanFasilitas->tingkatKerusakan)->parameter ?? '–' }}
+                </span>
+
+                 <span class="badge bg-info text-white">
+                  <i class="mdi mdi-alert-circle-outline me-1"></i>
+                  {{ optional($laporanFasilitas->dampakPengguna)->parameter ?? '–' }}
                 </span>
               </div>
 

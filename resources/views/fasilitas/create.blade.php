@@ -41,17 +41,6 @@
           <small class="error-text text-danger"></small>
         </div>
 
-        {{-- JUMLAH --}}
-        <div class="mb-3">
-          <label class="form-label">Jumlah Fasilitas</label>
-          <input name="jumlah_fasilitas"
-                 type="number"
-                 class="form-control"
-                 required
-                 min="1">
-          <small class="error-text text-danger"></small>
-        </div>
-
       </div>
       <div class="modal-footer border-0">
         <button type="submit" class="btn btn-primary">Simpan</button>

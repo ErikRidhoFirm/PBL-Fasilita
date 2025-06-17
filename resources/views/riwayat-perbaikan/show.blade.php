@@ -72,7 +72,7 @@
                     <div class="pr-2"><i class="fas fa-layer-group fa-lg text-primary"></i></div>
                     <div>
                       <div class="font-weight-bold">Lantai:</div>
-                      <div>{{ optional(optional($lapFas)->laporan->lantai)->nama_lantai ?? '-' }}</div>
+                      <div>{{ optional(optional($lapFas)->laporan->lantai)->nomor_lantai ?? '-' }}</div>
                     </div>
                   </div>
                   {{-- Ruangan --}}

@@ -17,9 +17,9 @@ class LaporanFasilitas extends Model
     protected $fillable = [
         'id_laporan',
         'id_fasilitas',
-        'id_kategori_kerusakan',
         'id_status',
-        'jumlah_rusak',
+        'id_tingkat_kerusakan',
+        'id_dampak_pengguna',
         'path_foto',
         'deskripsi',
         'is_active',
@@ -36,11 +36,6 @@ class LaporanFasilitas extends Model
     public function fasilitas(): BelongsTo
     {
         return $this->belongsTo(Fasilitas::class, 'id_fasilitas');
-    }
-
-    public function kategoriKerusakan(): BelongsTo
-    {
-        return $this->belongsTo(KategoriKerusakan::class, 'id_kategori_kerusakan');
     }
 
     public function status(): BelongsTo
@@ -71,6 +66,20 @@ class LaporanFasilitas extends Model
     public function skorTopsis(): HasMany
     {
         return $this->hasMany(SkorTopsis::class, 'id_laporan_fasilitas');
+    }
+
+    // app/Models/LaporanFasilitas.php
+
+/** Koreksi relasi: gunakan kunci id_tingkat_kerusakan **/
+    public function tingkatKerusakan(): BelongsTo
+    {
+        return $this->belongsTo(SkoringKriteria::class, 'id_tingkat_kerusakan', 'id_skoring_kriteria');
+    }
+
+    /** Koreksi relasi: gunakan kunci id_dampak_pengguna **/
+    public function dampakPengguna(): BelongsTo
+    {
+        return $this->belongsTo(SkoringKriteria::class, 'id_dampak_pengguna', 'id_skoring_kriteria');
     }
 
     public function penilaianPengguna(): HasOne

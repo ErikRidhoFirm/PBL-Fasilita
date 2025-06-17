@@ -15,18 +15,20 @@ return new class extends Migration
             $table->id('id_laporan_fasilitas');
             $table->unsignedBigInteger('id_laporan')->index();
             $table->unsignedBigInteger('id_fasilitas')->index();
-            $table->unsignedBigInteger('id_kategori_kerusakan')->index();
             $table->unsignedBigInteger('id_status')->index();
-            $table->integer('jumlah_rusak');
             $table->string('path_foto')->nullable();
             $table->text('deskripsi', 100);
+            $table->unsignedBigInteger('id_tingkat_kerusakan')->index();
+            $table->unsignedBigInteger('id_dampak_pengguna')->index();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
 
             $table->foreign('id_laporan')->references('id_laporan')->on('laporan')->onDelete('cascade');
             $table->foreign('id_fasilitas')->references('id_fasilitas')->on('fasilitas')->onDelete('cascade');
-            $table->foreign('id_kategori_kerusakan')->references('id_kategori_kerusakan')->on('kategori_kerusakan')->onDelete('cascade');
             $table->foreign('id_status')->references('id_status')->on('status')->onDelete('cascade');
+            $table->foreign('id_tingkat_kerusakan')->references('id_skoring_kriteria')->on('skoring_kriteria')->onDelete('cascade');
+            $table->foreign('id_dampak_pengguna')->references('id_skoring_kriteria')->on('skoring_kriteria')->onDelete('cascade');
+
         });
     }
 

@@ -56,7 +56,8 @@ class PenugasanController extends Controller
     {
         $lapfas = LaporanFasilitas::with([
             'fasilitas',
-            'kategoriKerusakan',
+            'tingkatKerusakan',
+            'dampakPengguna',
             'laporan.pengguna',
             'laporan.gedung',
             'laporan.lantai',

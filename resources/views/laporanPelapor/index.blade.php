@@ -136,6 +136,31 @@
     function updateVisible() {
       if (totalItems === null) return;
 
+if (totalItems === 0) {
+  innerContainer.innerHTML = `
+    <div class="role-card" style="
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 1rem;
+      box-sizing: border-box;
+    ">
+      <i class="mdi mdi-alert-circle-outline" style="font-size: 4rem; color: #6c757d;"></i>
+      <h5 class="mt-3 mb-2" style="color: #495057;">Belum ada laporan kerusakan</h5>
+      <p class="mb-0 text-muted">Silakan buat laporan baru .</p>
+    </div>
+  `;
+  // pastikan container set minimal setinggi viewport
+  innerContainer.style.height = scrollContainer.clientHeight + 'px';
+  return;
+}
+
+
       const columns     = getColumns();
       const totalRows   = Math.ceil(totalItems / columns);
       const totalHeight = totalRows * itemHeight;

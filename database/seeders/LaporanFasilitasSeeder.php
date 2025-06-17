@@ -18,11 +18,11 @@ class LaporanFasilitasSeeder extends Seeder
             [
                 'id_laporan'            => 1,
                 'id_fasilitas'          => 1,
-                'id_kategori_kerusakan' => 10,
                 'id_status'             => 1,
-                'jumlah_rusak'          => 1,
                 'path_foto'             => 'uploads/laporan/lap1_foto1.jpg',
                 'deskripsi'             => 'Kursi dekat jendela retak di sandaran.',
+                'id_tingkat_kerusakan'  => 3,
+                'id_dampak_pengguna'    => 16,
                 'is_active'   => true,
                 'created_at'            => now()->subDays(4),
                 'updated_at'            => now()->subDays(4),
@@ -31,11 +31,11 @@ class LaporanFasilitasSeeder extends Seeder
             [
                 'id_laporan'            => 1,
                 'id_fasilitas'          => 2,
-                'id_kategori_kerusakan' => 10,
                 'id_status'             => 1,
-                'jumlah_rusak'          => 1,
                 'path_foto'             => 'uploads/laporan/lap2_foto1.jpg',
                 'deskripsi'             => 'Cat meja mengelupas di sudut kanan.',
+                'id_tingkat_kerusakan'  => 1,
+                'id_dampak_pengguna'    => 16,
                 'is_active'   => true,
                 'created_at'            => now()->subDays(2),
                 'updated_at'            => now()->subDays(2),
@@ -44,23 +44,23 @@ class LaporanFasilitasSeeder extends Seeder
             [
                 'id_laporan'            => 2,
                 'id_fasilitas'          => 4,
-                'id_kategori_kerusakan' => 3,
                 'id_status'             => 1,
-                'jumlah_rusak'          => 1,
                 'path_foto'             => 'uploads/laporan/lap3_foto1.jpg',
                 'deskripsi'             => 'Proyektor tidak menyala sama sekali.',
+                'id_tingkat_kerusakan'  => 3,
+                'id_dampak_pengguna'    => 18,
                 'is_active'   => true,
                 'created_at'            => now(),
                 'updated_at'            => now(),
             ],
             [
                 'id_laporan'            => 3,
-                'id_fasilitas'          => 3, // Papan Tulis
-                'id_kategori_kerusakan' => 10, // Ringan
+                'id_fasilitas'          => 3, // Papan Tulis // Ringan
                 'id_status'             => 1,
-                'jumlah_rusak'          => 1,
                 'path_foto'             => 'uploads/laporan/lap4_foto1.jpg',
                 'deskripsi'             => 'Papan tulis sulit dibersihkan, bekas spidol menempel.',
+                'id_tingkat_kerusakan'  => 1,
+                'id_dampak_pengguna'    => 16,
                 'is_active'             => true,
                 'created_at'            => now()->subDays(2),
                 'updated_at'            => now()->subDays(2),
@@ -68,11 +68,11 @@ class LaporanFasilitasSeeder extends Seeder
             [
                 'id_laporan'            => 4,
                 'id_fasilitas'          => 5, // LCD Proyektor
-                'id_kategori_kerusakan' => 2, // Sedang
                 'id_status'             => 1,
-                'jumlah_rusak'          => 1,
                 'path_foto'             => 'uploads/laporan/lap4_foto2.jpg',
                 'deskripsi'             => 'LCD proyektor warna tidak akurat.',
+                'id_tingkat_kerusakan'  => 2,
+                'id_dampak_pengguna'    => 16,
                 'is_active'             => true,
                 'created_at'            => now()->subDays(2),
                 'updated_at'            => now()->subDays(2),

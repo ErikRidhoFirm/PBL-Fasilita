@@ -17,27 +17,22 @@ class FasilitasSeeder extends Seeder
             [
                 'id_kategori' => 2,
                 'nama_fasilitas' => 'Kursi',
-                'jumlah_fasilitas' => 51,
             ],
             [
                 'id_kategori' => 2,
                 'nama_fasilitas' => 'Meja',
-                'jumlah_fasilitas' => 1,
             ],
             [
                 'id_kategori' => 2,
                 'nama_fasilitas' => 'Papan Tulis',
-                'jumlah_fasilitas' => 1,
             ],
             [
                 'id_kategori' => 4,
                 'nama_fasilitas' => 'Proyektor',
-                'jumlah_fasilitas' => 1,
             ],
             [
                 'id_kategori' => 4,
                 'nama_fasilitas' => 'Layar Proyektor',
-                'jumlah_fasilitas' => 1,
             ],
         ];
 
@@ -55,7 +50,6 @@ class FasilitasSeeder extends Seeder
                         'id_ruangan' => $idRuangan,
                         'id_kategori' => $fasilitas['id_kategori'],
                         'nama_fasilitas' => $fasilitas['nama_fasilitas'],
-                        'jumlah_fasilitas' => $fasilitas['jumlah_fasilitas'],
                     ]);
                 }
             }

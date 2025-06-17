@@ -65,7 +65,6 @@
         <tr>
           <th>No</th>
           <th>Nama Fasilitas</th>
-          <th>Jumlah</th>
           <th>Aksi</th>
         </tr>
       </thead>
@@ -93,7 +92,6 @@
     columns:[
       { data:'DT_RowIndex', orderable:false, searchable:false },
       { data:'nama_fasilitas' },
-      { data:'jumlah_fasilitas' },
       { data:'aksi', orderable:false, searchable:false },
     ]
   });

@@ -20,7 +20,8 @@
           </div>
           <div class="col-md-8">
             <h6>{{ $lapfas->fasilitas->nama_fasilitas }}</h6>
-            <p><strong>Jenis Kerusakan:</strong> {{ $lapfas->kategoriKerusakan->nama_kerusakan }}</p>
+            <p><strong>Jenis Kerusakan:</strong> {{ $lapfas->tingkatKerusakan->parameter }}</p>
+            <p><strong>Dampak yang dirasakan pengguna:</strong> {{ $lapfas->dampakPengguna->parameter }}</p>
             <p><strong>Pelapor:</strong> {{ $lapfas->laporan->pengguna->nama }}</p>
             <p><strong>Lokasi:</strong>
               {{ $lapfas->laporan->gedung->nama_gedung }} /

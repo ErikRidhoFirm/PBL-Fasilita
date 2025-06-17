@@ -13,6 +13,7 @@ use App\Models\Pengguna;
 use App\Models\Fasilitas;
 use App\Models\Penilaian;
 use Illuminate\Http\Request;
+use App\Models\SkoringKriteria;
 use Illuminate\Validation\Rule;
 use App\Models\LaporanFasilitas;
 use App\Models\KategoriKerusakan;
@@ -20,6 +21,7 @@ use App\Models\PenilaianPengguna;
 use Illuminate\Support\Facades\DB;
 use App\Models\SkorKriteriaLaporan;
 use Illuminate\Support\Facades\Auth;
+use App\Models\PelaporLaporanFasilitas;
 use App\Models\RiwayatLaporanFasilitas;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
@@ -105,18 +107,149 @@ class LaporanController extends Controller
         $gedung = Gedung::all();
         $lantai = Lantai::all();
         $ruangan = Ruangan::all();
-        $kategoriKerusakan = KategoriKerusakan::all();
+        $allKriteria = SkoringKriteria::whereIn('id_kriteria', [1, 4])
+                      ->select('id_skoring_kriteria' ,'id_kriteria', 'parameter', 'nilai_referensi')
+                      ->get()
+                      ->groupBy('id_kriteria');
+
+        // Pisahkan ke dua variabel
+        $kriteriaC1 = $allKriteria->get(1, collect());
+        $kriteriaC4 = $allKriteria->get(4, collect());
+
+        $laporanFasilitas = LaporanFasilitas::all();
 
         return view('laporan.create', [
             'gedung' => $gedung,
             'lantai' => $lantai,
             'ruangan' => $ruangan,
-            'kategoriKerusakan' => $kategoriKerusakan,
+            'kriteriaC1' => $kriteriaC1,
+            'kriteriaC4' => $kriteriaC4,
+            'laporanFasilitas' => $laporanFasilitas,
             'activeMenu' => $activeMenu,
             'breadcrumbs' => $breadcrumbs,
             'authUser' => Auth::user(),
         ]);
     }
+
+    public function checkDuplicates(Request $request)
+    {
+        $userId = $request->user()->id_pengguna;
+
+        $request->validate([
+            'id_gedung'    => 'required|integer|exists:gedung,id_gedung',
+            'id_lantai'    => 'required|integer|exists:lantai,id_lantai',
+            'id_ruangan'   => 'required|integer|exists:ruangan,id_ruangan',
+            'id_fasilitas' => 'required|integer|exists:fasilitas,id_fasilitas',
+        ]);
+
+        $dupes = LaporanFasilitas::with(['laporan.pengguna'])
+            ->whereHas('laporan', function($q) use ($request) {
+                $q->where('id_gedung',  $request->id_gedung)
+                ->where('id_lantai',  $request->id_lantai)
+                ->where('id_ruangan', $request->id_ruangan);
+            })
+            ->where('id_fasilitas', $request->id_fasilitas)
+            ->get();
+
+        $data = $dupes->map(function($lf) use ($userId) {
+            // total votes untuk laporan ini
+            $votes = $lf->pelaporLaporanFasilitas()->count();
+            // apakah login user sudah vote
+            $votedByMe = $lf->pelaporLaporanFasilitas()
+                            ->where('id_pengguna', $userId)
+                            ->exists();
+
+            return [
+                'id'            => $lf->id_laporan_fasilitas,
+                'deskripsi'     => $lf->deskripsi,
+                'foto_url'      => $lf->path_foto
+                                    ? asset('storage/' . $lf->path_foto)
+                                    : asset('foto/default.jpg'),
+                'user_name'     => optional($lf->laporan->pengguna)->nama,
+                'created_at'    => $lf->laporan->created_at->format('d M Y'),
+                'votes_count'   => $votes,
+                'voted_by_me'   => $votedByMe,
+            ];
+        });
+
+        return response()->json(['data' => $data]);
+    }
+
+    /**
+     * AJAX endpoint: tambah vote.
+     */
+    public function vote(Request $request, $id)
+    {
+        // ID pengguna yang sedang login
+        $userId = $request->user()->id_pengguna;
+
+        // Cari LaporanFasilitas, kalau tidak ada kembalikan 404
+        $lapfas = LaporanFasilitas::find($id);
+        if (! $lapfas) {
+            return response()->json([
+                'status'  => 'error',
+                'message' => 'Laporan fasilitas tidak ditemukan.',
+            ], 404);
+        }
+
+        // Cek apakah user sudah vote sebelumnya
+        $alreadyVoted = PelaporLaporanFasilitas::where('id_laporan_fasilitas', $id)
+            ->where('id_pengguna', $userId)
+            ->exists();
+
+        if ($alreadyVoted) {
+            return response()->json([
+                'status'  => 'error',
+                'message' => 'Anda sudah mem‐vote fasilitas ini.',
+            ], 422);
+        }
+
+        // Simpan vote baru
+        PelaporLaporanFasilitas::create([
+            'id_laporan_fasilitas' => $id,
+            'id_pengguna'          => $userId,
+        ]);
+
+        // Hitung ulang total votes
+        $newCount = $lapfas->pelaporLaporanFasilitas()->count();
+
+        return response()->json([
+            'status'      => 'success',
+            'message'     => 'Terima kasih telah mem‐vote!',
+            'votes_count' => $newCount,
+        ]);
+    }
+
+    public function unvote(Request $request, $id)
+    {
+        $userId = $request->user()->id_pengguna;
+
+        // Cari vote record
+        $vote = PelaporLaporanFasilitas::where('id_laporan_fasilitas', $id)
+            ->where('id_pengguna', $userId)
+            ->first();
+
+        if (! $vote) {
+            return response()->json([
+                'status'  => 'error',
+                'message' => 'Anda belum mem‐vote fasilitas ini.',
+            ], 422);
+        }
+
+        // Hapus vote
+        $vote->delete();
+
+        // Hitung ulang
+        $lapfas = LaporanFasilitas::findOrFail($id);
+        $newCount = $lapfas->pelaporLaporanFasilitas()->count();
+
+        return response()->json([
+            'status'      => 'success',
+            'message'     => 'Vote dibatalkan.',
+            'votes_count' => $newCount,
+        ]);
+    }
+
 
     public function getLantai($idGedung)
     {
@@ -145,10 +278,10 @@ class LaporanController extends Controller
             'id_ruangan' => 'required|integer',
             'id_fasilitas' => 'required|array',
             'id_fasilitas.*' => 'required|integer',
-            'id_kategori_kerusakan' => 'required|array',
-            'id_kategori_kerusakan.*' => 'required|integer',
-            'jumlah_rusak' => 'required|array',
-            'jumlah_rusak.*' => 'required|integer|min:1',
+            'id_tingkat_kerusakan' => 'required|array',
+            'id_tingkat_kerusakan.*' => 'required|integer',
+            'id_dampak_pengguna' => 'required|array',
+            'id_dampak_pengguna.*' => 'required|integer',
             'deskripsi' => 'required|array',
             'deskripsi.*' => 'required|string',
             'path_foto' => 'required|array',
@@ -174,9 +307,9 @@ class LaporanController extends Controller
                 LaporanFasilitas::create([
                     'id_laporan' => $laporan->id_laporan,
                     'id_fasilitas' => $idFasilitas,
-                    'id_kategori_kerusakan' => $request->id_kategori_kerusakan[$index],
+                    'id_tingkat_kerusakan' => $request->id_tingkat_kerusakan[$index],
                     'id_status' => 1,
-                    'jumlah_rusak' => $request->jumlah_rusak[$index],
+                    'id_dampak_pengguna' => $request->id_dampak_pengguna[$index],
                     'deskripsi' => $request->deskripsi[$index],
                     'path_foto' => $fotoPath,
                     'is_active' => 1,
@@ -198,16 +331,22 @@ class LaporanController extends Controller
         }
     }
 
-    public function formByLaporan($id_laporan)
-    {
-        $laporan = Laporan::with(['laporanFasilitas.fasilitas','laporanFasilitas.kategoriKerusakan'])
-                          ->findOrFail($id_laporan);
-         $kriterias = Kriteria::with(['skoringKriterias' /* sesuaikan nama relasi di model */])
-                         ->orderBy('kode_kriteria')
-                         ->get();
+public function formByLaporan($id_laporan)
+{
+    $laporan = Laporan::with([
+        'laporanFasilitas.fasilitas',
+        'laporanFasilitas.status',
+        'laporanFasilitas.tingkatKerusakan',
+        'laporanFasilitas.dampakPengguna',
+    ])->findOrFail($id_laporan);
 
-    return view('laporan.verifikasi_by_laporan', compact('laporan','kriterias'));
-    }
+    $kriterias = Kriteria::with('skoringKriterias')
+        ->orderBy('kode_kriteria')
+        ->get();
+
+    return view('laporan.verifikasi_by_laporan', compact('laporan', 'kriterias'));
+}
+
 
     public function storeByLaporan(Request $r)
 {
@@ -334,7 +473,8 @@ class LaporanController extends Controller
             'laporan.ruangan',
             'laporan.pengguna',
             'fasilitas',
-            'kategoriKerusakan',
+            'tingkatKerusakan',
+            'dampakPengguna',
             'status',
         ])->findOrFail($id);
 

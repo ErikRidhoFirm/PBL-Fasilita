@@ -15,7 +15,6 @@
     <div class="modal-body p-4">
       <table class="table table-borderless">
         <tr><th>Nama Fasilitas</th><td>{{ $fasilitas->nama_fasilitas }}</td></tr>
-        <tr><th>Jumlah</th><td>{{ $fasilitas->jumlah_fasilitas }}</td></tr>
       </table>
     </div>
 

@@ -106,9 +106,9 @@
                 <div class="d-flex align-items-start p-3 bg-light-subtle rounded-3 shadow-sm h-100 border-start border-danger border-4">
                     <i class="mdi mdi-alert-decagram-outline fs-2 text-danger me-3 mt-1"></i>
                     <div>
-                        <small class="text-muted d-block mb-1">Kategori Kerusakan</small>
+                        <small class="text-muted d-block mb-1">Tingkat Kerusakan</small>
                         <div class="fw-semibold fs-6">
-                            {{ optional($lf->kategoriKerusakan)->nama_kategori ?? '-' }}
+                            {{ optional($lf->tingkatKerusakan)->parameter ?? '-' }}
                         </div>
                     </div>
                 </div>
@@ -119,8 +119,8 @@
                 <div class="d-flex align-items-start p-3 bg-light-subtle rounded-3 shadow-sm h-100 border-start border-secondary border-4">
                     <i class="mdi mdi-counter fs-2 text-secondary me-3 mt-1"></i>
                     <div>
-                        <small class="text-muted d-block mb-1">Perkiraan Jumlah Rusak</small>
-                        <div class="fw-semibold fs-6">{{ $lf->jumlah_rusak }} {{ $lf->satuan_jumlah ?? 'unit' }}</div>
+                        <small class="text-muted d-block mb-1">Dampak Kerusakan bagi Pengguna</small>
+                        <div class="fw-semibold fs-6">{{ optional($lf->dampakPengguna)->parameter ?? '-' }}</div>
                     </div>
                 </div>
             </div>

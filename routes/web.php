@@ -85,21 +85,6 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/import_ajax', [PeranController::class, 'importAjax'])->name('peran.import_ajax');
         });
 
-        Route::prefix('kategori_kerusakan')->group(function () {
-            Route::get('/', [KategoriKerusakanController::class, 'index'])->name('kategori_kerusakan.index');
-            Route::get('/list', [KategoriKerusakanController::class, 'list'])->name('kategori_kerusakan.list');
-            Route::get('/show/{id}', [KategoriKerusakanController::class, 'show'])->name('kategori_kerusakan.show');
-            Route::get('/create', [KategoriKerusakanController::class, 'create'])->name('kategori_kerusakan.create');
-            Route::post('/store', [KategoriKerusakanController::class, 'store'])->name('kategori_kerusakan.store');
-            Route::get('/edit/{id}', [KategoriKerusakanController::class, 'edit'])->name('kategori_kerusakan.edit');
-            Route::put('/update/{id}', [KategoriKerusakanController::class, 'update'])->name('kategori_kerusakan.update');
-            Route::get('/delete/{id}', [KategoriKerusakanController::class, 'delete'])->name('kategori_kerusakan.delete');
-            Route::delete('/destroy/{id}', [KategoriKerusakanController::class, 'destroy'])->name('kategori_kerusakan.destroy');
-            Route::get('/export_pdf', [KategoriKerusakanController::class, 'exportPdf'])->name('kategori_kerusakan.export_pdf');
-            Route::get('/import', [KategoriKerusakanController::class, 'import'])->name('kategori_kerusakan.import');
-            Route::post('/import_ajax', [KategoriKerusakanController::class, 'importAjax'])->name('kategori_kerusakan.import_ajax');
-        });
-
         // Pengguna
         Route::prefix('pengguna')->group(function () {
             Route::get('/', [PenggunaController::class, 'index'])->name('pengguna.index');
@@ -352,6 +337,9 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/get-fasilitas/{idRuangan}', [LaporanController::class, 'getFasilitas']);
             Route::get('/{id}/verifikasi', [LaporanController::class, 'formByLaporan'])->name('laporan.verifikasi.form');
             Route::post('/verifikasi', [LaporanController::class, 'storeByLaporan'])->name('laporan.verifikasi.store');
+            Route::get('/check-duplicates', [LaporanController::class, 'checkDuplicates'])->name('laporan.checkDuplicates');
+            Route::post('/{id}/vote', [LaporanController::class, 'vote'])->name('laporan.vote');
+            Route::delete('/{id}/unvote', [LaporanController::class, 'unvote'])->name('laporan.unvote');
         });
 
         Route::prefix('riwayat-laporan')->group(function(){
@@ -430,6 +418,9 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/get-lantai/{idGedung}', [LaporanController::class, 'getLantai']);
             Route::get('/get-ruangan/{idLantai}', [LaporanController::class, 'getRuangan']);
             Route::get('/get-fasilitas/{idRuangan}', [LaporanController::class, 'getFasilitas']);
+            Route::get('/check-duplicates', [LaporanController::class, 'checkDuplicates'])->name('laporan.checkDuplicates');
+            Route::post('/{id}/vote', [LaporanController::class, 'vote'])->name('laporan.vote');
+            Route::delete('/{id}/unvote', [LaporanController::class, 'unvote'])->name('laporan.unvote');
         });
 
         Route::prefix('vote')->group(function(){

@@ -29,13 +29,6 @@
           <small id="error-nama_fasilitas" class="error-text text-danger small"></small>
         </div>
 
-        <div class="form-group">
-          <label>Jumlah</label>
-          <input type="number" name="jumlah_fasilitas" class="form-control"
-                 value="{{ $fasilitas->jumlah_fasilitas }}" required min="1">
-          <small id="error-jumlah_fasilitas" class="error-text text-danger small"></small>
-        </div>
-
       </div>
 
       <div class="modal-footer border-0">

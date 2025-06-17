@@ -25,7 +25,7 @@ class FasilitasController extends Controller
     public function list(Ruangan $ruangan)
     {
         $qry = $ruangan->fasilitas()
-                       ->select(['id_fasilitas','nama_fasilitas','jumlah_fasilitas']);
+                       ->select(['id_fasilitas','nama_fasilitas']);
 
         return DataTables::of($qry)
             ->addIndexColumn()
@@ -58,14 +58,12 @@ class FasilitasController extends Controller
     $r->validate([
         'id_kategori'      => 'required|exists:kategori_fasilitas,id_kategori',
         'nama_fasilitas'   => 'required|string|max:100',
-        'jumlah_fasilitas' => 'required|integer|min:1',
     ]);
 
     $f = new Fasilitas;
     $f->id_ruangan       = $ruangan->id_ruangan;
     $f->id_kategori      = $r->input('id_kategori');
     $f->nama_fasilitas   = $r->input('nama_fasilitas');
-    $f->jumlah_fasilitas = $r->input('jumlah_fasilitas');
     $f->save();
 
     return response()->json([
@@ -85,12 +83,10 @@ class FasilitasController extends Controller
 {
     $r->validate([
         'nama_fasilitas'   => 'required|string|max:100',
-        'jumlah_fasilitas' => 'required|integer|min:1',
     ]);
 
     // assign manual supaya kolom jumlah_fasilitas benar-benar tersimpan
     $fasilitas->nama_fasilitas   = $r->input('nama_fasilitas');
-    $fasilitas->jumlah_fasilitas = $r->input('jumlah_fasilitas');
     $fasilitas->save();
 
     return response()->json([
@@ -122,7 +118,7 @@ class FasilitasController extends Controller
     public function exportPdf(Ruangan $ruangan)
     {
         $fasilitas = $ruangan->fasilitas()
-                            ->select('id_fasilitas', 'nama_fasilitas', 'jumlah_fasilitas')
+                            ->select('id_fasilitas', 'nama_fasilitas')
                             ->orderBy('nama_fasilitas')
                             ->get();
 
@@ -171,7 +167,6 @@ class FasilitasController extends Controller
                     'id_ruangan'       => $ruangan->id_ruangan,
                     'id_kategori'      => $row['A'],
                     'nama_fasilitas'   => $row['B'],
-                    'jumlah_fasilitas' => (int) $row['C'],
                     'created_at'       => now(),
                     'updated_at'       => now(),
                 ];

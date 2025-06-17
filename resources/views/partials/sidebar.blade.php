@@ -52,8 +52,7 @@
                 </a>
                 <div class="collapse" id="master-data">
                     <ul class="nav flex-column sub-menu">
-                        <li class="nav-item"> <a class="nav-link" href="{{ route('kategoriF.index') }}"> <i class="fas fa-tags menu-icon"></i> Kategori Fasilitas </a> </li>
-                        <li class="nav-item"> <a class="nav-link" href="{{ route('kategori_kerusakan.index') }}"> <i class="fas fa-exclamation-triangle menu-icon"></i> Kategori Kerusakan </a> </li>
+                        <li class="nav-item"> <a class="nav-link" href="{{ route('kategoriF.index') }}"> <i class="fas fa-tags menu-icon"></i> Kategori Fasilitas </a> </li
                     </ul>
                 </div>
             </li>

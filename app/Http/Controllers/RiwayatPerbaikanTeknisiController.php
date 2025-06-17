@@ -60,7 +60,7 @@ class RiwayatPerbaikanTeknisiController extends Controller
                        ->nama_fasilitas ?? '-';
             })
 
-            // Kolom Nama Teknisi (biasanya sama dengan auth user, 
+            // Kolom Nama Teknisi (biasanya sama dengan auth user,
             // tapi tampilkan juga untuk konsistensi)
             ->addColumn('teknisi', function($item) {
                 return optional($item->penugasan->teknisi)->nama ?? '-';
@@ -84,7 +84,7 @@ class RiwayatPerbaikanTeknisiController extends Controller
     }
 
     /**
-     * Menampilkan partial view detail perbaikan (modal) — 
+     * Menampilkan partial view detail perbaikan (modal) —
      * memanggil view yang sama seperti di admin.
      */
     public function show(Perbaikan $perbaikan)
@@ -101,11 +101,12 @@ class RiwayatPerbaikanTeknisiController extends Controller
             'penugasan.laporanFasilitas.laporan.lantai',
             'penugasan.laporanFasilitas.laporan.ruangan',
             'penugasan.laporanFasilitas.fasilitas',
-            'penugasan.laporanFasilitas.kategoriKerusakan',
+            'penugasan.laporanFasilitas.tingkatKerusakan',
+            'penugasan.laporanFasilitas.dampakPengguna',
             'penugasan.laporanFasilitas.status',
             'penugasan.laporanFasilitas.riwayatLaporanFasilitas.pengguna.peran'
         ]);
 
-        return view('riwayat-perbaikan/show', compact('perbaikan'));
+        return view('riwayat-perbaikan-teknisi/show', compact('perbaikan'));
     }
 }

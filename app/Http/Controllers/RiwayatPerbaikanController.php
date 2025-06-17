@@ -28,7 +28,8 @@ class RiwayatPerbaikanController extends Controller
             'penugasan.laporanFasilitas.laporan.lantai',
             'penugasan.laporanFasilitas.laporan.ruangan',
             'penugasan.laporanFasilitas.fasilitas',
-            'penugasan.laporanFasilitas.kategoriKerusakan',
+            'penugasan.laporanFasilitas.tingkatKerusakan',
+            'penugasan.laporanFasilitas.dampakPengguna',
             'penugasan.laporanFasilitas.status'
         ])->orderBy('updated_at', 'desc');
 
@@ -101,7 +102,8 @@ class RiwayatPerbaikanController extends Controller
             'penugasan.laporanFasilitas.laporan.lantai',
             'penugasan.laporanFasilitas.laporan.ruangan',
             'penugasan.laporanFasilitas.fasilitas',
-            'penugasan.laporanFasilitas.kategoriKerusakan',
+            'penugasan.laporanFasilitas.tingkatKerusakan',
+            'penugasan.laporanFasilitas.dampakPengguna',
             'penugasan.laporanFasilitas.status',
             'penugasan.laporanFasilitas.riwayatLaporanFasilitas.pengguna.peran'
         ]);
@@ -124,7 +126,8 @@ class RiwayatPerbaikanController extends Controller
             'penugasan.laporanFasilitas.laporan.lantai',
             'penugasan.laporanFasilitas.laporan.ruangan',
             'penugasan.laporanFasilitas.fasilitas',
-            'penugasan.laporanFasilitas.kategoriKerusakan',
+            'penugasan.laporanFasilitas.tingkatKerusakan',
+            'penugasan.laporanFasilitas.dampakPengguna',
             'penugasan.laporanFasilitas.status',
         ]);
 

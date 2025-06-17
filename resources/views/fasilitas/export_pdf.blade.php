@@ -80,7 +80,6 @@ img.image{
         <tr>
             <th class="text-center">No</th>
             <th>Nama Fasilitas</th>
-            <th>Jumlah</th>
         </tr>
     </thead>
     <tbody>
@@ -88,7 +87,6 @@ img.image{
         <tr>
             <td class="text-center">{{ $loop->iteration }}</td>
             <td>{{ $f->nama_fasilitas }}</td>
-            <td>{{ $f->jumlah_fasilitas }}</td>
         </tr>
         @endforeach
     </tbody>
